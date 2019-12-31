@@ -1,7 +1,6 @@
 package admin
 
 import (
-  "errors"
   mock "mock/admin"
   "models"
   "testing"
@@ -35,8 +34,24 @@ func TestAdminCreateUserErrorByUserNameExists(t *testing.T) {
   testUser := models.User{Name: mock.UserNameAlreadyExists}
   err := admin.CreateUser(testUser)
 
-  Assert(errors.Is(err, UnableToCreateUser), func() {
+  AssertErrorsEqual(err, mock.UnableToCreateUserNameAlreadyExists, func() {
     t.Log("wrong error:", err)
+    t.Log("should be:", mock.UnableToCreateUserNameAlreadyExists)
+    t.Fail()
+  })
+  Assert(!mockAdminData.HasUser(testUser), func() {
+    t.Log("user should not be created")
+    t.Fail()
+  })
+}
+
+func TestAdminCreateUserInternalError(t *testing.T) {
+  testUser := models.User{Name: mock.UserNameCreationError}
+  err := admin.CreateUser(testUser)
+
+  AssertErrorsEqual(err, mock.UnableToCreateUserInternal, func() {
+    t.Log("wrong error:", err)
+    t.Log("should be:", mock.UnableToCreateUserInternal)
     t.Fail()
   })
   Assert(!mockAdminData.HasUser(testUser), func() {
@@ -61,8 +76,23 @@ func TestAdminCreateWorkGroupSuccess(t *testing.T) {
 func TestAdminCreateWorkGroupErrorGroupAlreadyExists(t *testing.T) {
   err := admin.CreateWorkGroup(mock.WorkGroupAlreadyExists)
 
-  Assert(errors.Is(err, UnableToCreateWorkGroup), func() {
-    t.Log("should not be error:", err)
+  AssertErrorsEqual(err, mock.UnableToCreateWgAlreadyExists, func() {
+    t.Log("wrong error:", err)
+    t.Log("should be:", mock.UnableToCreateWgAlreadyExists)
+    t.Fail()
+  })
+  Assert(!mockAdminData.HasWorkGroup(mock.WorkGroupAlreadyExists), func() {
+    t.Log("work group should not be created")
+    t.Fail()
+  })
+}
+
+func TestAdminCreateWorkGroupInternalError(t *testing.T) {
+  err := admin.CreateWorkGroup(mock.WorkGroupCreationError)
+
+  AssertErrorsEqual(err, mock.UnableToCreateWgInternal, func() {
+    t.Log("wrong error:", err)
+    t.Log("should be:", mock.UnableToCreateWgAlreadyExists)
     t.Fail()
   })
   Assert(!mockAdminData.HasWorkGroup(mock.WorkGroupAlreadyExists), func() {
@@ -93,11 +123,29 @@ func TestAdminAssignTasksErrorByNotExistsWrkGroup(t *testing.T) {
   }
   err := admin.AssignTasksToWorkGroup(mock.WgIdNotExists, tasks)
 
-  Assert(errors.Is(err, UnableToAssignTasks), func() {
+  AssertErrorsEqual(err, mock.UnableToAssignTasksNotExists, func() {
     t.Log("wrong error:", err)
+    t.Log("should be:", mock.UnableToAssignTasksNotExists)
     t.Fail()
   })
   Assert(!mockAdminData.TasksAssigned(mock.WgIdNotExists, tasks), func() {
+    t.Log("tasks should not be assigned")
+    t.Fail()
+  })
+}
+
+func TestAdminAssignTasksInternalError(t *testing.T) {
+  tasks := []models.Task{
+    { Title: "", Description: "" },
+  }
+  err := admin.AssignTasksToWorkGroup(mock.WgIdAssigningError, tasks)
+
+  AssertErrorsEqual(err, mock.UnableToAssignTasksInternal, func() {
+    t.Log("wrong error:", err)
+    t.Log("should be:", mock.UnableToAssignTasksInternal)
+    t.Fail()
+  })
+  Assert(!mockAdminData.TasksAssigned(mock.WgIdAssigningError, tasks), func() {
     t.Log("tasks should not be assigned")
     t.Fail()
   })

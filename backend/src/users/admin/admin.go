@@ -15,7 +15,7 @@ func NewAdmin(provider interfaces.AdminData) Admin {
 
 func (a Admin) CreateUser(user models.User) error {
   if err := a.dataProvider.CreateUser(user); err != nil {
-    return UnableToCreateUser
+    return ParseAdminError("CreateUser", err)
   }
 
   return nil
@@ -23,7 +23,7 @@ func (a Admin) CreateUser(user models.User) error {
 
 func (a Admin) CreateWorkGroup(groupName string) error {
   if err := a.dataProvider.CreateWorkGroup(groupName); err != nil {
-    return UnableToCreateWorkGroup
+    return ParseAdminError("CreateWorkGroup", err)
   }
 
   return nil
@@ -31,7 +31,7 @@ func (a Admin) CreateWorkGroup(groupName string) error {
 
 func (a Admin) AssignTasksToWorkGroup(groupId uint, tasks []models.Task) error {
   if err := a.dataProvider.AssignTasksToGroup(groupId, tasks); err != nil {
-    return UnableToAssignTasks
+    return ParseAdminError("AssignTasksToWorkGroup", err)
   }
 
   return nil

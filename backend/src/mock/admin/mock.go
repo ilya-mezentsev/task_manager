@@ -3,18 +3,31 @@ package mock
 import (
   "errors"
   "models"
+  "processing"
 )
 
 const (
   UserNameAlreadyExists = "u_already_exists"
+  UserNameCreationError = "u_creation_error"
   WorkGroupAlreadyExists = "wg_already_exists"
-  WorkGroupNotExists = "wg_not_exists"
+  WorkGroupCreationError = "wg_creation_error"
+  WorkGroupAssigningError = "wg_assigning_error"
   WgIdNotExists uint = 0
+  WgIdAssigningError uint = 1
 )
 
 var (
   TestWgName = "test_wg"
-  WorkGroupId uint = 0
+  WorkGroupId uint = 1
+
+  UnableToCreateUserInternal = errors.New("unable to create user: internal error")
+  UnableToCreateUserNameAlreadyExists = errors.New("unable to create user: user name already exists")
+
+  UnableToCreateWgInternal = errors.New("unable to create work group: internal error")
+  UnableToCreateWgAlreadyExists = errors.New("unable to create work group: work group already exists")
+
+  UnableToAssignTasksInternal = errors.New("unable to assign tasks: internal error")
+  UnableToAssignTasksNotExists = errors.New("unable to assign tasks: work group not exists")
 )
 
 type AdminDataMock struct {
@@ -25,7 +38,9 @@ type AdminDataMock struct {
 
 func (m *AdminDataMock) CreateUser(user models.User) error {
   if user.Name == UserNameAlreadyExists {
-    return errors.New(UserNameAlreadyExists)
+    return processing.UserNameAlreadyExists
+  } else if user.Name == UserNameCreationError {
+    return errors.New(UserNameCreationError)
   }
 
   m.Users = append(m.Users, user)
@@ -44,7 +59,9 @@ func (m AdminDataMock) HasUser(user models.User) bool {
 
 func (m *AdminDataMock) CreateWorkGroup(groupName string) error {
   if groupName == WorkGroupAlreadyExists {
-    return errors.New(WorkGroupAlreadyExists)
+    return processing.WorkGroupAlreadyExists
+  } else if groupName == WorkGroupCreationError {
+    return errors.New(WorkGroupCreationError)
   }
 
   WorkGroupId++
@@ -64,7 +81,9 @@ func (m AdminDataMock) HasWorkGroup(groupName string) bool {
 
 func (m *AdminDataMock) AssignTasksToGroup(groupId uint, tasks []models.Task) error {
   if groupId == WgIdNotExists {
-    return errors.New(WorkGroupNotExists)
+    return processing.WorkGroupNotExists
+  } else if groupId == WgIdAssigningError {
+    return errors.New(WorkGroupAssigningError)
   }
 
   m.Tasks[groupId] = tasks
