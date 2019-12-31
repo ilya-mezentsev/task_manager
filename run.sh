@@ -7,7 +7,7 @@ function run() {
     set +o allexport
     scriptName=$1
     shift
-    bash ${PROJECT_ROOT}/scripts/${scriptName} $*
+    bash ${PROJECT_ROOT}/scripts/${scriptName} "$(echo $*)"
   fi
 }
 
@@ -22,7 +22,7 @@ function showHelp {
 
 if [[ $1 = 'push_all' ]]; then
   shift
-  run pushAll.sh "$(echo $*)"
+  run pushAll.sh $*
 elif [[ $1 = '-h' ]]; then
   showHelp
 else
