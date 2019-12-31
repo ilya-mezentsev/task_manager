@@ -1,3 +1,6 @@
 package models
 
-type Task struct {}
+type Task struct {
+  Title string
+  Description string
+}
