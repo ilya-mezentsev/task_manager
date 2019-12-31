@@ -4,6 +4,7 @@ import "models"
 
 type Admin interface {
   CreateUser(user models.User) error
+  CreateWorkGroup(groupName string) error
   AssignTasksToGroup(tasks []models.Task, groupId uint) error
 }
 
