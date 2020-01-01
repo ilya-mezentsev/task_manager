@@ -22,7 +22,10 @@ function showHelp {
 
 if [[ $1 = 'push_all' ]]; then
   shift
-  run pushAll.sh $*
+  run push_all.sh $*
+elif [[ $1 = 'go_tests' ]]; then
+  shift
+  run go_tests.sh $*
 elif [[ $1 = '-h' ]]; then
   showHelp
 else
