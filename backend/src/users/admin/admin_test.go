@@ -1,7 +1,7 @@
 package admin
 
 import (
-  mock "mock/admin"
+  "mock"
   "models"
   "testing"
   . "utils"

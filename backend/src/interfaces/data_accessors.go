@@ -10,7 +10,7 @@ type (
   }
 
   GroupLeadData interface {
-    AssignTaskToWorker(task models.Task, workerId uint) error
+    AssignTaskToWorker(workerId uint, task models.Task) error
   }
 
   GroupWorkerData interface {

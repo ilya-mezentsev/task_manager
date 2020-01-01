@@ -1,16 +1,17 @@
-package admin
+package users
 
 import (
   "fmt"
   "processing"
 )
 
-type errorParsingData struct {
+type ErrorParsingData struct {
   errorTemplate string
   errorsDetail map[error]string
 }
 
-var parsingData = map[string]errorParsingData{
+var parsingData = map[string]ErrorParsingData{
+  // admins errors
   "CreateUser": {
     errorTemplate: "unable to create user: %s",
     errorsDetail: map[error]string{
@@ -29,9 +30,17 @@ var parsingData = map[string]errorParsingData{
       processing.WorkGroupNotExists: "work group not exists",
     },
   },
+
+  // group lead errors
+  "AssignTaskToWorker": {
+    errorTemplate: "unable to assign task: %s",
+    errorsDetail: map[error]string{
+      processing.WorkerIdNotExists: "worker id not exists",
+    },
+  },
 }
 
-func ParseAdminError(methodName string, err error) error {
+func ParseError(methodName string, err error) error {
   data := parsingData[methodName]
 
   for handledError, errorDescription := range data.errorsDetail {

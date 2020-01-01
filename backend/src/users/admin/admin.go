@@ -3,6 +3,7 @@ package admin
 import (
   "interfaces"
   "models"
+  "users"
 )
 
 type Admin struct {
@@ -15,7 +16,7 @@ func NewAdmin(provider interfaces.AdminData) Admin {
 
 func (a Admin) CreateUser(user models.User) error {
   if err := a.dataProvider.CreateUser(user); err != nil {
-    return ParseAdminError("CreateUser", err)
+    return users.ParseError("CreateUser", err)
   }
 
   return nil
@@ -23,7 +24,7 @@ func (a Admin) CreateUser(user models.User) error {
 
 func (a Admin) CreateWorkGroup(groupName string) error {
   if err := a.dataProvider.CreateWorkGroup(groupName); err != nil {
-    return ParseAdminError("CreateWorkGroup", err)
+    return users.ParseError("CreateWorkGroup", err)
   }
 
   return nil
@@ -31,7 +32,7 @@ func (a Admin) CreateWorkGroup(groupName string) error {
 
 func (a Admin) AssignTasksToWorkGroup(groupId uint, tasks []models.Task) error {
   if err := a.dataProvider.AssignTasksToGroup(groupId, tasks); err != nil {
-    return ParseAdminError("AssignTasksToWorkGroup", err)
+    return users.ParseError("AssignTasksToWorkGroup", err)
   }
 
   return nil
