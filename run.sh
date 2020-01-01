@@ -12,10 +12,11 @@ function run() {
 }
 
 function showHelp {
-  echo 'usage bash run.sh command'
+  echo 'usage bash run.sh <command>'
   echo 'available commands:'
   echo -e '\t -h (show this help)'
   echo -e '\t push_all (push all files to git)'
+  echo -e '\t go_tests (run tests for golang)'
 
   exit 0
 }
