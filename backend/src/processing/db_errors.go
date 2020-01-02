@@ -8,4 +8,6 @@ var (
   WorkGroupNotExists = errors.New("work group not exists")
 
   WorkerIdNotExists = errors.New("worker id not exists")
+
+  TaskIdNotExists = errors.New("task id not exists")
 )

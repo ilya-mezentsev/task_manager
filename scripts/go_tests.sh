@@ -16,6 +16,7 @@ function setFoldersWithTests() {
   done
 }
 
+rm -rf ${REPORT_FOLDER}/*
 setFoldersWithTests
 for dir in "${folders[@]}"
 do

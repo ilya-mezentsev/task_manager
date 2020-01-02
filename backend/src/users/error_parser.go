@@ -38,6 +38,20 @@ var parsingData = map[string]ErrorParsingData{
       processing.WorkerIdNotExists: "worker id not exists",
     },
   },
+
+  // group worker errors
+  "AddCommentToTask": {
+    errorTemplate: "unable to comment task: %s",
+    errorsDetail: map[error]string{
+      processing.TaskIdNotExists: "id not exists",
+    },
+  },
+  "MarkTaskAsCompleted": {
+    errorTemplate: "unable to complete task: %s",
+    errorsDetail: map[error]string{
+      processing.TaskIdNotExists: "id not exists",
+    },
+  },
 }
 
 func ParseError(methodName string, err error) error {
