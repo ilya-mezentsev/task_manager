@@ -2,3 +2,5 @@
 static
 .idea
 test_report
+*.db
+github.com
