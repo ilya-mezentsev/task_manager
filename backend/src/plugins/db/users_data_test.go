@@ -3,6 +3,7 @@ package db
 import (
   "database/sql"
   "fmt"
+  mock "mock/plugins"
   "os"
   "testing"
   . "utils"
@@ -13,11 +14,6 @@ const (
 )
 
 var (
-  testingUsers = []string{
-    "insert into users values(1, 'name1', 1, 'some_pass', 0);",
-    "insert into users values(2, 'name2', 2, 'some_pass', 0);",
-    "insert into users values(3, 'name3', 1, 'some_pass', 1);",
-  }
   database  *sql.DB
   adminData UsersDataPlugin
 )
@@ -35,22 +31,24 @@ func init() {
   deleteAllFromUsers()
 }
 
-func execQuery(q string) {
+func execQuery(q string, args ...interface{}) sql.Result {
   statement, err := database.Prepare(q)
   if err != nil {
     fmt.Println("An error while preparing db statement:", err)
     os.Exit(1)
   }
 
-  _, err = statement.Exec()
+  result, err := statement.Exec(args...)
   if err != nil {
     fmt.Println("An error while creating db structure:", err)
     os.Exit(1)
   }
+
+  return result
 }
 
 func createTestUsers() {
-  for _, q := range testingUsers {
+  for _, q := range mock.TestingUsersQueries {
     execQuery(q)
   }
 }
@@ -69,5 +67,8 @@ func TestGetAllUsersSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  t.Log(users)
+  Assert(mock.UserListEqual(users, mock.TestingUsers), func() {
+    t.Log("unexpected:", users)
+    t.Log("wanted:", mock.TestingUsers)
+  })
 }
