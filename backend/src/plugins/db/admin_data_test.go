@@ -18,8 +18,8 @@ var (
     "insert into users values(2, 'name2', 2, 'some_pass', 0);",
     "insert into users values(3, 'name3', 1, 'some_pass', 1);",
   }
-  database *sql.DB
-  adminData AdminData
+  database  *sql.DB
+  adminData UsersDataPlugin
 )
 
 func init() {
@@ -31,7 +31,7 @@ func init() {
     os.Exit(1)
   }
 
-  adminData = NewAdminDataProvider(database)
+  adminData = NewUsersDataPlugin(database)
   deleteAllFromUsers()
 }
 

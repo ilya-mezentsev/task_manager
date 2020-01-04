@@ -10,15 +10,15 @@ const (
   AllUsersQuery = "SELECT * FROM users"
 )
 
-type AdminData struct {
+type UsersDataPlugin struct {
   database *sql.DB
 }
 
-func NewAdminDataProvider(db *sql.DB) AdminData {
-  return AdminData{database: db}
+func NewUsersDataPlugin(db *sql.DB) UsersDataPlugin {
+  return UsersDataPlugin{database: db}
 }
 
-func (a AdminData) GetAllUsers() ([]models.User, error) {
+func (a UsersDataPlugin) GetAllUsers() ([]models.User, error) {
   usersRows, err := a.database.Query(AllUsersQuery)
   if err != nil {
     return nil, err
