@@ -1,0 +1,70 @@
+package tasks
+
+import (
+  "database/sql"
+  "fmt"
+  mock "mock/plugins"
+  "os"
+  "testing"
+  . "utils"
+)
+
+var (
+  tasksDatabase *sql.DB
+  tasksData TasksDataPlugin
+)
+
+func init() {
+  var err error
+  tasksDatabase, err = sql.Open(
+    "sqlite3", os.Getenv("TEST_DB_FILE"))
+  if err != nil {
+    fmt.Println("An error while opening db file:", err)
+    os.Exit(1)
+  }
+
+  tasksData = NewTasksDataPlugin(tasksDatabase)
+  execTasksQuery(mock.TurnOnForeignKeys)
+}
+
+func execTasksQuery(q string, args ...interface{}) {
+  statement, err := tasksDatabase.Prepare(q)
+  if err != nil {
+    fmt.Println("An error while preparing db statement:", err)
+    os.Exit(1)
+  }
+
+  _, err = statement.Exec(args...)
+  if err != nil {
+    fmt.Println("An error while creating db structure:", err)
+    os.Exit(1)
+  }
+}
+
+func dropTasksTable() {
+  execTasksQuery(mock.DropTasksTable)
+}
+
+func initTasksTable() {
+  dropTasksTable()
+  execTasksQuery(mock.CreateTasksTable)
+  for _, q := range mock.TestingTasksQueries {
+    execTasksQuery(q)
+  }
+}
+
+func TestGetAllTasksSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  tasks, err := tasksData.GetAllTasks()
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(mock.TasksListEqual(tasks, mock.TestingTasks), func() {
+    t.Logf(GetExpectationString(mock.TestingTasks, tasks))
+    t.Fail()
+  })
+}

@@ -1,4 +1,4 @@
-package db
+package users
 
 import (
   "database/sql"
@@ -11,27 +11,28 @@ import (
 )
 
 var (
-  database  *sql.DB
+  usersDatabase *sql.DB
   usersData UsersDataPlugin
 )
 
 func init() {
   var err error
-  database, err = sql.Open(
-    "sqlite3", os.Getenv("TestDBFile"))
+  usersDatabase, err = sql.Open(
+    "sqlite3", os.Getenv("TEST_DB_FILE"))
   if err != nil {
     fmt.Println("An error while opening db file:", err)
     os.Exit(1)
   }
 
-  usersData = NewUsersDataPlugin(database)
-  execQuery(mock.TurnOnForeignKeys)
+  usersData = NewUsersDataPlugin(usersDatabase)
+  execUsersQuery(mock.TurnOnForeignKeys)
+  createGroupsForUsers()
   createUsersTable()
   deleteAllFromUsers()
 }
 
-func execQuery(q string, args ...interface{}) {
-  statement, err := database.Prepare(q)
+func execUsersQuery(q string, args ...interface{}) {
+  statement, err := usersDatabase.Prepare(q)
   if err != nil {
     fmt.Println("An error while preparing db statement:", err)
     os.Exit(1)
@@ -45,29 +46,29 @@ func execQuery(q string, args ...interface{}) {
 }
 
 func createGroupsForUsers() {
-  execQuery(mock.DropGroupsTable)
-  execQuery(mock.CreateGroupsTable)
+  execUsersQuery(mock.DropGroupsTable)
+  execUsersQuery(mock.CreateGroupsTable)
   for _, q := range mock.TestingGroupsQueries {
-    execQuery(q)
+    execUsersQuery(q)
   }
 }
 
 func createUsersTable() {
-  execQuery(mock.CreateUsersTable)
+  execUsersQuery(mock.CreateUsersTable)
 }
 
 func deleteUsersTable() {
-  execQuery(mock.DropUsersTable)
+  execUsersQuery(mock.DropUsersTable)
 }
 
 func createTestUsers() {
   for _, q := range mock.TestingUsersQueries {
-    execQuery(q)
+    execUsersQuery(q)
   }
 }
 
 func deleteAllFromUsers() {
-  execQuery(mock.ClearUsersTable)
+  execUsersQuery(mock.ClearUsersTable)
 }
 
 func TestGetAllUsersSuccess(t *testing.T) {
@@ -204,13 +205,11 @@ func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
 }
 
 func TestCreateUserErrorGroupNotExists(t *testing.T) {
-  createGroupsForUsers()
   deleteUsersTable()
   createUsersTable()
   defer deleteAllFromUsers()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUserWithNotExistsGroupId)
-  t.Log(err)
   Assert(err == processing.WorkGroupNotExists, func() {
     t.Log("should be error")
     t.Fail()
