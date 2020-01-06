@@ -27,40 +27,29 @@ func init() {
 
   usersData = NewUsersDataPlugin(usersDatabase)
   execUsersQuery(mock.TurnOnForeignKeys)
-  createGroupsForUsers()
-  createUsersTable()
-  deleteAllFromUsers()
+  db.CreateGroups(usersDatabase)
+  initUsersTable()
 }
 
 func execUsersQuery(q string, args ...interface{}) {
   db.ExecQuery(usersDatabase, q, args...)
 }
 
-func createGroupsForUsers() {
-  db.CreateGroups(usersDatabase)
-}
-
-func createUsersTable() {
-  execUsersQuery(mock.CreateUsersTable)
-}
-
-func deleteUsersTable() {
+func dropUsersTable() {
   execUsersQuery(mock.DropUsersTable)
 }
 
-func createTestUsers() {
+func initUsersTable() {
+  dropUsersTable()
+  execUsersQuery(mock.CreateUsersTable)
   for _, q := range mock.TestingUsersQueries {
     execUsersQuery(q)
   }
 }
 
-func deleteAllFromUsers() {
-  execUsersQuery(mock.ClearUsersTable)
-}
-
 func TestGetAllUsersSuccess(t *testing.T) {
-  createTestUsers()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   users, err := usersData.GetAllUsers()
 
@@ -75,8 +64,7 @@ func TestGetAllUsersSuccess(t *testing.T) {
 }
 
 func TestGetAllUsersErrorTableNotExists(t *testing.T) {
-  deleteUsersTable()
-  defer createUsersTable()
+  dropUsersTable()
 
   users, err := usersData.GetAllUsers()
 
@@ -91,8 +79,8 @@ func TestGetAllUsersErrorTableNotExists(t *testing.T) {
 }
 
 func TestGetUserSuccess(t *testing.T) {
-  createTestUsers()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   user, err := usersData.GetUser(1)
   Assert(err == nil, func() {
@@ -106,8 +94,8 @@ func TestGetUserSuccess(t *testing.T) {
 }
 
 func TestGetUserErrorIdNotExists(t *testing.T) {
-  createTestUsers()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   user, err := usersData.GetUser(11)
   Assert(err == processing.WorkerIdNotExists, func() {
@@ -121,8 +109,8 @@ func TestGetUserErrorIdNotExists(t *testing.T) {
 }
 
 func TestGetUserErrorTableNotExists(t *testing.T) {
-  deleteUsersTable()
-  defer createUsersTable()
+  initUsersTable()
+  defer dropUsersTable()
 
   user, err := usersData.GetUser(11)
   Assert(err != nil, func() {
@@ -136,24 +124,22 @@ func TestGetUserErrorTableNotExists(t *testing.T) {
 }
 
 func TestCreateUserSuccess(t *testing.T) {
-  deleteUsersTable()
-  createUsersTable()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUser)
   Assert(err == nil, func() {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(createdUserId == 1, func() {
-    t.Log(GetExpectationString(1, createdUserId))
+  Assert(createdUserId == uint(len(mock.TestingUsers)+1), func() {
+    t.Log(GetExpectationString(uint(len(mock.TestingUsers)+1), createdUserId))
     t.Fail()
   })
 }
 
 func TestCreateUserErrorTableNotExists(t *testing.T) {
-  deleteUsersTable()
-  defer createUsersTable()
+  dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUser)
   Assert(err != nil, func() {
@@ -167,10 +153,8 @@ func TestCreateUserErrorTableNotExists(t *testing.T) {
 }
 
 func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
-  deleteUsersTable()
-  createUsersTable()
-  createTestUsers()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUserWithExistsName)
   Assert(err == processing.UserNameAlreadyExists, func() {
@@ -184,9 +168,8 @@ func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
 }
 
 func TestCreateUserErrorGroupNotExists(t *testing.T) {
-  deleteUsersTable()
-  createUsersTable()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUserWithNotExistsGroupId)
   Assert(err == processing.WorkGroupNotExists, func() {
@@ -201,10 +184,8 @@ func TestCreateUserErrorGroupNotExists(t *testing.T) {
 }
 
 func TestDeleteUserSuccess(t *testing.T) {
-  deleteUsersTable()
-  createUsersTable()
-  createTestUsers()
-  defer deleteAllFromUsers()
+  initUsersTable()
+  defer dropUsersTable()
 
   err := usersData.DeleteUser(1)
   Assert(err == nil, func() {
@@ -214,8 +195,7 @@ func TestDeleteUserSuccess(t *testing.T) {
 }
 
 func TestDeleteUserErrorTableNotExists(t *testing.T) {
-  deleteUsersTable()
-  defer createUsersTable()
+  dropUsersTable()
 
   err := usersData.DeleteUser(1)
   Assert(err != nil, func() {

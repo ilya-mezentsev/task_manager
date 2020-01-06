@@ -13,5 +13,5 @@ func AssertErrorsEqual(err1, err2 error, onFalseFn func()) {
 }
 
 func GetExpectationString(expected, got interface{}) string {
-  return fmt.Sprintf("expected: %v\n, got: %v\n", expected, got)
+  return fmt.Sprintf("expected: %v, got: %v\n", expected, got)
 }

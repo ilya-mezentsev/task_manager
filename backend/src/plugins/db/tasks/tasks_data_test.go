@@ -26,6 +26,7 @@ func init() {
 
   tasksData = NewTasksDataPlugin(tasksDatabase)
   execTasksQuery(mock.TurnOnForeignKeys)
+  db.CreateGroups(tasksDatabase)
 }
 
 func execTasksQuery(q string, args ...interface{}) {
