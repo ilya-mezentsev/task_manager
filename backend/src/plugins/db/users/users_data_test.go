@@ -5,6 +5,7 @@ import (
   "fmt"
   mock "mock/plugins"
   "os"
+  "plugins/db"
   "processing"
   "testing"
   . "utils"
@@ -32,25 +33,11 @@ func init() {
 }
 
 func execUsersQuery(q string, args ...interface{}) {
-  statement, err := usersDatabase.Prepare(q)
-  if err != nil {
-    fmt.Println("An error while preparing db statement:", err)
-    os.Exit(1)
-  }
-
-  _, err = statement.Exec(args...)
-  if err != nil {
-    fmt.Println("An error while creating db structure:", err)
-    os.Exit(1)
-  }
+  db.ExecQuery(usersDatabase, q, args...)
 }
 
 func createGroupsForUsers() {
-  execUsersQuery(mock.DropGroupsTable)
-  execUsersQuery(mock.CreateGroupsTable)
-  for _, q := range mock.TestingGroupsQueries {
-    execUsersQuery(q)
-  }
+  db.CreateGroups(usersDatabase)
 }
 
 func createUsersTable() {
@@ -82,8 +69,7 @@ func TestGetAllUsersSuccess(t *testing.T) {
     t.Fail()
   })
   Assert(mock.UserListEqual(users, mock.TestingUsers), func() {
-    t.Log("unexpected:", users)
-    t.Log("wanted:", mock.TestingUsers)
+    t.Log(GetExpectationString(mock.TestingUsers, users))
     t.Fail()
   })
 }
@@ -114,8 +100,7 @@ func TestGetUserSuccess(t *testing.T) {
     t.Fail()
   })
   Assert(user == mock.TestingUsers[0], func() {
-    t.Log("unexpected user:", user)
-    t.Log("wanted:", mock.TestingUsers[0])
+    t.Log(GetExpectationString(mock.TestingUsers[0], user))
     t.Fail()
   })
 }
@@ -126,13 +111,11 @@ func TestGetUserErrorIdNotExists(t *testing.T) {
 
   user, err := usersData.GetUser(11)
   Assert(err == processing.WorkerIdNotExists, func() {
-    t.Log("wrong error:", err)
-    t.Log("should be:", processing.WorkerIdNotExists)
+    t.Log(GetExpectationString(processing.WorkerIdNotExists, err))
     t.Fail()
   })
   Assert(user == mock.EmptyUser, func() {
-    t.Log("unexpected user:", user)
-    t.Log("wanted:", mock.EmptyUser)
+    t.Log(GetExpectationString(mock.EmptyUser, user))
     t.Fail()
   })
 }
@@ -147,8 +130,7 @@ func TestGetUserErrorTableNotExists(t *testing.T) {
     t.Fail()
   })
   Assert(user == mock.EmptyUser, func() {
-    t.Log("unexpected user:", user)
-    t.Log("wanted:", mock.EmptyUser)
+    t.Log(GetExpectationString(mock.EmptyUser, user))
     t.Fail()
   })
 }
@@ -164,8 +146,7 @@ func TestCreateUserSuccess(t *testing.T) {
     t.Fail()
   })
   Assert(createdUserId == 1, func() {
-    t.Log("unexpected created user id:", createdUserId)
-    t.Log("wanted:", 1)
+    t.Log(GetExpectationString(1, createdUserId))
     t.Fail()
   })
 }
@@ -180,8 +161,7 @@ func TestCreateUserErrorTableNotExists(t *testing.T) {
     t.Fail()
   })
   Assert(createdUserId == 0, func() {
-    t.Log("unexpected created user id:", createdUserId)
-    t.Log("wanted:", 0)
+    t.Log(GetExpectationString(0, createdUserId))
     t.Fail()
   })
 }
@@ -198,8 +178,7 @@ func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
     t.Fail()
   })
   Assert(createdUserId == 0, func() {
-    t.Log("unexpected created user id:", createdUserId)
-    t.Log("wanted:", 0)
+    t.Log(GetExpectationString(0, createdUserId))
     t.Fail()
   })
 }

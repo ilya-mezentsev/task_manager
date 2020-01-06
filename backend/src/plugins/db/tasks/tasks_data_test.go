@@ -5,6 +5,7 @@ import (
   "fmt"
   mock "mock/plugins"
   "os"
+  "plugins/db"
   "testing"
   . "utils"
 )
@@ -28,17 +29,7 @@ func init() {
 }
 
 func execTasksQuery(q string, args ...interface{}) {
-  statement, err := tasksDatabase.Prepare(q)
-  if err != nil {
-    fmt.Println("An error while preparing db statement:", err)
-    os.Exit(1)
-  }
-
-  _, err = statement.Exec(args...)
-  if err != nil {
-    fmt.Println("An error while creating db structure:", err)
-    os.Exit(1)
-  }
+  db.ExecQuery(tasksDatabase, q, args...)
 }
 
 func dropTasksTable() {
@@ -64,7 +55,7 @@ func TestGetAllTasksSuccess(t *testing.T) {
     t.Fail()
   })
   Assert(mock.TasksListEqual(tasks, mock.TestingTasks), func() {
-    t.Logf(GetExpectationString(mock.TestingTasks, tasks))
+    t.Log(GetExpectationString(mock.TestingTasks, tasks))
     t.Fail()
   })
 }
