@@ -18,31 +18,38 @@ var (
 func init() {
   var err error
   database, err = sql.Open(
-    "sqlite3", "/home/ilya/prog/projects/task_manager/backend/data/test_data.db")
+    "sqlite3", os.Getenv("TestDBFile"))
   if err != nil {
     fmt.Println("An error while opening db file:", err)
     os.Exit(1)
   }
 
   usersData = NewUsersDataPlugin(database)
+  execQuery(mock.TurnOnForeignKeys)
   createUsersTable()
   deleteAllFromUsers()
 }
 
-func execQuery(q string, args ...interface{}) sql.Result {
+func execQuery(q string, args ...interface{}) {
   statement, err := database.Prepare(q)
   if err != nil {
     fmt.Println("An error while preparing db statement:", err)
     os.Exit(1)
   }
 
-  result, err := statement.Exec(args...)
+  _, err = statement.Exec(args...)
   if err != nil {
     fmt.Println("An error while creating db structure:", err)
     os.Exit(1)
   }
+}
 
-  return result
+func createGroupsForUsers() {
+  execQuery(mock.DropGroupsTable)
+  execQuery(mock.CreateGroupsTable)
+  for _, q := range mock.TestingGroupsQueries {
+    execQuery(q)
+  }
 }
 
 func createUsersTable() {
@@ -186,6 +193,25 @@ func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
 
   createdUserId, err := usersData.CreateUser(mock.TestingUserWithExistsName)
   Assert(err == processing.UserNameAlreadyExists, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+  Assert(createdUserId == 0, func() {
+    t.Log("unexpected created user id:", createdUserId)
+    t.Log("wanted:", 0)
+    t.Fail()
+  })
+}
+
+func TestCreateUserErrorGroupNotExists(t *testing.T) {
+  createGroupsForUsers()
+  deleteUsersTable()
+  createUsersTable()
+  defer deleteAllFromUsers()
+
+  createdUserId, err := usersData.CreateUser(mock.TestingUserWithNotExistsGroupId)
+  t.Log(err)
+  Assert(err == processing.WorkGroupNotExists, func() {
     t.Log("should be error")
     t.Fail()
   })
