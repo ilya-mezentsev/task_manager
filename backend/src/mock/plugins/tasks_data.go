@@ -28,6 +28,13 @@ var (
     {ID: 2, Title: "title2", GroupId: 2},
     {ID: 3, Title: "title1", GroupId: 3},
   }
+  TestingTasksAdditional = []models.Task{
+    {ID: 4, Title: "title1", GroupId: 1},
+    {ID: 5, Title: "title2", GroupId: 2},
+    {ID: 6, Title: "title1", GroupId: 3},
+  }
+  TestingTask = models.Task{ID: 4, Title: "title4", GroupId: 1}
+  TaskWithNotExistsGroupId = models.Task{ID: 4, Title: "title4", GroupId: 11}
 )
 
 func TasksListEqual(l1, l2 []models.Task) bool {

@@ -23,19 +23,6 @@ var (
     "insert into users values(2, 'name2', 2, 'some_pass', 0);",
     "insert into users values(3, 'name3', 1, 'some_pass', 1);",
   }
-  EmptyUser models.User
-  TestingUser = models.User{
-    Name: "name4",
-    GroupId: 3,
-    Password: "some_pass",
-    IsGroupLead: false,
-  }
-  TestingUserWithExistsName = models.User{
-    Name: "name1",
-  }
-  TestingUserWithNotExistsGroupId = models.User{
-    GroupId: 11,
-  }
   TestingUsers = []models.User{
     {
       ID: 1,
@@ -58,6 +45,19 @@ var (
       Password: "some_pass",
       IsGroupLead: true,
     },
+  }
+  EmptyUser models.User
+  TestingUser = models.User{
+    Name: "name4",
+    GroupId: 3,
+    Password: "some_pass",
+    IsGroupLead: false,
+  }
+  TestingUserWithExistsName = models.User{
+    Name: "name1",
+  }
+  TestingUserWithNotExistsGroupId = models.User{
+    GroupId: 11,
   }
 )
 

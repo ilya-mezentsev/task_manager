@@ -12,14 +12,20 @@ import (
 )
 
 var (
+  dbFile string
   usersDatabase *sql.DB
   usersData UsersDataPlugin
 )
 
 func init() {
+  dbFile = os.Getenv("TEST_DB_FILE")
+  if dbFile == "" {
+    fmt.Println("TEST_DB_FILE env var is not set")
+    os.Exit(1)
+  }
+
   var err error
-  usersDatabase, err = sql.Open(
-    "sqlite3", os.Getenv("TEST_DB_FILE"))
+  usersDatabase, err = sql.Open("sqlite3", dbFile)
   if err != nil {
     fmt.Println("An error while opening db file:", err)
     os.Exit(1)

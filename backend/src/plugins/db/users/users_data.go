@@ -14,7 +14,7 @@ const (
   DeleteUserQuery = "DELETE FROM users WHERE id = ?"
   UserNameAlreadyExistsMessage = "UNIQUE constraint failed: users.name"
   // users table has only work_id foreign key
-  WorkIdNotExistsMessage = "FOREIGN KEY constraint failed"
+  WGIdNotExists = "FOREIGN KEY constraint failed"
 )
 
 type UsersDataPlugin struct {
@@ -73,7 +73,7 @@ func (u UsersDataPlugin) CreateUser(user models.User) (uint, error) {
     switch err.Error() {
     case UserNameAlreadyExistsMessage:
       return 0, processing.UserNameAlreadyExists
-    case WorkIdNotExistsMessage:
+    case WGIdNotExists:
       return 0, processing.WorkGroupNotExists
     default:
       return 0, err
