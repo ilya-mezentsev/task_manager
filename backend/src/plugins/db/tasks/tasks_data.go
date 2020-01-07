@@ -11,9 +11,10 @@ const (
   AllTasksQuery = "SELECT * FROM tasks"
   GetTaskById = "SELECT * FROM tasks WHERE id = ?"
   AddTaskQuery = "INSERT INTO tasks VALUES(NULL, ?, ?, ?, ?, ?, ?)"
-  AssignTaskToWorker = "UPDATE tasks SET user_id = ? WHERE id = ?"
+  AssignTaskToWorkerQuery = "UPDATE tasks SET user_id = ? WHERE id = ?"
   MarkTaskAsCompleteQuery = "UPDATE tasks SET is_complete = 1 WHERE id = ?"
   CommentTaskQuery = "UPDATE tasks SET comment = ? WHERE id = ?"
+  DeleteTaskQuery = "DELETE FROM tasks WHERE id = ?"
   // tasks table has only work_id foreign key
   WGIdNotExistsMessage = "FOREIGN KEY constraint failed"
 )
@@ -93,8 +94,27 @@ func (t DataPlugin) assignRollbackErrorIfExists(err *error, rollbackError error)
   }
 }
 
+func (t DataPlugin) DeleteTask(taskId uint) error {
+  statement, err := t.database.Prepare(DeleteTaskQuery)
+  if err != nil {
+    return err
+  }
+
+  res, err := statement.Exec(taskId)
+  if err != nil {
+    return err
+  }
+
+  // we ignore error here coz sqlite driver does not return it
+  if rowsAffected, _ := res.RowsAffected(); rowsAffected == 0 {
+    return processing.TaskIdNotExists
+  }
+
+  return nil
+}
+
 func (t DataPlugin) AssignTaskToWorker(taskId, workerId uint) error {
-  return t.execUpdating(AssignTaskToWorker, workerId, taskId)
+  return t.execUpdating(AssignTaskToWorkerQuery, workerId, taskId)
 }
 
 func (t DataPlugin) MarkTaskAsComplete(taskId uint) error {

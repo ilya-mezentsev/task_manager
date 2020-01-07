@@ -14,7 +14,7 @@ const (
     user_id integer default 0,
     is_complete integer default 0,
     comment text default '',
-    foreign key(group_id) references groups(id)
+    foreign key(group_id) references groups(id) on delete cascade
   )`
 )
 

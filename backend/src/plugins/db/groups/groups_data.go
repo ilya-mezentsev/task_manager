@@ -10,6 +10,7 @@ import (
 const (
   GetAllGroupsQuery = "SELECT * FROM groups"
   CreateGroupQuery = "INSERT INTO groups VALUES(NULL, ?)"
+  DeleteGroupQuery = "DELETE FROM groups WHERE id = ?"
   GroupNameAlreadyExistsMessage = "UNIQUE constraint failed: groups.name"
 )
 
@@ -55,6 +56,25 @@ func (g DataPlugin) CreateWorkGroup(groupName string) error {
     default:
       return err
     }
+  }
+
+  return nil
+}
+
+func (g DataPlugin) DeleteWorkGroup(groupId uint) error {
+  statement, err := g.database.Prepare(DeleteGroupQuery)
+  if err != nil {
+    return err
+  }
+
+  res, err := statement.Exec(groupId)
+  if err != nil {
+    return err
+  }
+
+  // we ignore error here coz sqlite driver does not return it
+  if rowsAffected, _ := res.RowsAffected(); rowsAffected == 0 {
+    return processing.WorkGroupNotExists
   }
 
   return nil

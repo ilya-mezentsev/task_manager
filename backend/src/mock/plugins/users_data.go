@@ -4,7 +4,6 @@ import "models"
 
 const (
   TurnOnForeignKeys = "PRAGMA foreign_keys = ON;"
-  ClearUsersTable = "delete from users;"
   DropUsersTable = "drop table if exists users;"
   CreateUsersTable = `
   create table if not exists users(
@@ -13,7 +12,7 @@ const (
     group_id integer not null,
     password text not null,
     is_group_lead integer default 0,
-    foreign key(group_id) references groups(id)
+    foreign key(group_id) references groups(id) on delete cascade
   )`
 )
 

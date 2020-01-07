@@ -270,3 +270,41 @@ func TestAssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
     t.Fail()
   })
 }
+
+func TestDeleteTaskSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.DeleteTask(1)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  tasks, _ := tasksData.GetAllTasks()
+  expectedTasks := mock.TestingTasks[1:]
+  Assert(mock.TasksListEqual(tasks, expectedTasks), func() {
+    t.Log(GetExpectationString(expectedTasks, tasks))
+    t.Fail()
+  })
+}
+
+func TestDeleteTaskErrorTableNotExists(t *testing.T) {
+  dropTasksTable()
+
+  err := tasksData.DeleteTask(1)
+  Assert(err != nil, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+}
+
+func TestDeleteTaskErrorIdNotExists(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.DeleteTask(11)
+  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+    t.Fail()
+  })
+}

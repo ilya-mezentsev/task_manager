@@ -23,6 +23,33 @@ func NewDBProxy(db *sql.DB) DBProxy {
   }
 }
 
+func (proxy DBProxy) GetAllTasks() ([]models.Task, error) {
+  log.Println("requesting all tasks")
+
+  allTasks, err := proxy.tasksData.GetAllTasks()
+  if err != nil {
+    log.Println("error while requesting all tasks:", err)
+    return nil, err
+  }
+
+  return allTasks, nil
+}
+
+func (proxy DBProxy) AssignTasksToGroup(groupId uint, tasks []models.Task) error {
+  log.Printf("assigning tasks to work group (id <%d>)\n", groupId)
+  for i, task := range tasks {
+    log.Printf("\t%d: %v\n", i, task)
+  }
+
+  err := proxy.tasksData.CreateTasks(tasks)
+  if err != nil {
+    log.Printf("error while assigning tasks to work group (id <%d>): %v\n", groupId, err)
+    return err
+  }
+
+  return nil
+}
+
 func (proxy DBProxy) AddCommentToTask(taskId uint, comment string) error {
   log.Printf("adding comment '%s', to task with id <%d>\n", comment, taskId)
 
@@ -59,6 +86,30 @@ func (proxy DBProxy) AssignTaskToWorker(workerId uint, task models.Task) error {
   return nil
 }
 
+func (proxy DBProxy) DeleteTask(taskId uint) error {
+  log.Printf("deleting task (id <%d>)\n", taskId)
+
+  err := proxy.tasksData.DeleteTask(taskId)
+  if err != nil {
+    log.Printf("error while deleting task (id <%d>): %v\n", taskId, err)
+    return err
+  }
+
+  return nil
+}
+
+func (proxy DBProxy) GetAllUsers() ([]models.User, error) {
+  log.Println("requesting all users")
+
+  allUsers, err := proxy.usersData.GetAllUsers()
+  if err != nil {
+    log.Println("error while requesting all users:", err)
+    return nil, err
+  }
+
+  return allUsers, nil
+}
+
 func (proxy DBProxy) CreateUser(user models.User) error {
   log.Printf("creating user (%v)\n", user)
 
@@ -69,6 +120,18 @@ func (proxy DBProxy) CreateUser(user models.User) error {
   }
 
   log.Printf("created user id: %d\n", userId)
+  return nil
+}
+
+func (proxy DBProxy) DeleteUser(userId uint) error {
+  log.Printf("deleting user (id <%d>)\n", userId)
+
+  err := proxy.usersData.DeleteUser(userId)
+  if err != nil {
+    log.Printf("error while deleing user (id <%d>): %v\n", userId, err)
+    return err
+  }
+
   return nil
 }
 
@@ -84,15 +147,24 @@ func (proxy DBProxy) CreateWorkGroup(groupName string) error {
   return nil
 }
 
-func (proxy DBProxy) AssignTasksToGroup(groupId uint, tasks []models.Task) error {
-  log.Printf("assigning tasks to work group (id <%d>)\n", groupId)
-  for i, task := range tasks {
-    log.Printf("\t%d: %v\n", i, task)
+func (proxy DBProxy) GetAllGroups() ([]models.Group, error) {
+  log.Println("requesting all groups")
+
+  allGroups, err := proxy.groupsData.GetAllGroups()
+  if err != nil {
+    log.Println("error while requesting all groups:", err)
+    return nil, err
   }
 
-  err := proxy.tasksData.CreateTasks(tasks)
+  return allGroups, nil
+}
+
+func (proxy DBProxy) DeleteWorkGroup(groupId uint) error {
+  log.Printf("deleting work group (id <%d>)\n", groupId)
+
+  err := proxy.groupsData.DeleteWorkGroup(groupId)
   if err != nil {
-    log.Printf("error while assigning tasks to work group (id <%d>): %v\n", groupId, err)
+    log.Printf("error while deleting work group (id <%d>)\n", groupId)
     return err
   }
 

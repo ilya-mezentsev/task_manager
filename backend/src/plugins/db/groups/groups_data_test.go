@@ -119,3 +119,41 @@ func TestCreateWorkGroupErrorGroupNameAlreadyExists(t *testing.T) {
     t.Fail()
   })
 }
+
+func TestDeleteWorkGroupSuccess(t *testing.T) {
+  initGroupsTable()
+  defer dropGroupsTable()
+
+  err := groupsData.DeleteWorkGroup(1)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  groups, _ := groupsData.GetAllGroups()
+  expectedGroups := mock.TestingGroups[1:]
+  Assert(mock.GroupListEqual(expectedGroups, groups), func() {
+    t.Log(GetExpectationString(expectedGroups, groups))
+    t.Fail()
+  })
+}
+
+func TestDeleteWorkGroupErrorTableNotExists(t *testing.T) {
+  dropGroupsTable()
+
+  err := groupsData.DeleteWorkGroup(1)
+  Assert(err != nil, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+}
+
+func TestDeleteWorkGroupErrorIdNotExists(t *testing.T) {
+  initGroupsTable()
+  defer dropGroupsTable()
+
+  err := groupsData.DeleteWorkGroup(11)
+  AssertErrorsEqual(err, processing.WorkGroupNotExists, func() {
+    t.Log(GetExpectationString(processing.WorkGroupNotExists, err))
+    t.Fail()
+  })
+}
