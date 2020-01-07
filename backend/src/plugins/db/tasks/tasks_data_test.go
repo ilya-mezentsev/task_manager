@@ -14,7 +14,7 @@ import (
 
 var (
   dbFile string
-  tasksDatabase *sql.DB
+  database  *sql.DB
   tasksData TasksDataPlugin
 )
 
@@ -26,19 +26,19 @@ func init() {
   }
 
   var err error
-  tasksDatabase, err = sql.Open("sqlite3", dbFile)
+  database, err = sql.Open("sqlite3", dbFile)
   if err != nil {
     fmt.Println("An error while opening db file:", err)
     os.Exit(1)
   }
 
-  tasksData = NewTasksDataPlugin(tasksDatabase)
+  tasksData = NewTasksDataPlugin(database)
   execTasksQuery(mock.TurnOnForeignKeys)
-  db.CreateGroups(tasksDatabase)
+  db.CreateGroups(database)
 }
 
 func execTasksQuery(q string, args ...interface{}) {
-  db.ExecQuery(tasksDatabase, q, args...)
+  db.ExecQuery(database, q, args...)
 }
 
 func dropTasksTable() {
@@ -56,7 +56,7 @@ func initTasksTable() {
 func getTaskById(taskId uint) models.Task {
   var task models.Task
 
-  taskRow := tasksDatabase.QueryRow(GetTaskById, taskId)
+  taskRow := database.QueryRow(GetTaskById, taskId)
   err := taskRow.Scan(
     &task.ID, &task.Title, &task.Description, &task.GroupId,
     &task.UserId, &task.IsComplete, &task.Comment,

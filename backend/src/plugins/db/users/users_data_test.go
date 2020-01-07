@@ -13,7 +13,7 @@ import (
 
 var (
   dbFile string
-  usersDatabase *sql.DB
+  database *sql.DB
   usersData UsersDataPlugin
 )
 
@@ -25,20 +25,20 @@ func init() {
   }
 
   var err error
-  usersDatabase, err = sql.Open("sqlite3", dbFile)
+  database, err = sql.Open("sqlite3", dbFile)
   if err != nil {
     fmt.Println("An error while opening db file:", err)
     os.Exit(1)
   }
 
-  usersData = NewUsersDataPlugin(usersDatabase)
+  usersData = NewUsersDataPlugin(database)
   execUsersQuery(mock.TurnOnForeignKeys)
-  db.CreateGroups(usersDatabase)
+  db.CreateGroups(database)
   initUsersTable()
 }
 
 func execUsersQuery(q string, args ...interface{}) {
-  db.ExecQuery(usersDatabase, q, args...)
+  db.ExecQuery(database, q, args...)
 }
 
 func dropUsersTable() {
