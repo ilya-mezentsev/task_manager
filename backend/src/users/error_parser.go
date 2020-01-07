@@ -18,16 +18,34 @@ var parsingData = map[string]ErrorParsingData{
       processing.UserNameAlreadyExists: "user name already exists",
     },
   },
+  "DeleteUser": {
+    errorTemplate: "unable to delete user: %s",
+    errorsDetail: map[error]string{
+      processing.UserIdNotExists: "user id not exists",
+    },
+  },
   "CreateWorkGroup": {
     errorTemplate: "unable to create work group: %s",
     errorsDetail: map[error]string{
       processing.WorkGroupAlreadyExists: "work group already exists",
     },
   },
+  "DeleteWorkGroup": {
+    errorTemplate: "unable to delete work group: %s",
+    errorsDetail: map[error]string{
+      processing.WorkGroupNotExists: "work group not exists",
+    },
+  },
   "AssignTasksToWorkGroup": {
     errorTemplate: "unable to assign tasks: %s",
     errorsDetail: map[error]string{
       processing.WorkGroupNotExists: "work group not exists",
+    },
+  },
+  "DeleteTask": {
+    errorTemplate: "unable to delete task: %s",
+    errorsDetail: map[error]string{
+      processing.TaskIdNotExists: "task id not exists",
     },
   },
 

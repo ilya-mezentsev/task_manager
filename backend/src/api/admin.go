@@ -1,6 +1,20 @@
 package api
 
-import "net/http"
+import (
+  "interfaces"
+  "net/http"
+  . "users/admin"
+)
+
+var adminRequestHandler AdminRequestHandler
+
+type AdminRequestHandler struct {
+  admin Admin
+}
+
+func InitAdminRequestHandler(adminDataPlugin interfaces.AdminData) {
+  adminRequestHandler.admin = NewAdmin(adminDataPlugin)
+}
 
 func BindAdminRoutesToHandlers() {
   api := router.PathPrefix("/api/admin").Subrouter()

@@ -3,6 +3,7 @@ package processing
 import "errors"
 
 var (
+  UserIdNotExists = errors.New("user id not exists")
   UserNameAlreadyExists = errors.New("user name already exists")
   WorkGroupAlreadyExists = errors.New("work group already exists")
   WorkGroupNotExists = errors.New("work group not exists")

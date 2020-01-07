@@ -4,9 +4,15 @@ import "models"
 
 type (
   AdminData interface {
-    CreateUser(user models.User) error
+    GetAllGroups() ([]models.Group, error)
     CreateWorkGroup(groupName string) error
+    DeleteWorkGroup(groupId uint) error
+    GetAllUsers() ([]models.User, error)
+    CreateUser(user models.User) error
+    DeleteUser(userId uint) error
+    GetAllTasks() ([]models.Task, error)
     AssignTasksToGroup(groupId uint, tasks []models.Task) error
+    DeleteTask(taskId uint) error
   }
 
   GroupLeadData interface {
