@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 SCRIPTS_FOLDER=$(pwd)/scripts
+declare -A scriptsDescriptions=(
+  ['help']='show this help'
+  ['calc_go_lines']='calculate lines of *.go files'
+  ['go_tests']='run go tests'
+  ['ng_tests']='run angular tests'
+  ['push_all']='push all files to repository'
+)
 
 function run() {
   if [[ -f ./.env ]]; then
@@ -19,8 +26,15 @@ function run() {
 function showHelp {
   echo 'usage bash run.sh <command>'
   echo 'available commands:'
-  printf '\t-h, -help, help - show this help\n'
-  find ${SCRIPTS_FOLDER} -type f -printf "\t%f\n" | sed 's/\.sh$//1'
+  echo -e '\t-h, -help, help - ' ${scriptsDescriptions['help']}
+  for scriptName in ${SCRIPTS_FOLDER}/*.sh; do
+    scriptName=$(basename ${scriptName} | sed 's/\.sh$//1')
+    scriptDescription=${scriptsDescriptions[$scriptName]}
+    if [[ ${scriptDescription} = '' ]]; then
+      scriptDescription='no description'
+    fi
+    printf "\t${scriptName} - ${scriptDescription}\n"
+  done
 }
 
 if [[ $1 = '-h' || $1 = 'help' || $1 = '-help' || $1 = '' ]]; then
