@@ -32,24 +32,20 @@ func init() {
   }
 
   usersData = NewUsersDataPlugin(database)
-  execUsersQuery(mock.TurnOnForeignKeys)
+  db.ExecQuery(database, mock.TurnOnForeignKeys)
   db.CreateGroups(database)
   initUsersTable()
 }
 
-func execUsersQuery(q string, args ...interface{}) {
-  db.ExecQuery(database, q, args...)
-}
-
 func dropUsersTable() {
-  execUsersQuery(mock.DropUsersTable)
+  db.ExecQuery(database, mock.DropUsersTable)
 }
 
 func initUsersTable() {
   dropUsersTable()
-  execUsersQuery(mock.CreateUsersTable)
+  db.ExecQuery(database, mock.CreateUsersTable)
   for _, q := range mock.TestingUsersQueries {
-    execUsersQuery(q)
+    db.ExecQuery(database, q)
   }
 }
 

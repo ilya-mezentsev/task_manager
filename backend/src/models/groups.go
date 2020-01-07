@@ -1,6 +1,6 @@
 package models
 
 type Group struct {
-  ID uint
-  Name string
+  ID uint `db:"id"`
+  Name string `db:"name"`
 }

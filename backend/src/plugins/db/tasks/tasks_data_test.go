@@ -33,23 +33,19 @@ func init() {
   }
 
   tasksData = NewTasksDataPlugin(database)
-  execTasksQuery(mock.TurnOnForeignKeys)
+  db.ExecQuery(database, mock.TurnOnForeignKeys)
   db.CreateGroups(database)
 }
 
-func execTasksQuery(q string, args ...interface{}) {
-  db.ExecQuery(database, q, args...)
-}
-
 func dropTasksTable() {
-  execTasksQuery(mock.DropTasksTable)
+  db.ExecQuery(database, mock.DropTasksTable)
 }
 
 func initTasksTable() {
   dropTasksTable()
-  execTasksQuery(mock.CreateTasksTable)
+  db.ExecQuery(database, mock.CreateTasksTable)
   for _, q := range mock.TestingTasksQueries {
-    execTasksQuery(q)
+    db.ExecQuery(database, q)
   }
 }
 
