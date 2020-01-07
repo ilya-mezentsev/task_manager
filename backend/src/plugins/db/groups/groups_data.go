@@ -13,15 +13,15 @@ const (
   GroupNameAlreadyExistsMessage = "UNIQUE constraint failed: groups.name"
 )
 
-type GroupsDataPlugin struct {
+type DataPlugin struct {
   database *sql.DB
 }
 
-func NewGroupsDataPlugin(provider *sql.DB) GroupsDataPlugin {
-  return GroupsDataPlugin{database: provider}
+func NewDataPlugin(provider *sql.DB) DataPlugin {
+  return DataPlugin{database: provider}
 }
 
-func (g GroupsDataPlugin) GetAllGroups() ([]models.Group, error) {
+func (g DataPlugin) GetAllGroups() ([]models.Group, error) {
   groupsRows, err := g.database.Query(GetAllGroupsQuery)
   if err != nil {
     return nil, err
@@ -41,7 +41,7 @@ func (g GroupsDataPlugin) GetAllGroups() ([]models.Group, error) {
   return groups, nil
 }
 
-func (g GroupsDataPlugin) CreateWorkGroup(groupName string) error {
+func (g DataPlugin) CreateWorkGroup(groupName string) error {
   statement, err := g.database.Prepare(CreateGroupQuery)
   if err != nil {
     return err

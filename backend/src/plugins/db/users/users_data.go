@@ -17,15 +17,15 @@ const (
   WGIdNotExists = "FOREIGN KEY constraint failed"
 )
 
-type UsersDataPlugin struct {
+type DataPlugin struct {
   database *sql.DB
 }
 
-func NewUsersDataPlugin(db *sql.DB) UsersDataPlugin {
-  return UsersDataPlugin{database: db}
+func NewDataPlugin(db *sql.DB) DataPlugin {
+  return DataPlugin{database: db}
 }
 
-func (u UsersDataPlugin) GetAllUsers() ([]models.User, error) {
+func (u DataPlugin) GetAllUsers() ([]models.User, error) {
   usersRows, err := u.database.Query(AllUsersQuery)
   if err != nil {
     return nil, err
@@ -45,7 +45,7 @@ func (u UsersDataPlugin) GetAllUsers() ([]models.User, error) {
   return users, nil
 }
 
-func (u UsersDataPlugin) GetUser(userId uint) (models.User, error) {
+func (u DataPlugin) GetUser(userId uint) (models.User, error) {
   var (
     user models.User
     emptyUser models.User
@@ -62,7 +62,7 @@ func (u UsersDataPlugin) GetUser(userId uint) (models.User, error) {
   }
 }
 
-func (u UsersDataPlugin) CreateUser(user models.User) (uint, error) {
+func (u DataPlugin) CreateUser(user models.User) (uint, error) {
   statement, err := u.database.Prepare(CreateUserQuery)
   if err != nil {
     return 0, err
@@ -86,7 +86,7 @@ func (u UsersDataPlugin) CreateUser(user models.User) (uint, error) {
   return uint(lastInsertedId), nil
 }
 
-func (u UsersDataPlugin) getCreatingFieldsSequence(user models.User) []interface{} {
+func (u DataPlugin) getCreatingFieldsSequence(user models.User) []interface{} {
   return []interface{}{
     user.Name,
     user.GroupId,
@@ -95,7 +95,7 @@ func (u UsersDataPlugin) getCreatingFieldsSequence(user models.User) []interface
   }
 }
 
-func (u UsersDataPlugin) DeleteUser(userId uint) error {
+func (u DataPlugin) DeleteUser(userId uint) error {
   statement, err := u.database.Prepare(DeleteUserQuery)
   if err != nil {
     return err

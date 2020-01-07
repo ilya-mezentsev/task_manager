@@ -14,7 +14,7 @@ import (
 var (
   dbFile string
   database *sql.DB
-  usersData UsersDataPlugin
+  usersData DataPlugin
 )
 
 func init() {
@@ -31,7 +31,7 @@ func init() {
     os.Exit(1)
   }
 
-  usersData = NewUsersDataPlugin(database)
+  usersData = NewDataPlugin(database)
   db.ExecQuery(database, mock.TurnOnForeignKeys)
   db.CreateGroups(database)
   initUsersTable()

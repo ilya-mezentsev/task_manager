@@ -11,21 +11,22 @@ const (
   AllTasksQuery = "SELECT * FROM tasks"
   GetTaskById = "SELECT * FROM tasks WHERE id = ?"
   AddTaskQuery = "INSERT INTO tasks VALUES(NULL, ?, ?, ?, ?, ?, ?)"
+  AssignTaskToWorker = "UPDATE tasks SET user_id = ? WHERE id = ?"
   MarkTaskAsCompleteQuery = "UPDATE tasks SET is_complete = 1 WHERE id = ?"
   CommentTaskQuery = "UPDATE tasks SET comment = ? WHERE id = ?"
   // tasks table has only work_id foreign key
   WGIdNotExistsMessage = "FOREIGN KEY constraint failed"
 )
 
-type TasksDataPlugin struct {
+type DataPlugin struct {
   database *sql.DB
 }
 
-func NewTasksDataPlugin(driver *sql.DB) TasksDataPlugin {
-  return TasksDataPlugin{database: driver}
+func NewDataPlugin(driver *sql.DB) DataPlugin {
+  return DataPlugin{database: driver}
 }
 
-func (t TasksDataPlugin) GetAllTasks() ([]models.Task, error) {
+func (t DataPlugin) GetAllTasks() ([]models.Task, error) {
   tasksRows, err := t.database.Query(AllTasksQuery)
   if err != nil {
     return nil, err
@@ -47,7 +48,7 @@ func (t TasksDataPlugin) GetAllTasks() ([]models.Task, error) {
   return tasks, nil
 }
 
-func (t TasksDataPlugin) CreateTasks(tasks []models.Task) error {
+func (t DataPlugin) CreateTasks(tasks []models.Task) error {
   tx, err := t.database.Begin()
   if err != nil {
     return err
@@ -66,7 +67,7 @@ func (t TasksDataPlugin) CreateTasks(tasks []models.Task) error {
   return tx.Commit()
 }
 
-func (t TasksDataPlugin) getCreatingFieldsSequence(task models.Task) []interface{} {
+func (t DataPlugin) getCreatingFieldsSequence(task models.Task) []interface{} {
   return []interface{}{
     task.Title,
     task.Description,
@@ -77,7 +78,7 @@ func (t TasksDataPlugin) getCreatingFieldsSequence(task models.Task) []interface
   }
 }
 
-func (t TasksDataPlugin) parseDBError(err error) error {
+func (t DataPlugin) parseDBError(err error) error {
   switch err.Error() {
   case WGIdNotExistsMessage:
     return processing.WorkGroupNotExists
@@ -86,21 +87,25 @@ func (t TasksDataPlugin) parseDBError(err error) error {
   }
 }
 
-func (t TasksDataPlugin) assignRollbackErrorIfExists(err *error, rollbackError error) {
+func (t DataPlugin) assignRollbackErrorIfExists(err *error, rollbackError error) {
   if rollbackError != nil {
     *err = rollbackError
   }
 }
 
-func (t TasksDataPlugin) MarkTaskAsComplete(taskId uint) error {
+func (t DataPlugin) AssignTaskToWorker(taskId, workerId uint) error {
+  return t.execUpdating(AssignTaskToWorker, workerId, taskId)
+}
+
+func (t DataPlugin) MarkTaskAsComplete(taskId uint) error {
   return t.execUpdating(MarkTaskAsCompleteQuery, taskId)
 }
 
-func (t TasksDataPlugin) CommentTask(taskId uint, comment string) error {
+func (t DataPlugin) CommentTask(taskId uint, comment string) error {
   return t.execUpdating(CommentTaskQuery, comment, taskId)
 }
 
-func (t TasksDataPlugin) execUpdating(query string, args ...interface{}) error {
+func (t DataPlugin) execUpdating(query string, args ...interface{}) error {
   statement, err := t.database.Prepare(query)
   if err != nil {
     return err

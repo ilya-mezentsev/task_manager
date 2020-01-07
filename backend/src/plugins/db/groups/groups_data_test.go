@@ -14,7 +14,7 @@ import (
 var (
   dbFile string
   database *sql.DB
-  groupsData GroupsDataPlugin
+  groupsData DataPlugin
 )
 
 func init() {
@@ -31,7 +31,7 @@ func init() {
     os.Exit(1)
   }
 
-  groupsData = NewGroupsDataPlugin(database)
+  groupsData = NewDataPlugin(database)
   db.ExecQuery(database, mock.TurnOnForeignKeys)
 }
 

@@ -31,6 +31,10 @@ func (a Admin) CreateWorkGroup(groupName string) error {
 }
 
 func (a Admin) AssignTasksToWorkGroup(groupId uint, tasks []models.Task) error {
+  for _, task := range tasks {
+    task.GroupId = groupId
+  }
+
   if err := a.dataProvider.AssignTasksToGroup(groupId, tasks); err != nil {
     return users.ParseError("AssignTasksToWorkGroup", err)
   }

@@ -14,8 +14,8 @@ import (
 
 var (
   dbFile string
-  database  *sql.DB
-  tasksData TasksDataPlugin
+  database *sql.DB
+  tasksData DataPlugin
 )
 
 func init() {
@@ -32,7 +32,7 @@ func init() {
     os.Exit(1)
   }
 
-  tasksData = NewTasksDataPlugin(database)
+  tasksData = NewDataPlugin(database)
   db.ExecQuery(database, mock.TurnOnForeignKeys)
   db.CreateGroups(database)
 }
