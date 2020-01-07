@@ -45,6 +45,7 @@ fi
 
 scriptName="$1.sh"
 if [[ -f ${SCRIPTS_FOLDER}/${scriptName} ]]; then
+  shift
   run ${scriptName} $*
 else
   echo file ${SCRIPTS_FOLDER}/${scriptName} not found
