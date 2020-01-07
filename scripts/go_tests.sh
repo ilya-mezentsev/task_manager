@@ -30,7 +30,7 @@ setFoldersWithTests
 for dir in "${folders[@]}"
 do
   reportFileName=$(echo -n ${dir} | md5sum | awk '{print $1}')
-  cd ${GOPATH}/src/${dir} && go test -coverprofile=${REPORT_FOLDER}/${reportFileName}.out
+  cd ${GOPATH}/src/${dir} && TESTING_MODE=1 go test -coverprofile=${REPORT_FOLDER}/${reportFileName}.out
   if [[ $1 = html ]]; then # open reports in browser
     go tool cover -html=${REPORT_FOLDER}/${reportFileName}.out
   fi
