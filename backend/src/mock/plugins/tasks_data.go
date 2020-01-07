@@ -3,6 +3,7 @@ package mock
 import "models"
 
 const (
+  TestingComment = "hello world"
   DropTasksTable = "drop table if exists tasks;"
   CreateTasksTable = `
   create table if not exists tasks(

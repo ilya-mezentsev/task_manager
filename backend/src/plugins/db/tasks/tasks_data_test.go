@@ -53,6 +53,22 @@ func initTasksTable() {
   }
 }
 
+func getTaskById(taskId uint) models.Task {
+  var task models.Task
+
+  taskRow := tasksDatabase.QueryRow(GetTaskById, taskId)
+  err := taskRow.Scan(
+    &task.ID, &task.Title, &task.Description, &task.GroupId,
+    &task.UserId, &task.IsComplete, &task.Comment,
+  )
+  if err != nil {
+    fmt.Println("error while getting task by id:", err)
+    os.Exit(1)
+  }
+
+  return task
+}
+
 func TestGetAllTasksSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
@@ -142,6 +158,82 @@ func TestCreateTasksErrorGroupIdNotExists(t *testing.T) {
   tasks, _ := tasksData.GetAllTasks()
   Assert(mock.TasksListEqual(mock.TestingTasks, tasks), func() {
     t.Log(GetExpectationString(mock.TestingTasks, tasks))
+    t.Fail()
+  })
+}
+
+func TestMarkTaskAsCompleteSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.MarkTaskAsComplete(1)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+
+  task := getTaskById(1)
+  Assert(task.IsComplete, func() {
+    t.Log("task should be completed")
+    t.Fail()
+  })
+}
+
+func TestMarkTaskAsCompleteErrorTableNotExists(t *testing.T) {
+  dropTasksTable()
+
+  err := tasksData.MarkTaskAsComplete(1)
+  Assert(err != nil, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+}
+
+func TestMarkTaskAsCompleteErrorTaskIdNotExists(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.MarkTaskAsComplete(11)
+  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+    t.Fail()
+  })
+}
+
+func TestCommentTaskSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.CommentTask(1, mock.TestingComment)
+  Assert(err == nil, func() {
+    t.Log("should not ber error:", err)
+    t.Fail()
+  })
+
+  task := getTaskById(1)
+  Assert(task.Comment == mock.TestingComment, func() {
+    t.Log(GetExpectationString(mock.TestingComment, task.Comment))
+    t.Fail()
+  })
+}
+
+func TestCommentTaskErrorTableNotExists(t *testing.T) {
+  dropTasksTable()
+
+  err := tasksData.CommentTask(1, "")
+  Assert(err != nil, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+}
+
+func TestCommentTaskTaskIdNotExists(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.CommentTask(11, "")
+  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
     t.Fail()
   })
 }

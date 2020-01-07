@@ -11,9 +11,10 @@ const (
   AllTasksQuery = "SELECT * FROM tasks"
   GetTaskById = "SELECT * FROM tasks WHERE id = ?"
   AddTaskQuery = "INSERT INTO tasks VALUES(NULL, ?, ?, ?, ?, ?, ?)"
+  MarkTaskAsCompleteQuery = "UPDATE tasks SET is_complete = 1 WHERE id = ?"
+  CommentTaskQuery = "UPDATE tasks SET comment = ? WHERE id = ?"
   // tasks table has only work_id foreign key
   WGIdNotExistsMessage = "FOREIGN KEY constraint failed"
-
 )
 
 type TasksDataPlugin struct {
@@ -44,27 +45,6 @@ func (t TasksDataPlugin) GetAllTasks() ([]models.Task, error) {
   }
 
   return tasks, nil
-}
-
-func (t TasksDataPlugin) GetTaskById(taskId uint) (models.Task, error) {
-  var (
-    task models.Task
-    emptyTask models.Task
-  )
-
-  taskRow := t.database.QueryRow(GetTaskById, taskId)
-  err := taskRow.Scan(
-    &task.ID, &task.Title, &task.Description, &task.GroupId,
-    &task.UserId, &task.IsComplete, &task.Comment,
-  )
-  switch err {
-  case nil: // no errors, it's ok
-    return task, nil
-  case sql.ErrNoRows:
-    return emptyTask, processing.TaskIdNotExists
-  default:
-    return emptyTask, err
-  }
 }
 
 func (t TasksDataPlugin) CreateTasks(tasks []models.Task) error {
@@ -113,9 +93,27 @@ func (t TasksDataPlugin) assignRollbackErrorIfExists(err *error, rollbackError e
 }
 
 func (t TasksDataPlugin) MarkTaskAsComplete(taskId uint) error {
-  return nil
+  return t.execUpdating(MarkTaskAsCompleteQuery, taskId)
 }
 
 func (t TasksDataPlugin) CommentTask(taskId uint, comment string) error {
+  return t.execUpdating(CommentTaskQuery, comment, taskId)
+}
+
+func (t TasksDataPlugin) execUpdating(query string, args ...interface{}) error {
+  statement, err := t.database.Prepare(query)
+  if err != nil {
+    return err
+  }
+
+  res, err := statement.Exec(args...)
+  if err != nil {
+    return err
+  }
+
+  // ignore error here coz sqlite does not return it
+  if affectedRows, _ := res.RowsAffected(); affectedRows == 0 {
+    return processing.TaskIdNotExists
+  }
   return nil
 }
