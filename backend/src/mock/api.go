@@ -11,6 +11,16 @@ type (
     Data []models.Group `json:"data"`
     ErrorDetail string `json:"error_detail"`
   }
+  CreateGroupResponse struct {
+    Status string `json:"status"`
+    Data interface{} `json:"data"`
+    ErrorDetail string `json:"error_detail"`
+  }
+)
+
+const (
+  CreateGroupRequestData = `{"group_name": "group4"}`
+  CreateGroupRequestDataAlreadyExists = `{"group_name": "group1"}`
 )
 
 var (

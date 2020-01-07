@@ -36,7 +36,6 @@ func init() {
   }
 
   InitAdminRequestHandler(plugins.NewDBProxy(database))
-  initTestTables()
 }
 
 func dropTestTables() {
@@ -79,12 +78,30 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
   return resp.Body
 }
 
+func assertStatusesEqual(t *testing.T, actualStatus, expectedStatus string) {
+  Assert(actualStatus == expectedStatus, func() {
+    t.Log(GetExpectationString(expectedStatus, actualStatus))
+    t.Fail()
+  })
+}
+
+func assertStatusIsOk(t *testing.T, responseStatus string) {
+  assertStatusesEqual(t, responseStatus, "ok")
+}
+
+func assertStatusIsError(t *testing.T, responseStatus string) {
+  assertStatusesEqual(t, responseStatus, "error")
+}
+
 func TestMain(m *testing.M) {
   log.SetOutput(ioutil.Discard)
   os.Exit(m.Run())
 }
 
 func TestGetAllGroupsSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
   var response mock.AllGroupsResponse
   responseBody := makeRequest(t, http.MethodGet, "admin/groups", "")
   err := json.NewDecoder(responseBody).Decode(&response)
@@ -93,12 +110,47 @@ func TestGetAllGroupsSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(response.Status == "ok", func() {
-    t.Log(GetExpectationString("ok", response.Status))
-    t.Fail()
-  })
+  assertStatusIsOk(t, response.Status)
   Assert(mock2.GroupListEqual(response.Data, mock2.TestingGroups), func() {
     t.Log(GetExpectationString(mock2.TestingGroups, response.Data))
+    t.Fail()
+  })
+}
+
+func TestCreateGroupSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.CreateGroupResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/group", mock.CreateGroupRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  Assert(response.Data == nil, func() {
+    t.Log(GetExpectationString(nil, response.Data))
+    t.Fail()
+  })
+}
+
+func TestCreateGroupErrorGroupAlreadyExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.CreateGroupResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/group", mock.CreateGroupRequestDataAlreadyExists)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  Assert(response.ErrorDetail == mock.UnableToCreateWgAlreadyExists.Error(), func() {
+    t.Log(GetExpectationString(mock.UnableToCreateWgAlreadyExists.Error(), response.ErrorDetail))
     t.Fail()
   })
 }
