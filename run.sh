@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPTS_FOLDER=$(pwd)/scripts
+
 function run() {
   if [[ -f ./.env ]]; then
     set -o allexport
@@ -7,21 +9,29 @@ function run() {
     set +o allexport
     scriptName=$1
     shift
-    bash ${PROJECT_ROOT}/scripts/${scriptName} "$(echo $*)"
+    bash ${SCRIPTS_FOLDER}/${scriptName} "$(echo $*)"
+  else
+    echo file $(pwd)/.env not found
+    exit 1
   fi
 }
 
 function showHelp {
   echo 'usage bash run.sh <command>'
   echo 'available commands:'
-  echo -e '\t help (show this help)'
-  echo -e '\t push_all (push all files to git)'
-  echo -e '\t go_tests (run tests for golang)'
+  printf '\t-h, -help, help - show this help\n'
+  find ${SCRIPTS_FOLDER} -type f -printf "\t%f\n" | sed 's/\.sh$//1'
 }
 
-if [[ $1 = '-h' || $1 = 'help' || $1 = '-help' ]]; then
+if [[ $1 = '-h' || $1 = 'help' || $1 = '-help' || $1 = '' ]]; then
   showHelp
   exit 0
 fi
 
-run "$1.sh" $*
+scriptName="$1.sh"
+if [[ -f ${SCRIPTS_FOLDER}/${scriptName} ]]; then
+  run ${scriptName} $*
+else
+  echo file ${SCRIPTS_FOLDER}/${scriptName} not found
+  exit 1
+fi
