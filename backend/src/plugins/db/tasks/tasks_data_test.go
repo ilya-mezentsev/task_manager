@@ -233,3 +233,40 @@ func TestCommentTaskTaskIdNotExists(t *testing.T) {
     t.Fail()
   })
 }
+
+func TestAssignTaskToWorkerSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.AssignTaskToWorker(1, 1)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  task := getTaskById(1)
+  Assert(task.UserId == 1, func() {
+    t.Log(GetExpectationString(1, task.ID))
+    t.Fail()
+  })
+}
+
+func TestAssignTaskToWorkerErrorTableNotExists(t *testing.T) {
+  dropTasksTable()
+
+  err := tasksData.AssignTaskToWorker(1, 1)
+  Assert(err != nil, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+}
+
+func TestAssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  err := tasksData.AssignTaskToWorker(11, 1)
+  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+    t.Fail()
+  })
+}
