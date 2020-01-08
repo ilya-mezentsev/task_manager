@@ -1,6 +1,7 @@
 package api
 
 import (
+  "api/helpers"
   "interfaces"
   "models"
   "net/http"
@@ -11,10 +12,12 @@ var adminRequestHandler AdminRequestHandler
 
 type AdminRequestHandler struct {
   admin Admin
+  checker helpers.InputChecker
 }
 
 func InitAdminRequestHandler(adminDataPlugin interfaces.AdminData) {
   adminRequestHandler.admin = NewAdmin(adminDataPlugin)
+  adminRequestHandler.checker = helpers.NewInputChecker()
   bindAdminRoutesToHandlers()
 }
 
@@ -50,6 +53,10 @@ func (handler AdminRequestHandler) CreateGroup(w http.ResponseWriter, r *http.Re
 
   var createGroupReq models.CreateWorkGroupRequest
   decodeRequestBody(r, &createGroupReq)
+
+  if !handler.checker.IsStringCorrect(createGroupReq.GroupName) {
+    panic(getIncorrectGroupNameError(createGroupReq.GroupName))
+  }
 
   err := handler.admin.CreateWorkGroup(createGroupReq.GroupName)
   if err != nil {

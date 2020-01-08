@@ -6,6 +6,10 @@ import (
 )
 
 type (
+  BadRequestResponse struct {
+    Status string `json:"status"`
+    ErrorDetail string `json:"error_detail"`
+  }
   AllGroupsResponse struct {
     Status string `json:"status"`
     Data []models.Group `json:"data"`
@@ -16,11 +20,20 @@ type (
     Data interface{} `json:"data"`
     ErrorDetail string `json:"error_detail"`
   }
+  EmptyDataResponse struct {
+    Status string `json:"status"`
+    Data interface{} `json:"data"`
+  }
 )
 
 const (
+  BadRequestData = ``
   CreateGroupRequestData = `{"group_name": "group4"}`
   CreateGroupRequestDataAlreadyExists = `{"group_name": "group1"}`
+  CreateGroupRequestDataEmptyName = `{"group_name": ""}`
+
+  DeleteGroupRequestData = `{"group_id": 1}`
+  DeleteGroupRequestDataIdNotExists = `{"group_id": 4}`
 )
 
 var (

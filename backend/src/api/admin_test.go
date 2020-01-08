@@ -15,11 +15,15 @@ import (
   "os"
   "plugins"
   "plugins/db"
+  "plugins/db/groups"
   "testing"
   . "utils"
 )
 
-var database *sql.DB
+var (
+  database *sql.DB
+  groupsData groups.DataPlugin
+)
 
 func init() {
   dbFile := os.Getenv("TEST_DB_FILE")
@@ -36,6 +40,7 @@ func init() {
   }
 
   InitAdminRequestHandler(plugins.NewDBProxy(database))
+  groupsData = groups.NewDataPlugin(database)
 }
 
 func dropTestTables() {
@@ -98,6 +103,22 @@ func TestMain(m *testing.M) {
   os.Exit(m.Run())
 }
 
+func TestRequestWithBadData(t *testing.T) {
+  var response mock.AllGroupsResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/group", mock.BadRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  Assert(response.ErrorDetail == CannotDecodeRequestBody.Error(), func() {
+    t.Log(GetExpectationString(CannotDecodeRequestBody.Error(), response.ErrorDetail))
+    t.Fail()
+  })
+}
+
 func TestGetAllGroupsSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
@@ -136,6 +157,25 @@ func TestCreateGroupSuccess(t *testing.T) {
   })
 }
 
+func TestCreateGroupErrorIncorrectName(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.CreateGroupResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/group", mock.CreateGroupRequestDataEmptyName)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  Assert(response.ErrorDetail == getIncorrectGroupNameError("").Error(), func() {
+    t.Log(GetExpectationString(getIncorrectGroupNameError("").Error(), response.ErrorDetail))
+    t.Fail()
+  })
+}
+
 func TestCreateGroupErrorGroupAlreadyExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
@@ -151,6 +191,50 @@ func TestCreateGroupErrorGroupAlreadyExists(t *testing.T) {
   assertStatusIsError(t, response.Status)
   Assert(response.ErrorDetail == mock.UnableToCreateWgAlreadyExists.Error(), func() {
     t.Log(GetExpectationString(mock.UnableToCreateWgAlreadyExists.Error(), response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestDeleteGroupSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.EmptyDataResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/group", mock.DeleteGroupRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  Assert(response.Data == nil, func() {
+    t.Log(GetExpectationString(nil, response.Data))
+    t.Fail()
+  })
+  actualGroups, _ := groupsData.GetAllGroups()
+  expectedGroups := mock2.TestingGroups[1:]
+  Assert(len(actualGroups) == len(expectedGroups), func() {
+    t.Log(GetExpectationString(expectedGroups, actualGroups))
+    t.Fail()
+  })
+}
+
+func TestDeleteGroupErrorIdNotExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.BadRequestResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/group", mock.DeleteGroupRequestDataIdNotExists)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  Assert(response.ErrorDetail == mock.UnableToDeleteWgIdNotExists.Error(), func() {
+    t.Log(GetExpectationString(mock.UnableToDeleteWgIdNotExists.Error(), response.ErrorDetail))
     t.Fail()
   })
 }
