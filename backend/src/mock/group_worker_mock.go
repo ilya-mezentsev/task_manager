@@ -2,7 +2,7 @@ package mock
 
 import (
   "errors"
-  "processing"
+  "plugins/db"
 )
 
 const (
@@ -27,7 +27,7 @@ type GroupWorkerDataMock struct {
 
 func (gwd GroupWorkerDataMock) AddCommentToTask(taskId uint, comment string) error {
   if taskId == NotExistsTaskId {
-    return processing.TaskIdNotExists
+    return db.TaskIdNotExists
   } else if taskId == CommentingErrorTaskId {
     return commentingError
   }
@@ -43,7 +43,7 @@ func (gwd GroupWorkerDataMock) IsTaskCommented(taskId uint) bool {
 
 func (gwd GroupWorkerDataMock) MarkTaskAsCompleted(taskId uint) error {
   if taskId == NotExistsTaskId {
-    return processing.TaskIdNotExists
+    return db.TaskIdNotExists
   } else if taskId == CompletingErrorTaskId {
     return markingError
   }

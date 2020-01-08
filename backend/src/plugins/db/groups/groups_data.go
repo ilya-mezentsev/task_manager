@@ -4,7 +4,7 @@ import (
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
   "models"
-  "processing"
+  "plugins/db"
 )
 
 const (
@@ -52,7 +52,7 @@ func (g DataPlugin) CreateWorkGroup(groupName string) error {
   if err != nil {
     switch err.Error() {
     case GroupNameAlreadyExistsMessage:
-      return processing.WorkGroupAlreadyExists
+      return db.WorkGroupAlreadyExists
     default:
       return err
     }
@@ -74,7 +74,7 @@ func (g DataPlugin) DeleteWorkGroup(groupId uint) error {
 
   // we ignore error here coz sqlite driver does not return it
   if rowsAffected, _ := res.RowsAffected(); rowsAffected == 0 {
-    return processing.WorkGroupNotExists
+    return db.WorkGroupNotExists
   }
 
   return nil

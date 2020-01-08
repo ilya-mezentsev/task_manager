@@ -3,7 +3,7 @@ package mock
 import (
   "errors"
   "models"
-  "processing"
+  "plugins/db"
 )
 
 const (
@@ -23,7 +23,7 @@ type GroupLeadDataMock struct {
 
 func (gld GroupLeadDataMock) AssignTaskToWorker(workerId uint, task models.Task) error {
   if workerId == WorkerIdNotExists {
-    return processing.WorkerIdNotExists
+    return db.WorkerIdNotExists
   } else if workerId == WorkerIdAssigningError {
     return assigningError
   }

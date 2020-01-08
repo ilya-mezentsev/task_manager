@@ -6,7 +6,6 @@ import (
   mock "mock/plugins"
   "os"
   "plugins/db"
-  "processing"
   "testing"
   . "utils"
 )
@@ -109,8 +108,8 @@ func TestCreateWorkGroupErrorGroupNameAlreadyExists(t *testing.T) {
   defer dropGroupsTable()
 
   err := groupsData.CreateWorkGroup(mock.ExistsGroupName)
-  AssertErrorsEqual(err, processing.WorkGroupAlreadyExists, func() {
-    t.Log(GetExpectationString(processing.WorkGroupAlreadyExists, err))
+  AssertErrorsEqual(err, db.WorkGroupAlreadyExists, func() {
+    t.Log(GetExpectationString(db.WorkGroupAlreadyExists, err))
     t.Fail()
   })
   groups, _ := groupsData.GetAllGroups()
@@ -152,8 +151,8 @@ func TestDeleteWorkGroupErrorIdNotExists(t *testing.T) {
   defer dropGroupsTable()
 
   err := groupsData.DeleteWorkGroup(11)
-  AssertErrorsEqual(err, processing.WorkGroupNotExists, func() {
-    t.Log(GetExpectationString(processing.WorkGroupNotExists, err))
+  AssertErrorsEqual(err, db.WorkGroupNotExists, func() {
+    t.Log(GetExpectationString(db.WorkGroupNotExists, err))
     t.Fail()
   })
 }

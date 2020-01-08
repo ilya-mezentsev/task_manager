@@ -4,7 +4,7 @@ import (
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
   "models"
-  "processing"
+  "plugins/db"
 )
 
 const (
@@ -56,7 +56,7 @@ func (u DataPlugin) GetUser(userId uint) (models.User, error) {
   case nil: // no errors, it's ok
     return user, nil
   case sql.ErrNoRows: // we need to wrap this case here
-    return emptyUser, processing.WorkerIdNotExists
+    return emptyUser, db.WorkerIdNotExists
   default:
     return emptyUser, err
   }
@@ -72,9 +72,9 @@ func (u DataPlugin) CreateUser(user models.User) (uint, error) {
   if err != nil {
     switch err.Error() {
     case UserNameAlreadyExistsMessage:
-      return 0, processing.UserNameAlreadyExists
+      return 0, db.UserNameAlreadyExists
     case WGIdNotExists:
-      return 0, processing.WorkGroupNotExists
+      return 0, db.WorkGroupNotExists
     default:
       return 0, err
     }
@@ -107,7 +107,7 @@ func (u DataPlugin) DeleteUser(userId uint) error {
   }
 
   if rowsAffected, _ := res.RowsAffected(); rowsAffected == 0 {
-    return processing.UserIdNotExists
+    return db.UserIdNotExists
   }
 
   return nil

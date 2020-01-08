@@ -7,7 +7,6 @@ import (
   "models"
   "os"
   "plugins/db"
-  "processing"
   "testing"
   . "utils"
 )
@@ -146,8 +145,8 @@ func TestCreateTasksErrorGroupIdNotExists(t *testing.T) {
   defer dropTasksTable()
 
   err := tasksData.CreateTasks([]models.Task{mock.TaskWithNotExistsGroupId})
-  AssertErrorsEqual(err, processing.WorkGroupNotExists, func() {
-    t.Log(GetExpectationString(processing.WorkGroupNotExists, err))
+  AssertErrorsEqual(err, db.WorkGroupNotExists, func() {
+    t.Log(GetExpectationString(db.WorkGroupNotExists, err))
     t.Fail()
   })
 
@@ -190,8 +189,8 @@ func TestMarkTaskAsCompleteErrorTaskIdNotExists(t *testing.T) {
   defer dropTasksTable()
 
   err := tasksData.MarkTaskAsComplete(11)
-  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
-    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+  AssertErrorsEqual(err, db.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(db.TaskIdNotExists, err))
     t.Fail()
   })
 }
@@ -228,8 +227,8 @@ func TestCommentTaskTaskIdNotExists(t *testing.T) {
   defer dropTasksTable()
 
   err := tasksData.CommentTask(11, "")
-  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
-    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+  AssertErrorsEqual(err, db.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(db.TaskIdNotExists, err))
     t.Fail()
   })
 }
@@ -265,8 +264,8 @@ func TestAssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
   defer dropTasksTable()
 
   err := tasksData.AssignTaskToWorker(11, 1)
-  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
-    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+  AssertErrorsEqual(err, db.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(db.TaskIdNotExists, err))
     t.Fail()
   })
 }
@@ -303,8 +302,8 @@ func TestDeleteTaskErrorIdNotExists(t *testing.T) {
   defer dropTasksTable()
 
   err := tasksData.DeleteTask(11)
-  AssertErrorsEqual(err, processing.TaskIdNotExists, func() {
-    t.Log(GetExpectationString(processing.TaskIdNotExists, err))
+  AssertErrorsEqual(err, db.TaskIdNotExists, func() {
+    t.Log(GetExpectationString(db.TaskIdNotExists, err))
     t.Fail()
   })
 }

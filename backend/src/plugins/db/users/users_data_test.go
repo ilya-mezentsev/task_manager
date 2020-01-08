@@ -6,7 +6,6 @@ import (
   mock "mock/plugins"
   "os"
   "plugins/db"
-  "processing"
   "testing"
   . "utils"
 )
@@ -100,8 +99,8 @@ func TestGetUserErrorIdNotExists(t *testing.T) {
   defer dropUsersTable()
 
   user, err := usersData.GetUser(11)
-  Assert(err == processing.WorkerIdNotExists, func() {
-    t.Log(GetExpectationString(processing.WorkerIdNotExists, err))
+  Assert(err == db.WorkerIdNotExists, func() {
+    t.Log(GetExpectationString(db.WorkerIdNotExists, err))
     t.Fail()
   })
   Assert(user == mock.EmptyUser, func() {
@@ -159,7 +158,7 @@ func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
   defer dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUserWithExistsName)
-  Assert(err == processing.UserNameAlreadyExists, func() {
+  Assert(err == db.UserNameAlreadyExists, func() {
     t.Log("should be error")
     t.Fail()
   })
@@ -174,7 +173,7 @@ func TestCreateUserErrorGroupNotExists(t *testing.T) {
   defer dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUserWithNotExistsGroupId)
-  Assert(err == processing.WorkGroupNotExists, func() {
+  Assert(err == db.WorkGroupNotExists, func() {
     t.Log("should be error")
     t.Fail()
   })
@@ -211,7 +210,7 @@ func TestDeleteUserErrorNotExists(t *testing.T) {
   defer dropUsersTable()
 
   err := usersData.DeleteUser(11)
-  AssertErrorsEqual(err, processing.UserIdNotExists, func() {
+  AssertErrorsEqual(err, db.UserIdNotExists, func() {
     t.Log("should be error")
     t.Fail()
   })

@@ -4,7 +4,7 @@ import (
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
   "models"
-  "processing"
+  "plugins/db"
 )
 
 const (
@@ -82,7 +82,7 @@ func (t DataPlugin) getCreatingFieldsSequence(task models.Task) []interface{} {
 func (t DataPlugin) parseDBError(err error) error {
   switch err.Error() {
   case WGIdNotExistsMessage:
-    return processing.WorkGroupNotExists
+    return db.WorkGroupNotExists
   default:
     return err
   }
@@ -107,7 +107,7 @@ func (t DataPlugin) DeleteTask(taskId uint) error {
 
   // we ignore error here coz sqlite driver does not return it
   if rowsAffected, _ := res.RowsAffected(); rowsAffected == 0 {
-    return processing.TaskIdNotExists
+    return db.TaskIdNotExists
   }
 
   return nil
@@ -138,7 +138,7 @@ func (t DataPlugin) execUpdating(query string, args ...interface{}) error {
 
   // ignore error here coz sqlite does not return it
   if affectedRows, _ := res.RowsAffected(); affectedRows == 0 {
-    return processing.TaskIdNotExists
+    return db.TaskIdNotExists
   }
   return nil
 }

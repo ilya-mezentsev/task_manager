@@ -2,7 +2,7 @@ package users
 
 import (
   "fmt"
-  "processing"
+  "plugins/db"
 )
 
 type ErrorParsingData struct {
@@ -18,13 +18,13 @@ var parsingData = map[string]ErrorParsingData{
   "CreateUser": {
     errorTemplate: "unable to create user: %s",
     errorsDetail: map[error]string{
-      processing.UserNameAlreadyExists: "user name already exists",
+      db.UserNameAlreadyExists: "user name already exists",
     },
   },
   "DeleteUser": {
     errorTemplate: "unable to delete user: %s",
     errorsDetail: map[error]string{
-      processing.UserIdNotExists: "user id not exists",
+      db.UserIdNotExists: "user id not exists",
     },
   },
   "GetAllGroups": {
@@ -33,13 +33,13 @@ var parsingData = map[string]ErrorParsingData{
   "CreateWorkGroup": {
     errorTemplate: "unable to create work group: %s",
     errorsDetail: map[error]string{
-      processing.WorkGroupAlreadyExists: "work group already exists",
+      db.WorkGroupAlreadyExists: "work group already exists",
     },
   },
   "DeleteWorkGroup": {
     errorTemplate: "unable to delete work group: %s",
     errorsDetail: map[error]string{
-      processing.WorkGroupNotExists: "work group not exists",
+      db.WorkGroupNotExists: "work group not exists",
     },
   },
   "GetAllTasks": {
@@ -48,13 +48,13 @@ var parsingData = map[string]ErrorParsingData{
   "AssignTasksToWorkGroup": {
     errorTemplate: "unable to assign tasks: %s",
     errorsDetail: map[error]string{
-      processing.WorkGroupNotExists: "work group not exists",
+      db.WorkGroupNotExists: "work group not exists",
     },
   },
   "DeleteTask": {
     errorTemplate: "unable to delete task: %s",
     errorsDetail: map[error]string{
-      processing.TaskIdNotExists: "task id not exists",
+      db.TaskIdNotExists: "task id not exists",
     },
   },
 
@@ -62,7 +62,7 @@ var parsingData = map[string]ErrorParsingData{
   "AssignTaskToWorker": {
     errorTemplate: "unable to assign task: %s",
     errorsDetail: map[error]string{
-      processing.WorkerIdNotExists: "worker id not exists",
+      db.WorkerIdNotExists: "worker id not exists",
     },
   },
 
@@ -70,13 +70,13 @@ var parsingData = map[string]ErrorParsingData{
   "AddCommentToTask": {
     errorTemplate: "unable to comment task: %s",
     errorsDetail: map[error]string{
-      processing.TaskIdNotExists: "id not exists",
+      db.TaskIdNotExists: "id not exists",
     },
   },
   "MarkTaskAsCompleted": {
     errorTemplate: "unable to complete task: %s",
     errorsDetail: map[error]string{
-      processing.TaskIdNotExists: "id not exists",
+      db.TaskIdNotExists: "id not exists",
     },
   },
 }

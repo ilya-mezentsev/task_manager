@@ -3,7 +3,7 @@ package mock
 import (
   "errors"
   "models"
-  "processing"
+  "plugins/db"
 )
 
 const (
@@ -79,7 +79,7 @@ func (m *AdminDataMock) GetAllGroups() ([]models.Group, error) {
 
 func (m *AdminDataMock) CreateWorkGroup(groupName string) error {
   if groupName == WorkGroupAlreadyExists {
-    return processing.WorkGroupAlreadyExists
+    return db.WorkGroupAlreadyExists
   } else if groupName == WorkGroupCreationError {
     return errors.New(WorkGroupCreationError)
   }
@@ -101,7 +101,7 @@ func (m AdminDataMock) HasWorkGroup(groupName string) bool {
 
 func (m *AdminDataMock) DeleteWorkGroup(groupId uint) error {
   if groupId == WgIdNotExists {
-    return processing.WorkGroupNotExists
+    return db.WorkGroupNotExists
   }
 
   return nil
@@ -117,7 +117,7 @@ func (m *AdminDataMock) GetAllUsers() ([]models.User, error) {
 
 func (m *AdminDataMock) CreateUser(user models.User) error {
   if user.Name == UserNameAlreadyExists {
-    return processing.UserNameAlreadyExists
+    return db.UserNameAlreadyExists
   } else if user.Name == UserNameCreationError {
     return errors.New(UserNameCreationError)
   }
@@ -138,7 +138,7 @@ func (m AdminDataMock) HasUser(user models.User) bool {
 
 func (m *AdminDataMock) DeleteUser(userId uint) error {
   if userId == UserIdNotExists {
-    return processing.UserIdNotExists
+    return db.UserIdNotExists
   } else if userId == UserIdDeletingError {
     return errors.New(UserIdDeletingErrorMessage)
   }
@@ -170,7 +170,7 @@ func (m *AdminDataMock) GetAllTasks() ([]models.Task, error) {
 
 func (m *AdminDataMock) AssignTasksToGroup(groupId uint, tasks []models.Task) error {
   if groupId == WgIdNotExists {
-    return processing.WorkGroupNotExists
+    return db.WorkGroupNotExists
   } else if groupId == WgIdAssigningError {
     return errors.New(WorkGroupAssigningError)
   }
@@ -196,7 +196,7 @@ func (m AdminDataMock) TasksAssigned(groupId uint, tasks []models.Task) bool {
 
 func (m *AdminDataMock) DeleteTask(taskId uint) error {
   if taskId == TaskIdNotExists {
-    return processing.TaskIdNotExists
+    return db.TaskIdNotExists
   } else if taskId == TaskIdDeletingError {
     return errors.New(TaskIdDeletingErrorMessage)
   }
