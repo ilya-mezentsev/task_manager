@@ -82,8 +82,8 @@ func (a Admin) GetAllTasks() ([]models.Task, error) {
 }
 
 func (a Admin) AssignTasksToWorkGroup(groupId uint, tasks []models.Task) error {
-  for _, task := range tasks {
-    task.GroupId = groupId
+  for taskIndex := range tasks {
+    tasks[taskIndex].GroupId = groupId
   }
 
   if err := a.dataProvider.AssignTasksToGroup(groupId, tasks); err != nil {

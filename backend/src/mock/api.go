@@ -53,6 +53,16 @@ const (
   DeleteUserRequestData = `{"user_id": 1}`
   DeleteUserRequestDataIncorrectId = `{"user_id": 18446744073709551615}`
   DeleteUserRequestDataNotExists = `{"user_id": 4}`
+
+  AssignTasksToWGRequestData = `{"group_id": 1, "tasks": [{"title": "some_title", "description": "hello world"}]}`
+  AssignTasksToWGRequestDataIncorrectGroupId = `{"group_id": 18446744073709551615, "tasks": []}`
+  AssignTasksToWGRequestDataIncorrectTaskTitle = `{"group_id": 1, "tasks": [{"title": "", "description": "hello world"}]}`
+  AssignTasksToWGRequestDataIncorrectTaskDescription = `{"group_id": 1, "tasks": [{"title": "some_title", "description": ""}]}`
+  AssignTasksToWGRequestDataGroupNotExists = `{"group_id": 4, "tasks": [{"title": "some_title", "description": "hello world"}]}`
+
+  DeleteTaskRequestData = `{"task_id": 1}`
+  DeleteTaskRequestDataIncorrectId = `{"task_id": 18446744073709551615}`
+  DeleteTaskRequestDataNotExists = `{"task_id": 4}`
 )
 
 var (
@@ -69,6 +79,15 @@ var (
     GroupId: 1,
     Password: utils.GetHash("name4_1"),
     IsGroupLead: false,
+  }
+  CreatedTask = models.Task{
+    ID: 4,
+    Title: "some_title",
+    Description: "hello world",
+    GroupId: 1,
+    UserId: 0,
+    IsComplete: false,
+    Comment: "",
   }
 )
 

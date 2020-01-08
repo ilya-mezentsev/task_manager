@@ -16,6 +16,10 @@ var (
   IncorrectUserNameTemplate = "incorrect user name: '%s'"
   IncorrectUserGroupIdTemplate = "incorrect user group id: %v"
   IncorrectUserIdTemplate = "incorrect user id: %v"
+
+  IncorrectTaskTitleTemplate = "incorrect task title: '%s'"
+  IncorrectTaskDescriptionTemplate = "incorrect task description: '%s'"
+  IncorrectTaskIdTemplate = "incorrect task id: %v"
 )
 
 func getIncorrectGroupNameError(groupName string) error {
@@ -36,4 +40,16 @@ func getIncorrectUserGroupIdError(groupId uint) error {
 
 func getIncorrectUserIdError(userId uint) error {
   return fmt.Errorf(IncorrectUserIdTemplate, userId)
+}
+
+func getIncorrectTaskTitleError(title string) error {
+  return fmt.Errorf(IncorrectTaskTitleTemplate, title)
+}
+
+func getIncorrectTaskDescriptionError(description string) error {
+  return fmt.Errorf(IncorrectTaskDescriptionTemplate, description)
+}
+
+func getIncorrectTaskIdError(taskId uint) error {
+  return fmt.Errorf(IncorrectTaskIdTemplate, taskId)
 }

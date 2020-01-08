@@ -152,6 +152,17 @@ func (handler AdminRequestHandler) AssignTasksToWorkGroup(w http.ResponseWriter,
   var assignTasksReq models.AssignTasksToWorkGroupRequest
   decodeRequestBody(r, &assignTasksReq)
 
+  if !handler.checker.IsSafeUint64(assignTasksReq.GroupId) {
+    panic(getIncorrectGroupIdError(assignTasksReq.GroupId))
+  }
+  for _, task := range assignTasksReq.Tasks {
+    if !handler.checker.IsStringCorrect(task.Title) {
+      panic(getIncorrectTaskTitleError(task.Title))
+    } else if !handler.checker.IsLongTextCorrect(task.Description) {
+      panic(getIncorrectTaskDescriptionError(task.Description))
+    }
+  }
+
   err := handler.admin.AssignTasksToWorkGroup(assignTasksReq.GroupId, assignTasksReq.Tasks)
   if err != nil {
     panic(err)
@@ -165,6 +176,10 @@ func (handler AdminRequestHandler) DeleteTask(w http.ResponseWriter, r *http.Req
 
   var deleteTaskReq models.DeleteTaskRequest
   decodeRequestBody(r, &deleteTaskReq)
+
+  if !handler.checker.IsSafeUint64(deleteTaskReq.TaskId) {
+    panic(getIncorrectTaskIdError(deleteTaskReq.TaskId))
+  }
 
   err := handler.admin.DeleteTask(deleteTaskReq.TaskId)
   if err != nil {

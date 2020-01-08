@@ -48,6 +48,7 @@ func init() {
   groupsData = groups.NewDataPlugin(database)
   usersData = users.NewDataPlugin(database)
   tasksData = tasks.NewDataPlugin(database)
+  db.ExecQuery(database, mock2.TurnOnForeignKeys)
 }
 
 func dropTestTables() {
@@ -506,6 +507,169 @@ func TestGetAllTasksErrorTableNotExists(t *testing.T) {
   })
   assertStatusIsError(t, response.Status)
   expectedError := mock.UnableToGetAllTasksInternal.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestAssignTasksToWorkGroupSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.EmptyDataResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/tasks", mock.AssignTasksToWGRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  allTasks, _ := tasksData.GetAllTasks()
+  addedTask := allTasks[len(allTasks)-1]
+  expectedTask := mock.CreatedTask
+  Assert(addedTask == expectedTask, func() {
+    t.Log(GetExpectationString(expectedTask, addedTask))
+    t.Fail()
+  })
+}
+
+func TestAssignTasksToWorkGroupErrorIncorrectGroupId(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/tasks", mock.AssignTasksToWGRequestDataIncorrectGroupId)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectGroupIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestAssignTasksToWorkGroupErrorIncorrectTaskTitle(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/tasks", mock.AssignTasksToWGRequestDataIncorrectTaskTitle)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectTaskTitleError("").Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestAssignTasksToWorkGroupErrorIncorrectTaskDescription(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/tasks", mock.AssignTasksToWGRequestDataIncorrectTaskDescription)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectTaskDescriptionError("").Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestAssignTasksToWorkGroupErrorGroupNotExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/tasks", mock.AssignTasksToWGRequestDataGroupNotExists)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToAssignTasksNotExists.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestDeleteTaskSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.EmptyDataResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/task", mock.DeleteTaskRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  actualTasks, _ := tasksData.GetAllTasks()
+  expectedTasks := mock2.TestingTasks[1:]
+  Assert(mock2.TasksListEqual(actualTasks, expectedTasks), func() {
+    t.Log(GetExpectationString(expectedTasks, actualTasks))
+    t.Fail()
+  })
+}
+
+func TestDeleteTaskErrorIncorrectId(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/task", mock.DeleteTaskRequestDataIncorrectId)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectTaskIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestDeleteTaskErrorNotExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/task", mock.DeleteTaskRequestDataNotExists)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToDeleteTaskIdNotExists.Error()
   Assert(response.ErrorDetail == expectedError, func() {
     t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()
