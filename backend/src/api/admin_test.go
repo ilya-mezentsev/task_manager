@@ -83,6 +83,9 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
   })
 
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
+  req.Header.Set(
+    "TM-Session-Token",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoxfQ.vwUFq3FTIuPbi8U6bVmzfgSHbbV5pyq6D4mrCBlvu6A")
   resp, err := client.Do(req)
   if err != nil {
     panic(err)

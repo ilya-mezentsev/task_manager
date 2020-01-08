@@ -2,6 +2,7 @@ package api
 
 import (
   "api/helpers"
+  "api/middleware"
   "interfaces"
   "models"
   "net/http"
@@ -23,6 +24,7 @@ func InitAdminRequestHandler(adminDataPlugin interfaces.AdminData) {
 
 func bindAdminRoutesToHandlers() {
   api := router.PathPrefix("/api/admin").Subrouter()
+  api.Use(middleware.RequiredAdminRole)
 
   api.HandleFunc("/groups", adminRequestHandler.GetAllGroups).Methods(http.MethodGet)
   api.HandleFunc("/group", adminRequestHandler.CreateGroup).Methods(http.MethodPost)
