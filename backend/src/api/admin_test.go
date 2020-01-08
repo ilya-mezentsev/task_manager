@@ -8,6 +8,7 @@ import (
   "io"
   "io/ioutil"
   "log"
+  "math"
   "mock"
   mock2 "mock/plugins"
   "net/http"
@@ -16,6 +17,8 @@ import (
   "plugins"
   "plugins/db"
   "plugins/db/groups"
+  "plugins/db/tasks"
+  "plugins/db/users"
   "testing"
   . "utils"
 )
@@ -23,6 +26,8 @@ import (
 var (
   database *sql.DB
   groupsData groups.DataPlugin
+  usersData users.DataPlugin
+  tasksData tasks.DataPlugin
 )
 
 func init() {
@@ -41,6 +46,8 @@ func init() {
 
   InitAdminRequestHandler(plugins.NewDBProxy(database))
   groupsData = groups.NewDataPlugin(database)
+  usersData = users.NewDataPlugin(database)
+  tasksData = tasks.NewDataPlugin(database)
 }
 
 func dropTestTables() {
@@ -138,6 +145,25 @@ func TestGetAllGroupsSuccess(t *testing.T) {
   })
 }
 
+func TestGetAllGroupsErrorTableNotExists(t *testing.T) {
+  dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "admin/groups", "")
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToGetAllGroupsInternal.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
 func TestCreateGroupSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
@@ -170,8 +196,9 @@ func TestCreateGroupErrorIncorrectName(t *testing.T) {
     t.Fail()
   })
   assertStatusIsError(t, response.Status)
-  Assert(response.ErrorDetail == getIncorrectGroupNameError("").Error(), func() {
-    t.Log(GetExpectationString(getIncorrectGroupNameError("").Error(), response.ErrorDetail))
+  expectedError := getIncorrectGroupNameError("").Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()
   })
 }
@@ -189,8 +216,9 @@ func TestCreateGroupErrorGroupAlreadyExists(t *testing.T) {
     t.Fail()
   })
   assertStatusIsError(t, response.Status)
-  Assert(response.ErrorDetail == mock.UnableToCreateWgAlreadyExists.Error(), func() {
-    t.Log(GetExpectationString(mock.UnableToCreateWgAlreadyExists.Error(), response.ErrorDetail))
+  expectedError := mock.UnableToCreateWgAlreadyExists.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()
   })
 }
@@ -214,8 +242,28 @@ func TestDeleteGroupSuccess(t *testing.T) {
   })
   actualGroups, _ := groupsData.GetAllGroups()
   expectedGroups := mock2.TestingGroups[1:]
-  Assert(len(actualGroups) == len(expectedGroups), func() {
+  Assert(mock2.GroupListEqual(expectedGroups, actualGroups), func() {
     t.Log(GetExpectationString(expectedGroups, actualGroups))
+    t.Fail()
+  })
+}
+
+func TestDeleteGroupBadGroupId(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/group", mock.DeleteGroupRequestDataIncorrectId)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectGroupIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()
   })
 }
@@ -233,8 +281,233 @@ func TestDeleteGroupErrorIdNotExists(t *testing.T) {
     t.Fail()
   })
   assertStatusIsError(t, response.Status)
-  Assert(response.ErrorDetail == mock.UnableToDeleteWgIdNotExists.Error(), func() {
-    t.Log(GetExpectationString(mock.UnableToDeleteWgIdNotExists.Error(), response.ErrorDetail))
+  expectedError := mock.UnableToDeleteWgIdNotExists.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGetAllUsers(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.AllUsersResponse
+  responseBody := makeRequest(t, http.MethodGet, "admin/users", "")
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  Assert(mock2.UserListEqual(response.Data, mock2.TestingUsers), func() {
+    t.Log(GetExpectationString(mock2.TestingUsers, response.Data))
+    t.Fail()
+  })
+}
+
+func TestGetAllUsersErrorTableNotExists(t *testing.T) {
+  dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "admin/users", "")
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToGetAllUsersInternal.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestCreateUserSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.EmptyDataResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/user", mock.CreateUserRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  allUsers, _ := usersData.GetAllUsers()
+  actualUser := allUsers[len(allUsers)-1]
+  Assert(actualUser == mock.CreatedUser, func() {
+    t.Log(GetExpectationString(mock.CreatedUser, actualUser))
+  })
+}
+
+func TestCreateUserErrorIncorrectName(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/user", mock.CreateUserRequestDataIncorrectName)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectUserNameError("").Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestCreateUserErrorIncorrectGroupId(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(
+    t, http.MethodPost, "admin/user", mock.CreateUserRequestDataIncorrectGroupId)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectUserGroupIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestCreateUserErrorAlreadyExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "admin/user", mock.CreateUserRequestDataAlreadyExists)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToCreateUserNameAlreadyExists.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestDeleteUserSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.EmptyDataResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/user", mock.DeleteUserRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  Assert(response.Data == nil, func() {
+    t.Log(GetExpectationString(nil, response.Data))
+    t.Fail()
+  })
+  actualUsers, _ := usersData.GetAllUsers()
+  expectedUsers := mock2.TestingUsers[1:]
+  Assert(mock2.UserListEqual(expectedUsers, actualUsers), func() {
+    t.Log(GetExpectationString(expectedUsers, actualUsers))
+    t.Fail()
+  })
+}
+
+func TestDeleteUserErrorIncorrectId(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/user", mock.DeleteUserRequestDataIncorrectId)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectUserIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestDeleteUserErrorNotExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodDelete, "admin/user", mock.DeleteUserRequestDataNotExists)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToDeleteUserIdNotExists.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGetAllTasksSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.AllTasksResponse
+  responseBody := makeRequest(t, http.MethodGet, "admin/tasks", "")
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  actualTasks := response.Data
+  expectedTasks, _ := tasksData.GetAllTasks()
+  Assert(mock2.TasksListEqual(expectedTasks, actualTasks), func() {
+    t.Log(GetExpectationString(expectedTasks, actualTasks))
+    t.Fail()
+  })
+}
+
+func TestGetAllTasksErrorTableNotExists(t *testing.T) {
+  dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "admin/tasks", "")
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToGetAllTasksInternal.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()
   })
 }

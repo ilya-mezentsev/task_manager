@@ -101,6 +101,14 @@ func (u DataPlugin) DeleteUser(userId uint) error {
     return err
   }
 
-  _, err = statement.Exec(userId)
-  return err
+  res, err := statement.Exec(userId)
+  if err != nil {
+    return err
+  }
+
+  if rowsAffected, _ := res.RowsAffected(); rowsAffected == 0 {
+    return processing.UserIdNotExists
+  }
+
+  return nil
 }

@@ -17,7 +17,7 @@ var (
 )
 
 func TestAdminCreateUserSuccessfully(t *testing.T) {
-  testUser := models.User{}
+  testUser := models.User{Password: GetHash("_0")}
   err := admin.CreateUser(testUser)
 
   Assert(err == nil, func() {
@@ -39,6 +39,22 @@ func TestAdminGetAllUsers(t *testing.T) {
   })
   Assert(len(users) == len(mockAdminData.Users), func() {
     t.Log(GetExpectationString(mockAdminData.Users, users))
+    t.Fail()
+  })
+}
+
+func TestAdminGetAllUsersError(t *testing.T) {
+  mockAdminData.TurnOnReturningErrorOnGettingAll()
+  defer mockAdminData.TurnOffReturningErrorOnGettingAll()
+
+  users, err := admin.GetAllUsers()
+
+  AssertErrorsEqual(err, mock.UnableToGetAllUsersInternal, func() {
+    t.Log(GetExpectationString(mock.UnableToGetAllUsersInternal, err))
+    t.Fail()
+  })
+  Assert(users == nil, func() {
+    t.Log(GetExpectationString(nil, users))
     t.Fail()
   })
 }
@@ -113,6 +129,22 @@ func TestAdminGetAllGroupsSuccess(t *testing.T) {
   })
 }
 
+func TestAdminGetAllGroupsError(t *testing.T) {
+  mockAdminData.TurnOnReturningErrorOnGettingAll()
+  defer mockAdminData.TurnOffReturningErrorOnGettingAll()
+
+  groups, err := admin.GetAllGroups()
+
+  AssertErrorsEqual(err, mock.UnableToGetAllGroupsInternal, func() {
+    t.Log(GetExpectationString(mock.UnableToGetAllGroupsInternal, err))
+    t.Fail()
+  })
+  Assert(groups == nil, func() {
+    t.Log(GetExpectationString(nil, groups))
+    t.Fail()
+  })
+}
+
 func TestAdminCreateWorkGroupSuccess(t *testing.T) {
   err := admin.CreateWorkGroup(mock.TestWgName)
 
@@ -182,6 +214,22 @@ func TestAdminGetAllTasksSuccess(t *testing.T) {
   expectedTasks, _ := mockAdminData.GetAllTasks()
   Assert(len(tasks) == len(expectedTasks), func() {
     t.Log(GetExpectationString(expectedTasks, tasks))
+    t.Fail()
+  })
+}
+
+func TestAdminGetAllTasksError(t *testing.T) {
+  mockAdminData.TurnOnReturningErrorOnGettingAll()
+  defer mockAdminData.TurnOffReturningErrorOnGettingAll()
+
+  tasks, err := admin.GetAllTasks()
+
+  AssertErrorsEqual(err, mock.UnableToGetAllTasksInternal, func() {
+    t.Log(GetExpectationString(mock.UnableToGetAllTasksInternal, err))
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
     t.Fail()
   })
 }

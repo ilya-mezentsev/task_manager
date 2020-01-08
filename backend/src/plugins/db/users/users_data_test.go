@@ -205,3 +205,14 @@ func TestDeleteUserErrorTableNotExists(t *testing.T) {
     t.Fail()
   })
 }
+
+func TestDeleteUserErrorNotExists(t *testing.T) {
+  initUsersTable()
+  defer dropUsersTable()
+
+  err := usersData.DeleteUser(11)
+  AssertErrorsEqual(err, processing.UserIdNotExists, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+}

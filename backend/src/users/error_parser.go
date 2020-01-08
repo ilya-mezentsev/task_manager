@@ -11,7 +11,10 @@ type ErrorParsingData struct {
 }
 
 var parsingData = map[string]ErrorParsingData{
-  // admins errors
+  // admin errors
+  "GetAllUsers": {
+    errorTemplate: "unable to get all users: %s",
+  },
   "CreateUser": {
     errorTemplate: "unable to create user: %s",
     errorsDetail: map[error]string{
@@ -24,6 +27,9 @@ var parsingData = map[string]ErrorParsingData{
       processing.UserIdNotExists: "user id not exists",
     },
   },
+  "GetAllGroups": {
+    errorTemplate: "unable to get all groups: %s",
+  },
   "CreateWorkGroup": {
     errorTemplate: "unable to create work group: %s",
     errorsDetail: map[error]string{
@@ -35,6 +41,9 @@ var parsingData = map[string]ErrorParsingData{
     errorsDetail: map[error]string{
       processing.WorkGroupNotExists: "work group not exists",
     },
+  },
+  "GetAllTasks": {
+    errorTemplate: "unable to get all tasks: %s",
   },
   "AssignTasksToWorkGroup": {
     errorTemplate: "unable to assign tasks: %s",

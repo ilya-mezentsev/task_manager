@@ -72,6 +72,10 @@ func (handler AdminRequestHandler) DeleteGroup(w http.ResponseWriter, r *http.Re
   var deleteGroupReq models.DeleteWorkGroupRequest
   decodeRequestBody(r, &deleteGroupReq)
 
+  if !handler.checker.IsSafeUint64(deleteGroupReq.GroupId) {
+    panic(getIncorrectGroupIdError(deleteGroupReq.GroupId))
+  }
+
   err := handler.admin.DeleteWorkGroup(deleteGroupReq.GroupId)
   if err != nil {
     panic(err)
@@ -97,6 +101,14 @@ func (handler AdminRequestHandler) CreateUser(w http.ResponseWriter, r *http.Req
   var createUserReq models.CreateUserRequest
   decodeRequestBody(r, &createUserReq)
 
+  groupId, userName := createUserReq.User.GroupId, createUserReq.User.Name
+  switch {
+  case !handler.checker.IsSafeUint64(groupId):
+    panic(getIncorrectUserGroupIdError(groupId))
+  case !handler.checker.IsStringCorrect(userName):
+    panic(getIncorrectUserNameError(userName))
+  }
+
   err := handler.admin.CreateUser(createUserReq.User)
   if err != nil {
     panic(err)
@@ -110,6 +122,10 @@ func (handler AdminRequestHandler) DeleteUser(w http.ResponseWriter, r *http.Req
 
   var deleteUserReq models.DeleteUserRequest
   decodeRequestBody(r, &deleteUserReq)
+
+  if !handler.checker.IsSafeUint64(deleteUserReq.UserId) {
+    panic(getIncorrectUserIdError(deleteUserReq.UserId))
+  }
 
   err := handler.admin.DeleteUser(deleteUserReq.UserId)
   if err != nil {

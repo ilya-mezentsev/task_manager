@@ -1,9 +1,11 @@
 package admin
 
 import (
+  "fmt"
   "interfaces"
   "models"
   "users"
+  "utils"
 )
 
 type Admin struct {
@@ -15,7 +17,12 @@ func NewAdmin(provider interfaces.AdminData) Admin {
 }
 
 func (a Admin) GetAllGroups() ([]models.Group, error) {
-  return a.dataProvider.GetAllGroups()
+  allGroups, err := a.dataProvider.GetAllGroups()
+  if err != nil {
+    return nil, users.ParseError("GetAllGroups", err)
+  }
+
+  return allGroups, nil
 }
 
 func (a Admin) CreateWorkGroup(groupName string) error {
@@ -35,15 +42,26 @@ func (a Admin) DeleteWorkGroup(groupId uint) error {
 }
 
 func (a Admin) GetAllUsers() ([]models.User, error) {
-  return a.dataProvider.GetAllUsers()
+  allUsers, err := a.dataProvider.GetAllUsers()
+  if err != nil {
+    return nil, users.ParseError("GetAllUsers", err)
+  }
+
+  return allUsers, nil
 }
 
 func (a Admin) CreateUser(user models.User) error {
+  user.Password = a.getUserPassword(user)
+
   if err := a.dataProvider.CreateUser(user); err != nil {
     return users.ParseError("CreateUser", err)
   }
 
   return nil
+}
+
+func (a Admin) getUserPassword(user models.User) string {
+  return utils.GetHash(fmt.Sprintf("%s_%d", user.Name, user.GroupId))
 }
 
 func (a Admin) DeleteUser(userId uint) error {
@@ -55,7 +73,12 @@ func (a Admin) DeleteUser(userId uint) error {
 }
 
 func (a Admin) GetAllTasks() ([]models.Task, error) {
-  return a.dataProvider.GetAllTasks()
+  allTasks, err := a.dataProvider.GetAllTasks()
+  if err != nil {
+    return nil, users.ParseError("GetAllTasks", err)
+  }
+
+  return allTasks, nil
 }
 
 func (a Admin) AssignTasksToWorkGroup(groupId uint, tasks []models.Task) error {

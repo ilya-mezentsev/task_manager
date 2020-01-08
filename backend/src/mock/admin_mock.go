@@ -26,15 +26,20 @@ var (
   TestWgName = "test_wg"
   WorkGroupId uint = 1
 
+  gettingAllError = errors.New("error")
+
+  UnableToGetAllUsersInternal = errors.New("unable to get all users: internal error")
   UnableToCreateUserInternal = errors.New("unable to create user: internal error")
   UnableToCreateUserNameAlreadyExists = errors.New("unable to create user: user name already exists")
   UnableToDeleteUserIdNotExists = errors.New("unable to delete user: user id not exists")
   UnableToDeleteUserInternal = errors.New("unable to delete user: internal error")
 
+  UnableToGetAllGroupsInternal = errors.New("unable to get all groups: internal error")
   UnableToCreateWgInternal = errors.New("unable to create work group: internal error")
   UnableToCreateWgAlreadyExists = errors.New("unable to create work group: work group already exists")
   UnableToDeleteWgIdNotExists = errors.New("unable to delete work group: work group not exists")
 
+  UnableToGetAllTasksInternal = errors.New("unable to get all tasks: internal error")
   UnableToAssignTasksInternal = errors.New("unable to assign tasks: internal error")
   UnableToAssignTasksNotExists = errors.New("unable to assign tasks: work group not exists")
   UnableToDeleteTaskIdNotExists = errors.New("unable to delete task: task id not exists")
@@ -45,9 +50,22 @@ type AdminDataMock struct {
   Users []models.User
   WorkGroups map[uint]string
   Tasks map[uint][]models.Task
+  gettingAllReturnsError bool
+}
+
+func (m *AdminDataMock) TurnOnReturningErrorOnGettingAll() {
+  m.gettingAllReturnsError = true
+}
+
+func (m *AdminDataMock) TurnOffReturningErrorOnGettingAll() {
+  m.gettingAllReturnsError = false
 }
 
 func (m *AdminDataMock) GetAllGroups() ([]models.Group, error) {
+  if m.gettingAllReturnsError {
+    return nil, gettingAllError
+  }
+
   var allGroups []models.Group
   for groupId, groupName := range m.WorkGroups {
     allGroups = append(allGroups, models.Group{
@@ -90,6 +108,10 @@ func (m *AdminDataMock) DeleteWorkGroup(groupId uint) error {
 }
 
 func (m *AdminDataMock) GetAllUsers() ([]models.User, error) {
+  if m.gettingAllReturnsError {
+    return nil, gettingAllError
+  }
+
   return m.Users, nil
 }
 
@@ -133,6 +155,10 @@ func (m *AdminDataMock) DeleteUser(userId uint) error {
 }
 
 func (m *AdminDataMock) GetAllTasks() ([]models.Task, error) {
+  if m.gettingAllReturnsError {
+    return nil, gettingAllError
+  }
+
   var allTasks []models.Task
 
   for _, t := range m.Tasks {

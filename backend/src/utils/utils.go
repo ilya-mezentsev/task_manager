@@ -1,6 +1,10 @@
 package utils
 
-import "fmt"
+import (
+  "crypto/md5"
+  "encoding/hex"
+  "fmt"
+)
 
 func Assert(condition bool, onFalseFn func()) {
   if !condition {
@@ -14,4 +18,10 @@ func AssertErrorsEqual(err1, err2 error, onFalseFn func()) {
 
 func GetExpectationString(expected, got interface{}) string {
   return fmt.Sprintf("expected: %v, got: %v\n", expected, got)
+}
+
+func GetHash(key string) string {
+  h := md5.New()
+  h.Write([]byte(key))
+  return hex.EncodeToString(h.Sum(nil))
 }
