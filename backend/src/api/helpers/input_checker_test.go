@@ -1,6 +1,7 @@
 package helpers
 
 import (
+  "math"
   "strings"
   "testing"
   . "utils"
@@ -19,6 +20,9 @@ var (
   }
   incorrectLongText = []string{
     "", strings.Repeat("a", 1025),
+  }
+  safeUints = []uint{
+    0, 10, math.MaxUint64-1,
   }
 )
 
@@ -56,4 +60,19 @@ func TestIsLongTextCorrectFalse(t *testing.T) {
       t.Fail()
     })
   }
+}
+
+func TestIsSafeUint64True(t *testing.T) {
+  for _, num := range safeUints {
+    Assert(checker.IsSafeUint64(num), func() {
+      t.Logf("expected that number %d is safe uint64, but it is not\n", num)
+      t.Fail()
+    })
+  }
+}
+
+func TestIsSafeUint64False(t *testing.T) {
+  Assert(!checker.IsSafeUint64(math.MaxUint64), func() {
+    t.Fail()
+  })
 }

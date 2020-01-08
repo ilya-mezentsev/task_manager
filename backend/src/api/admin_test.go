@@ -224,7 +224,7 @@ func TestDeleteGroupErrorIdNotExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
-  var response mock.BadRequestResponse
+  var response mock.ErroredResponse
   responseBody := makeRequest(t, http.MethodDelete, "admin/group", mock.DeleteGroupRequestDataIdNotExists)
   err := json.NewDecoder(responseBody).Decode(&response)
 

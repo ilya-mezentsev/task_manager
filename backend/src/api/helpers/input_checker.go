@@ -1,5 +1,7 @@
 package helpers
 
+import "math"
+
 type InputChecker struct {
   minStringLength, maxStringLength, maxLongStringLength uint
 }
@@ -10,6 +12,10 @@ func NewInputChecker() InputChecker {
     maxStringLength: 255,
     maxLongStringLength: 1024,
   }
+}
+
+func (ic InputChecker) IsSafeUint64(num uint) bool {
+  return num >= 0 && num < math.MaxUint64
 }
 
 func (ic InputChecker) IsStringCorrect(str string) bool {

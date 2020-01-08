@@ -6,7 +6,7 @@ import (
 )
 
 type (
-  BadRequestResponse struct {
+  ErroredResponse struct {
     Status string `json:"status"`
     ErrorDetail string `json:"error_detail"`
   }
