@@ -2,6 +2,7 @@ package group_worker
 
 import (
   "interfaces"
+  "models"
   "users"
 )
 
@@ -27,4 +28,13 @@ func (gw GroupWorker) MarkTaskAsCompleted(taskId uint) error {
   }
 
   return nil
+}
+
+func (gw GroupWorker) GetTasksByUserId(userId uint) ([]models.Task, error) {
+  tasks, err := gw.dataProvider.GetTasksByUserId(userId)
+  if err != nil {
+    return nil, users.ParseError("GetTasksByUserId", err)
+  }
+
+  return tasks, nil
 }

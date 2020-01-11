@@ -7,6 +7,7 @@ import (
 )
 
 var (
+  safeTaskId uint = 4
   workerDataMock = mock.GroupWorkerDataMock{
     CompletedTask: make(map[uint]bool),
     TaskComments: make(map[uint]string),
@@ -14,14 +15,40 @@ var (
   groupWorker = NewGroupWorker(workerDataMock)
 )
 
-func TestAddCommentToTaskSuccess(t *testing.T) {
-  err := groupWorker.AddCommentToTask(3, "comment")
+func TestGetTasksByUserIdSuccess(t *testing.T) {
+  tasks, err := groupWorker.GetTasksByUserId(1)
 
   Assert(err == nil, func() {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(workerDataMock.IsTaskCommented(3), func() {
+  Assert(len(tasks) == len(mock.MockTasks), func() {
+    t.Log(GetExpectationString(mock.MockTasks, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByUserId(t *testing.T) {
+  tasks, err := groupWorker.GetTasksByUserId(mock.GettingTasksErrorUserId)
+
+  AssertErrorsEqual(err, mock.UnableToGetTasksByUserIdInternalError, func() {
+    t.Log(GetExpectationString(mock.UnableToGetTasksByUserIdInternalError, err))
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
+    t.Fail()
+  })
+}
+
+func TestAddCommentToTaskSuccess(t *testing.T) {
+  err := groupWorker.AddCommentToTask(safeTaskId, "comment")
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(workerDataMock.IsTaskCommented(safeTaskId), func() {
     t.Log("task should be commented")
     t.Fail()
   })
@@ -56,13 +83,13 @@ func TestAddCommentToTaskCommentingError(t *testing.T) {
 }
 
 func TestMarkTaskAsCompletedSuccess(t *testing.T) {
-  err := groupWorker.MarkTaskAsCompleted(3)
+  err := groupWorker.MarkTaskAsCompleted(safeTaskId)
 
   Assert(err == nil, func() {
     t.Log("wrong error:", err)
     t.Fail()
   })
-  Assert(workerDataMock.TaskCompleted(3), func() {
+  Assert(workerDataMock.TaskCompleted(safeTaskId), func() {
     t.Log("task should not be completed")
     t.Fail()
   })

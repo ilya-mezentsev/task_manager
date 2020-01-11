@@ -17,9 +17,11 @@ type (
 
   GroupLeadData interface {
     AssignTaskToWorker(workerId uint, task models.Task) error
+    GetTasksByGroupId(groupId uint) ([]models.Task, error)
   }
 
   GroupWorkerData interface {
+    GetTasksByUserId(userId uint) ([]models.Task, error)
     AddCommentToTask(taskId uint, comment string) error
     MarkTaskAsCompleted(taskId uint) error
   }

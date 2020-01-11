@@ -21,3 +21,12 @@ func (gl GroupLead) AssignTaskToWorker(workerId uint, task models.Task) error {
 
   return nil
 }
+
+func (gl GroupLead) GetTasksByGroupId(groupId uint) ([]models.Task, error) {
+  tasks, err := gl.dataProvider.GetTasksByGroupId(groupId)
+  if err != nil {
+    return nil, users.ParseError("GetTasksByGroupId", err)
+  }
+
+  return tasks, nil
+}

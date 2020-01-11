@@ -8,6 +8,7 @@ import (
 )
 
 var (
+  safeWorkerId uint = 3
   mockGroupLeadData = mock.GroupLeadDataMock{WorkersTasks: map[uint][]models.Task{}}
   groupLead = NewGroupLead(mockGroupLeadData)
 )
@@ -17,13 +18,13 @@ func TestAssignTaskToWorkerSuccess(t *testing.T) {
     Title: "title",
     Description: "desc",
   }
-  err := groupLead.AssignTaskToWorker(2, testTask)
+  err := groupLead.AssignTaskToWorker(safeWorkerId, testTask)
 
   Assert(err == nil, func() {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(mockGroupLeadData.TaskAssigned(2, testTask), func() {
+  Assert(mockGroupLeadData.TaskAssigned(safeWorkerId, testTask), func() {
     t.Log("task should be assigned")
     t.Fail()
   })
@@ -61,6 +62,39 @@ func TestAssignTaskToWorkerInternalError(t *testing.T) {
   })
   Assert(!mockGroupLeadData.TaskAssigned(mock.WorkerIdNotExists, testTask), func() {
     t.Log("task should not be assigned")
+    t.Fail()
+  })
+}
+
+func TestGetTasksByGroupIdSuccess(t *testing.T) {
+  var testTask = models.Task{
+    Title: "title",
+    Description: "desc",
+  }
+  mockGroupLeadData.WorkersTasks[safeWorkerId] = []models.Task{testTask}
+
+  tasks, err := groupLead.GetTasksByGroupId(safeWorkerId)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  lastTask := tasks[len(tasks)-1]
+  Assert(lastTask == testTask, func() {
+    t.Log(GetExpectationString(testTask, lastTask))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByGroupIdInternalError(t *testing.T) {
+  tasks, err := groupLead.GetTasksByGroupId(mock.GroupIdError)
+
+  AssertErrorsEqual(err, mock.GetTasksByGroupIdInternalError, func() {
+    t.Log(GetExpectationString(mock.GetTasksByGroupIdInternalError, err))
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
     t.Fail()
   })
 }

@@ -65,8 +65,14 @@ var parsingData = map[string]ErrorParsingData{
       db.WorkerIdNotExists: "worker id not exists",
     },
   },
+  "GetTasksByGroupId": {
+    errorTemplate: "unable to get tasks by group id: %s",
+  },
 
   // group worker errors
+  "GetTasksByUserId": {
+    errorTemplate: "unable to get tasks by user id: %s",
+  },
   "AddCommentToTask": {
     errorTemplate: "unable to comment task: %s",
     errorsDetail: map[error]string{
