@@ -49,5 +49,6 @@ if [[ -f ${SCRIPTS_FOLDER}/${scriptName} ]]; then
   run ${scriptName} $*
 else
   echo file ${SCRIPTS_FOLDER}/${scriptName} not found
+  showHelp
   exit 1
 fi

@@ -15,6 +15,7 @@ import (
   "net/http/httptest"
   "os"
   "plugins"
+  "plugins/code"
   "plugins/db"
   "plugins/db/groups"
   "plugins/db/tasks"
@@ -24,6 +25,7 @@ import (
 )
 
 var (
+  token string
   database *sql.DB
   groupsData groups.DataPlugin
   usersData users.DataPlugin
@@ -31,6 +33,11 @@ var (
 )
 
 func init() {
+  var coder = code.NewCoder("123456789012345678901234")
+  token, _ = coder.Encrypt(map[string]interface{}{
+    "role": "admin",
+  })
+
   dbFile := os.Getenv("TEST_DB_FILE")
   if dbFile == "" {
     fmt.Println("TEST_DB_FILE env var is not set")
@@ -45,6 +52,7 @@ func init() {
   }
 
   InitAdminRequestHandler(plugins.NewDBProxy(database))
+  coder = code.NewCoder("123456789012345678901234")
   groupsData = groups.NewDataPlugin(database)
   usersData = users.NewDataPlugin(database)
   tasksData = tasks.NewDataPlugin(database)
@@ -83,9 +91,7 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
   })
 
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
-  req.Header.Set(
-    "TM-Session-Token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoxfQ.vwUFq3FTIuPbi8U6bVmzfgSHbbV5pyq6D4mrCBlvu6A")
+  req.Header.Set("TM-Session-Token", token)
   resp, err := client.Do(req)
   if err != nil {
     panic(err)
