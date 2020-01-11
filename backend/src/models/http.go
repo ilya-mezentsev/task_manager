@@ -22,6 +22,10 @@ type (
     Tasks []Task `json:"tasks"`
   }
 
+  WorkGroupTasksRequest struct {
+    GroupId uint `json:"group_id"`
+  }
+
   DeleteTaskRequest struct {
     TaskId uint `json:"task_id"`
   }

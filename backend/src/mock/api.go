@@ -36,7 +36,7 @@ type (
     Status string `json:"status"`
     Data []models.User `json:"data"`
   }
-  AllTasksResponse struct {
+  TasksResponse struct {
     Status string `json:"status"`
     Data []models.Task `json:"data"`
   }
@@ -74,6 +74,8 @@ const (
   DeleteTaskRequestData = `{"task_id": 1}`
   DeleteTaskRequestDataIncorrectId = `{"task_id": 18446744073709551615}`
   DeleteTaskRequestDataNotExists = `{"task_id": 4}`
+
+  GroupTasksRequestData = `{"group_id": 1}`
 )
 
 var (

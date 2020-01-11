@@ -481,7 +481,7 @@ func TestGetAllTasksSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
-  var response mock.AllTasksResponse
+  var response mock.TasksResponse
   responseBody := makeRequest(t, http.MethodGet, "admin/tasks", "")
   err := json.NewDecoder(responseBody).Decode(&response)
 

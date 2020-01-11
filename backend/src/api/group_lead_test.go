@@ -2,9 +2,11 @@ package api
 
 import (
   "database/sql"
+  "encoding/json"
   "fmt"
   "mock"
   mock2 "mock/plugins"
+  "net/http"
   "os"
   "plugins"
   "plugins/code"
@@ -12,6 +14,8 @@ import (
   "plugins/db/groups"
   "plugins/db/tasks"
   "plugins/db/users"
+  "testing"
+  . "utils"
 )
 
 var (
@@ -42,4 +46,19 @@ func init() {
   groupLeadTestingHelpers.UsersData = users.NewDataPlugin(groupLeadTestingHelpers.Database)
   groupLeadTestingHelpers.TasksData = tasks.NewDataPlugin(groupLeadTestingHelpers.Database)
   db.ExecQuery(groupLeadTestingHelpers.Database, mock2.TurnOnForeignKeys)
+}
+
+func TestGetGroupTasksSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.TasksResponse
+  responseBody := makeRequest(t, http.MethodGet, "group/lead/tasks", mock.GroupTasksRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  t.Log(response.Data)
 }
