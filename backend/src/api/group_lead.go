@@ -19,7 +19,10 @@ func InitGroupLeadRequestHandler(groupLeadDataPlugin interfaces.GroupLeadData) {
 func BindGroupLeadRoutesToHandlers() {
   api := router.PathPrefix("/api/group/lead").Subrouter()
 
-  api.HandleFunc("task", groupLeadRequestHandler.AssignTaskToWorker).Methods(http.MethodPost)
+  api.HandleFunc("/tasks", groupWorkerRequestHandler.GetAllTasks).Methods(http.MethodGet)
+  api.HandleFunc("/task", groupLeadRequestHandler.AssignTaskToWorker).Methods(http.MethodPost)
 }
 
 func (handler GroupLeadRequestHandler) AssignTaskToWorker(w http.ResponseWriter, r *http.Request) {}
+
+func (handler GroupLeadRequestHandler) GetTasksByGroupId(w http.ResponseWriter, r *http.Request) {}

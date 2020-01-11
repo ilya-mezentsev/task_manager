@@ -1,12 +1,23 @@
 package mock
 
 import (
+  "database/sql"
   mock "mock/plugins"
   "models"
+  "plugins/db/groups"
+  "plugins/db/tasks"
+  "plugins/db/users"
   "utils"
 )
 
 type (
+  TestingHelpers struct {
+    Token string
+    Database *sql.DB
+    GroupsData groups.DataPlugin
+    UsersData users.DataPlugin
+    TasksData tasks.DataPlugin
+  }
   ErroredResponse struct {
     Status string `json:"status"`
     ErrorDetail string `json:"error_detail"`
