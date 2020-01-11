@@ -25,7 +25,7 @@ import (
 )
 
 var (
-  adminTestingHelper = mock.TestingHelpers{}
+  adminTestingHelper mock.TestingHelpers
 )
 
 func init() {

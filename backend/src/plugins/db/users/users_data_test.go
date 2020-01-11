@@ -79,6 +79,36 @@ func TestGetAllUsersErrorTableNotExists(t *testing.T) {
   })
 }
 
+func TestGetUsersByGroupIdSuccess(t *testing.T) {
+  initUsersTable()
+  defer dropUsersTable()
+
+  users, err := usersData.GetUsersByGroupId(2)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(mock.UserListEqual(users, mock.TestingUsersByGroupId), func() {
+    t.Log(GetExpectationString(mock.TestingUsersByGroupId, users))
+    t.Fail()
+  })
+}
+
+func TestGetUsersByNotExistsGroupId(t *testing.T) {
+  initUsersTable()
+  defer dropUsersTable()
+
+  users, err := usersData.GetUsersByGroupId(11)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(mock.UserListEqual(users, nil), func() {
+    t.Log(GetExpectationString(nil, users))
+    t.Fail()
+  })
+}
+
 func TestGetUserSuccess(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()

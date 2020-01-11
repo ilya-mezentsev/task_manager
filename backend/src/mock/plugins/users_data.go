@@ -45,6 +45,15 @@ var (
       IsGroupLead: true,
     },
   }
+  TestingUsersByGroupId = []models.User{
+    {
+      ID: 2,
+      Name: "name2",
+      GroupId: 2,
+      Password: "some_pass",
+      IsGroupLead: false,
+    },
+  }
   EmptyUser models.User
   TestingUser = models.User{
     Name: "name4",

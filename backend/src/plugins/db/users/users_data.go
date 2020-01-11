@@ -9,6 +9,7 @@ import (
 
 const (
   AllUsersQuery = "SELECT * FROM users"
+  GetUsersByGroupId = "SELECT * FROM users WHERE group_id = ?"
   GetUserById = "SELECT * FROM users WHERE id = ?"
   CreateUserQuery = "INSERT INTO users VALUES(NULL, ?, ?, ?, ?)"
   DeleteUserQuery = "DELETE FROM users WHERE id = ?"
@@ -26,7 +27,15 @@ func NewDataPlugin(db *sql.DB) DataPlugin {
 }
 
 func (u DataPlugin) GetAllUsers() ([]models.User, error) {
-  usersRows, err := u.database.Query(AllUsersQuery)
+  return u.getUsersSequence(AllUsersQuery)
+}
+
+func (u DataPlugin) GetUsersByGroupId(groupId uint) ([]models.User, error) {
+  return u.getUsersSequence(GetUsersByGroupId, groupId)
+}
+
+func (u DataPlugin) getUsersSequence(query string, args ...interface{}) ([]models.User, error) {
+  usersRows, err := u.database.Query(query, args...)
   if err != nil {
     return nil, err
   }
