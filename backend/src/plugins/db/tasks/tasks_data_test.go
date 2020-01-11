@@ -64,7 +64,7 @@ func getTaskById(taskId uint) models.Task {
   return task
 }
 
-func TestGetAllTasksSuccess(t *testing.T) {
+func TestTasksDataPlugin_GetAllTasksSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -80,7 +80,7 @@ func TestGetAllTasksSuccess(t *testing.T) {
   })
 }
 
-func TestGetAllTasksErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_GetAllTasksErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   tasks, err := tasksData.GetAllTasks()
@@ -94,7 +94,7 @@ func TestGetAllTasksErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestGetTasksByGroupIdSuccess(t *testing.T) {
+func TestTasksDataPlugin_GetTasksByGroupIdSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -109,7 +109,7 @@ func TestGetTasksByGroupIdSuccess(t *testing.T) {
   })
 }
 
-func TestGetTasksByGroupIdThatNotExists(t *testing.T) {
+func TestTasksDataPlugin_GetTasksByGroupIdThatNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -124,7 +124,7 @@ func TestGetTasksByGroupIdThatNotExists(t *testing.T) {
   })
 }
 
-func TestGetTasksByGroupIdErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_GetTasksByGroupIdErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   tasks, err := tasksData.GetTasksByGroupId(1)
@@ -138,7 +138,7 @@ func TestGetTasksByGroupIdErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestGetTasksByUserIdSuccess(t *testing.T) {
+func TestTasksDataPlugin_GetTasksByUserIdSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -153,7 +153,7 @@ func TestGetTasksByUserIdSuccess(t *testing.T) {
   })
 }
 
-func TestGetTasksByUserIdThatNotExists(t *testing.T) {
+func TestTasksDataPlugin_GetTasksByUserIdThatNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -168,7 +168,7 @@ func TestGetTasksByUserIdThatNotExists(t *testing.T) {
   })
 }
 
-func TestGetTasksByUserIdErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_GetTasksByUserIdErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   tasks, err := tasksData.GetTasksByUserId(1)
@@ -182,7 +182,7 @@ func TestGetTasksByUserIdErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateTasksSuccessForOne(t *testing.T) {
+func TestTasksDataPlugin_CreateTasksSuccessForOne(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -200,7 +200,7 @@ func TestCreateTasksSuccessForOne(t *testing.T) {
   })
 }
 
-func TestCreateTasksSuccessForList(t *testing.T) {
+func TestTasksDataPlugin_CreateTasksSuccessForList(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -218,7 +218,7 @@ func TestCreateTasksSuccessForList(t *testing.T) {
   })
 }
 
-func TestCreateTasksErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_CreateTasksErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   err := tasksData.CreateTasks(mock.TestingTasksAdditional)
@@ -228,7 +228,7 @@ func TestCreateTasksErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateTasksErrorGroupIdNotExists(t *testing.T) {
+func TestTasksDataPlugin_CreateTasksErrorGroupIdNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -245,7 +245,7 @@ func TestCreateTasksErrorGroupIdNotExists(t *testing.T) {
   })
 }
 
-func TestMarkTaskAsCompleteSuccess(t *testing.T) {
+func TestTasksDataPlugin_MarkTaskAsCompleteSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -262,7 +262,7 @@ func TestMarkTaskAsCompleteSuccess(t *testing.T) {
   })
 }
 
-func TestMarkTaskAsCompleteErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_MarkTaskAsCompleteErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   err := tasksData.MarkTaskAsComplete(1)
@@ -272,7 +272,7 @@ func TestMarkTaskAsCompleteErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestMarkTaskAsCompleteErrorTaskIdNotExists(t *testing.T) {
+func TestTasksDataPlugin_MarkTaskAsCompleteErrorTaskIdNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -283,7 +283,7 @@ func TestMarkTaskAsCompleteErrorTaskIdNotExists(t *testing.T) {
   })
 }
 
-func TestCommentTaskSuccess(t *testing.T) {
+func TestTasksDataPlugin_CommentTaskSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -300,7 +300,7 @@ func TestCommentTaskSuccess(t *testing.T) {
   })
 }
 
-func TestCommentTaskErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_CommentTaskErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   err := tasksData.CommentTask(1, "")
@@ -310,7 +310,7 @@ func TestCommentTaskErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCommentTaskTaskIdNotExists(t *testing.T) {
+func TestTasksDataPlugin_CommentTaskTaskIdNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -321,7 +321,7 @@ func TestCommentTaskTaskIdNotExists(t *testing.T) {
   })
 }
 
-func TestAssignTaskToWorkerSuccess(t *testing.T) {
+func TestTasksDataPlugin_AssignTaskToWorkerSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -337,7 +337,7 @@ func TestAssignTaskToWorkerSuccess(t *testing.T) {
   })
 }
 
-func TestAssignTaskToWorkerErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_AssignTaskToWorkerErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   err := tasksData.AssignTaskToWorker(1, 1)
@@ -347,7 +347,7 @@ func TestAssignTaskToWorkerErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestAssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
+func TestTasksDataPlugin_AssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -358,7 +358,7 @@ func TestAssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
   })
 }
 
-func TestDeleteTaskSuccess(t *testing.T) {
+func TestTasksDataPlugin_DeleteTaskSuccess(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 
@@ -375,7 +375,7 @@ func TestDeleteTaskSuccess(t *testing.T) {
   })
 }
 
-func TestDeleteTaskErrorTableNotExists(t *testing.T) {
+func TestTasksDataPlugin_DeleteTaskErrorTableNotExists(t *testing.T) {
   dropTasksTable()
 
   err := tasksData.DeleteTask(1)
@@ -385,7 +385,7 @@ func TestDeleteTaskErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestDeleteTaskErrorIdNotExists(t *testing.T) {
+func TestTasksDataPlugin_DeleteTaskErrorIdNotExists(t *testing.T) {
   initTasksTable()
   defer dropTasksTable()
 

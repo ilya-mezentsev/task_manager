@@ -48,7 +48,7 @@ func init() {
   db.ExecQuery(groupLeadTestingHelpers.Database, mock2.TurnOnForeignKeys)
 }
 
-func TestGetGroupTasksSuccess(t *testing.T) {
+func TestGroupLeadRequestHandler_GetGroupTasksSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -60,5 +60,8 @@ func TestGetGroupTasksSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  t.Log(response.Data)
+  Assert(mock2.TasksListEqual(response.Data, mock2.TestingTasksByGroupId), func() {
+    t.Log(GetExpectationString(mock2.TestingTasksByGroupId, response.Data))
+    t.Fail()
+  })
 }

@@ -7,7 +7,7 @@ import (
 
 var coder = NewCoder("123456789012345678901234")
 
-func TestEncrypt(t *testing.T) {
+func TestCoder_Encrypt(t *testing.T) {
   expected := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoxfQ.vwUFq3FTIuPbi8U6bVmzfgSHbbV5pyq6D4mrCBlvu6A"
   encrypted, err := coder.Encrypt(map[string]interface{}{
     "user_id": 1, "role": "admin",
@@ -23,7 +23,7 @@ func TestEncrypt(t *testing.T) {
   })
 }
 
-func TestDecrypt(t *testing.T) {
+func TestCoder_Decrypt(t *testing.T) {
   expected := map[string]interface{}{
     "user_id": 1, "role": "admin",
   }
@@ -39,7 +39,7 @@ func TestDecrypt(t *testing.T) {
   })
 }
 
-func TestDecryptErrorEmpty(t *testing.T) {
+func TestCoder_DecryptErrorEmpty(t *testing.T) {
   _, err := coder.Decrypt("")
   Assert(err != nil, func() {
     t.Log("should be error")
@@ -47,7 +47,7 @@ func TestDecryptErrorEmpty(t *testing.T) {
   })
 }
 
-func TestDecryptErrorIncorrectFormat(t *testing.T) {
+func TestCoder_DecryptErrorIncorrectFormat(t *testing.T) {
   _, err := coder.Decrypt("etJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ8.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoxfQ.vwUFq3FTIuPbi8U6bVmzfgSHbbV5pyq6D4mrCBlvu6A")
   Assert(err != nil, func() {
     t.Log("should be error")

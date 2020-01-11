@@ -16,7 +16,7 @@ var (
   admin = NewAdmin(&mockAdminData)
 )
 
-func TestAdminCreateUserSuccessfully(t *testing.T) {
+func TestAdmin_AdminCreateUserSuccessfully(t *testing.T) {
   testUser := models.User{Password: GetHash("_0")}
   err := admin.CreateUser(testUser)
 
@@ -30,7 +30,7 @@ func TestAdminCreateUserSuccessfully(t *testing.T) {
   })
 }
 
-func TestAdminGetAllUsers(t *testing.T) {
+func TestAdmin_AdminGetAllUsers(t *testing.T) {
   users, err := admin.GetAllUsers()
 
   Assert(err == nil, func() {
@@ -43,7 +43,7 @@ func TestAdminGetAllUsers(t *testing.T) {
   })
 }
 
-func TestAdminGetAllUsersError(t *testing.T) {
+func TestAdmin_AdminGetAllUsersError(t *testing.T) {
   mockAdminData.TurnOnReturningErrorOnGettingAll()
   defer mockAdminData.TurnOffReturningErrorOnGettingAll()
 
@@ -59,7 +59,7 @@ func TestAdminGetAllUsersError(t *testing.T) {
   })
 }
 
-func TestAdminCreateUserErrorByUserNameExists(t *testing.T) {
+func TestAdmin_AdminCreateUserErrorByUserNameExists(t *testing.T) {
   testUser := models.User{Name: mock.UserNameAlreadyExists}
   err := admin.CreateUser(testUser)
 
@@ -74,7 +74,7 @@ func TestAdminCreateUserErrorByUserNameExists(t *testing.T) {
   })
 }
 
-func TestAdminCreateUserInternalError(t *testing.T) {
+func TestAdmin_AdminCreateUserInternalError(t *testing.T) {
   testUser := models.User{Name: mock.UserNameCreationError}
   err := admin.CreateUser(testUser)
 
@@ -89,7 +89,7 @@ func TestAdminCreateUserInternalError(t *testing.T) {
   })
 }
 
-func TestAdminDeleteUserSuccess(t *testing.T) {
+func TestAdmin_AdminDeleteUserSuccess(t *testing.T) {
   err := admin.DeleteUser(2)
 
   Assert(err == nil, func() {
@@ -98,7 +98,7 @@ func TestAdminDeleteUserSuccess(t *testing.T) {
   })
 }
 
-func TestAdminDeleteUserErrorIdNotExists(t *testing.T) {
+func TestAdmin_AdminDeleteUserErrorIdNotExists(t *testing.T) {
   err := admin.DeleteUser(mock.UserIdNotExists)
 
   AssertErrorsEqual(err, mock.UnableToDeleteUserIdNotExists, func() {
@@ -107,7 +107,7 @@ func TestAdminDeleteUserErrorIdNotExists(t *testing.T) {
   })
 }
 
-func TestAdminDeleteUserInternalError(t *testing.T) {
+func TestAdmin_AdminDeleteUserInternalError(t *testing.T) {
   err := admin.DeleteUser(mock.UserIdDeletingError)
 
   AssertErrorsEqual(err, mock.UnableToDeleteUserInternal, func() {
@@ -116,7 +116,7 @@ func TestAdminDeleteUserInternalError(t *testing.T) {
   })
 }
 
-func TestAdminGetAllGroupsSuccess(t *testing.T) {
+func TestAdmin_AdminGetAllGroupsSuccess(t *testing.T) {
   groups, err := admin.GetAllGroups()
 
   Assert(err == nil, func() {
@@ -129,7 +129,7 @@ func TestAdminGetAllGroupsSuccess(t *testing.T) {
   })
 }
 
-func TestAdminGetAllGroupsError(t *testing.T) {
+func TestAdmin_AdminGetAllGroupsError(t *testing.T) {
   mockAdminData.TurnOnReturningErrorOnGettingAll()
   defer mockAdminData.TurnOffReturningErrorOnGettingAll()
 
@@ -145,7 +145,7 @@ func TestAdminGetAllGroupsError(t *testing.T) {
   })
 }
 
-func TestAdminCreateWorkGroupSuccess(t *testing.T) {
+func TestAdmin_AdminCreateWorkGroupSuccess(t *testing.T) {
   err := admin.CreateWorkGroup(mock.TestWgName)
 
   Assert(err == nil, func() {
@@ -158,7 +158,7 @@ func TestAdminCreateWorkGroupSuccess(t *testing.T) {
   })
 }
 
-func TestAdminCreateWorkGroupErrorGroupAlreadyExists(t *testing.T) {
+func TestAdmin_AdminCreateWorkGroupErrorGroupAlreadyExists(t *testing.T) {
   err := admin.CreateWorkGroup(mock.WorkGroupAlreadyExists)
 
   AssertErrorsEqual(err, mock.UnableToCreateWgAlreadyExists, func() {
@@ -172,7 +172,7 @@ func TestAdminCreateWorkGroupErrorGroupAlreadyExists(t *testing.T) {
   })
 }
 
-func TestAdminCreateWorkGroupInternalError(t *testing.T) {
+func TestAdmin_AdminCreateWorkGroupInternalError(t *testing.T) {
   err := admin.CreateWorkGroup(mock.WorkGroupCreationError)
 
   AssertErrorsEqual(err, mock.UnableToCreateWgInternal, func() {
@@ -186,7 +186,7 @@ func TestAdminCreateWorkGroupInternalError(t *testing.T) {
   })
 }
 
-func TestAdminDeleteWorkGroupSuccess(t *testing.T) {
+func TestAdmin_AdminDeleteWorkGroupSuccess(t *testing.T) {
   err := admin.DeleteWorkGroup(2)
 
   Assert(err == nil, func() {
@@ -195,7 +195,7 @@ func TestAdminDeleteWorkGroupSuccess(t *testing.T) {
   })
 }
 
-func TestAdminDeleteWorkGroupErrorIdNotExists(t *testing.T) {
+func TestAdmin_AdminDeleteWorkGroupErrorIdNotExists(t *testing.T) {
   err := admin.DeleteWorkGroup(mock.WgIdNotExists)
 
   AssertErrorsEqual(err, mock.UnableToDeleteWgIdNotExists, func() {
@@ -204,7 +204,7 @@ func TestAdminDeleteWorkGroupErrorIdNotExists(t *testing.T) {
   })
 }
 
-func TestAdminGetAllTasksSuccess(t *testing.T) {
+func TestAdmin_AdminGetAllTasksSuccess(t *testing.T) {
   tasks, err := admin.GetAllTasks()
 
   Assert(err == nil, func() {
@@ -218,7 +218,7 @@ func TestAdminGetAllTasksSuccess(t *testing.T) {
   })
 }
 
-func TestAdminGetAllTasksError(t *testing.T) {
+func TestAdmin_AdminGetAllTasksError(t *testing.T) {
   mockAdminData.TurnOnReturningErrorOnGettingAll()
   defer mockAdminData.TurnOffReturningErrorOnGettingAll()
 
@@ -234,7 +234,7 @@ func TestAdminGetAllTasksError(t *testing.T) {
   })
 }
 
-func TestAdminAssignTasksToWorkGroup(t *testing.T) {
+func TestAdmin_AdminAssignTasksToWorkGroup(t *testing.T) {
   tasks := []models.Task{
     { Title: "", Description: "" },
   }
@@ -250,7 +250,7 @@ func TestAdminAssignTasksToWorkGroup(t *testing.T) {
   })
 }
 
-func TestAdminAssignTasksErrorByNotExistsWrkGroup(t *testing.T) {
+func TestAdmin_AdminAssignTasksErrorByNotExistsWrkGroup(t *testing.T) {
   tasks := []models.Task{
     { Title: "", Description: "" },
   }
@@ -267,7 +267,7 @@ func TestAdminAssignTasksErrorByNotExistsWrkGroup(t *testing.T) {
   })
 }
 
-func TestAdminAssignTasksInternalError(t *testing.T) {
+func TestAdmin_AdminAssignTasksInternalError(t *testing.T) {
   tasks := []models.Task{
     { Title: "", Description: "" },
   }
@@ -284,7 +284,7 @@ func TestAdminAssignTasksInternalError(t *testing.T) {
   })
 }
 
-func TestAdminDeleteTaskSuccess(t *testing.T) {
+func TestAdmin_AdminDeleteTaskSuccess(t *testing.T) {
   err := admin.DeleteTask(2)
 
   Assert(err == nil, func() {
@@ -293,7 +293,7 @@ func TestAdminDeleteTaskSuccess(t *testing.T) {
   })
 }
 
-func TestAdminDeleteTaskErrorIdNotExists(t *testing.T) {
+func TestAdmin_AdminDeleteTaskErrorIdNotExists(t *testing.T) {
   err := admin.DeleteTask(mock.TaskIdNotExists)
 
   AssertErrorsEqual(err, mock.UnableToDeleteTaskIdNotExists, func() {
@@ -302,7 +302,7 @@ func TestAdminDeleteTaskErrorIdNotExists(t *testing.T) {
   })
 }
 
-func TestAdminDeleteTaskInternalError(t *testing.T) {
+func TestAdmin_AdminDeleteTaskInternalError(t *testing.T) {
   err := admin.DeleteTask(mock.TaskIdDeletingError)
 
   AssertErrorsEqual(err, mock.UnableToDeleteTaskInternal, func() {

@@ -15,7 +15,7 @@ var (
   groupWorker = NewGroupWorker(workerDataMock)
 )
 
-func TestGetTasksByUserIdSuccess(t *testing.T) {
+func TestGroupWorker_GetTasksByUserIdSuccess(t *testing.T) {
   tasks, err := groupWorker.GetTasksByUserId(1)
 
   Assert(err == nil, func() {
@@ -28,7 +28,7 @@ func TestGetTasksByUserIdSuccess(t *testing.T) {
   })
 }
 
-func TestGetTasksByUserId(t *testing.T) {
+func TestGroupWorker_GetTasksByUserId(t *testing.T) {
   tasks, err := groupWorker.GetTasksByUserId(mock.GettingTasksErrorUserId)
 
   AssertErrorsEqual(err, mock.UnableToGetTasksByUserIdInternalError, func() {
@@ -41,7 +41,7 @@ func TestGetTasksByUserId(t *testing.T) {
   })
 }
 
-func TestAddCommentToTaskSuccess(t *testing.T) {
+func TestGroupWorker_AddCommentToTaskSuccess(t *testing.T) {
   err := groupWorker.AddCommentToTask(safeTaskId, "comment")
 
   Assert(err == nil, func() {
@@ -54,7 +54,7 @@ func TestAddCommentToTaskSuccess(t *testing.T) {
   })
 }
 
-func TestAddCommentToTaskErrorNotExistsTaskId(t *testing.T) {
+func TestGroupWorker_AddCommentToTaskErrorNotExistsTaskId(t *testing.T) {
   err := groupWorker.AddCommentToTask(mock.NotExistsTaskId, "")
 
   AssertErrorsEqual(err, mock.UnableToCommentTaskIdNotExists, func() {
@@ -68,7 +68,7 @@ func TestAddCommentToTaskErrorNotExistsTaskId(t *testing.T) {
   })
 }
 
-func TestAddCommentToTaskCommentingError(t *testing.T) {
+func TestGroupWorker_AddCommentToTaskCommentingError(t *testing.T) {
   err := groupWorker.AddCommentToTask(mock.CommentingErrorTaskId, "")
 
   AssertErrorsEqual(err, mock.UnableToCommentInternalError, func() {
@@ -82,7 +82,7 @@ func TestAddCommentToTaskCommentingError(t *testing.T) {
   })
 }
 
-func TestMarkTaskAsCompletedSuccess(t *testing.T) {
+func TestGroupWorker_MarkTaskAsCompletedSuccess(t *testing.T) {
   err := groupWorker.MarkTaskAsCompleted(safeTaskId)
 
   Assert(err == nil, func() {
@@ -95,7 +95,7 @@ func TestMarkTaskAsCompletedSuccess(t *testing.T) {
   })
 }
 
-func TestMarkTaskAsCompletedErrorNotExistsTaskId(t *testing.T) {
+func TestGroupWorker_MarkTaskAsCompletedErrorNotExistsTaskId(t *testing.T) {
   err := groupWorker.MarkTaskAsCompleted(mock.NotExistsTaskId)
 
   AssertErrorsEqual(err, mock.UnableToCompleteTaskTaskIdNotExists, func() {
@@ -109,7 +109,7 @@ func TestMarkTaskAsCompletedErrorNotExistsTaskId(t *testing.T) {
   })
 }
 
-func TestMarkTaskAsCompletedInternalError(t *testing.T) {
+func TestGroupWorker_MarkTaskAsCompletedInternalError(t *testing.T) {
   err := groupWorker.MarkTaskAsCompleted(mock.CompletingErrorTaskId)
 
   AssertErrorsEqual(err, mock.UnableToCompleteInternalError, func() {

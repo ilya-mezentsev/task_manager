@@ -46,7 +46,7 @@ func initGroupsTable() {
   }
 }
 
-func TestGetAllTasksSuccess(t *testing.T) {
+func TestGroupsDataPlugin_GetAllTasksSuccess(t *testing.T) {
   initGroupsTable()
   defer dropGroupsTable()
 
@@ -61,7 +61,7 @@ func TestGetAllTasksSuccess(t *testing.T) {
   })
 }
 
-func TestGetAllGroupsErrorTableNotExists(t *testing.T) {
+func TestGroupsDataPlugin_GetAllGroupsErrorTableNotExists(t *testing.T) {
   dropGroupsTable()
 
   groups, err := groupsData.GetAllGroups()
@@ -75,7 +75,7 @@ func TestGetAllGroupsErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateWorkGroupSuccess(t *testing.T) {
+func TestGroupsDataPlugin_CreateWorkGroupSuccess(t *testing.T) {
   initGroupsTable()
   defer dropGroupsTable()
 
@@ -93,7 +93,7 @@ func TestCreateWorkGroupSuccess(t *testing.T) {
   })
 }
 
-func TestCreateWorkGroupErrorTableNotExists(t *testing.T) {
+func TestGroupsDataPlugin_CreateWorkGroupErrorTableNotExists(t *testing.T) {
   dropGroupsTable()
 
   err := groupsData.CreateWorkGroup("")
@@ -103,7 +103,7 @@ func TestCreateWorkGroupErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateWorkGroupErrorGroupNameAlreadyExists(t *testing.T) {
+func TestGroupsDataPlugin_CreateWorkGroupErrorGroupNameAlreadyExists(t *testing.T) {
   initGroupsTable()
   defer dropGroupsTable()
 
@@ -119,7 +119,7 @@ func TestCreateWorkGroupErrorGroupNameAlreadyExists(t *testing.T) {
   })
 }
 
-func TestDeleteWorkGroupSuccess(t *testing.T) {
+func TestGroupsDataPlugin_DeleteWorkGroupSuccess(t *testing.T) {
   initGroupsTable()
   defer dropGroupsTable()
 
@@ -136,7 +136,7 @@ func TestDeleteWorkGroupSuccess(t *testing.T) {
   })
 }
 
-func TestDeleteWorkGroupErrorTableNotExists(t *testing.T) {
+func TestGroupsDataPlugin_DeleteWorkGroupErrorTableNotExists(t *testing.T) {
   dropGroupsTable()
 
   err := groupsData.DeleteWorkGroup(1)
@@ -146,7 +146,7 @@ func TestDeleteWorkGroupErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestDeleteWorkGroupErrorIdNotExists(t *testing.T) {
+func TestGroupsDataPlugin_DeleteWorkGroupErrorIdNotExists(t *testing.T) {
   initGroupsTable()
   defer dropGroupsTable()
 

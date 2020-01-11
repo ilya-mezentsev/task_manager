@@ -48,7 +48,7 @@ func initUsersTable() {
   }
 }
 
-func TestGetAllUsersSuccess(t *testing.T) {
+func TestUsersDataPlugin_GetAllUsersSuccess(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -64,7 +64,7 @@ func TestGetAllUsersSuccess(t *testing.T) {
   })
 }
 
-func TestGetAllUsersErrorTableNotExists(t *testing.T) {
+func TestUsersDataPlugin_GetAllUsersErrorTableNotExists(t *testing.T) {
   dropUsersTable()
 
   users, err := usersData.GetAllUsers()
@@ -79,7 +79,7 @@ func TestGetAllUsersErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestGetUsersByGroupIdSuccess(t *testing.T) {
+func TestUsersDataPlugin_GetUsersByGroupIdSuccess(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -94,7 +94,7 @@ func TestGetUsersByGroupIdSuccess(t *testing.T) {
   })
 }
 
-func TestGetUsersByNotExistsGroupId(t *testing.T) {
+func TestUsersDataPlugin_GetUsersByNotExistsGroupId(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -109,7 +109,7 @@ func TestGetUsersByNotExistsGroupId(t *testing.T) {
   })
 }
 
-func TestGetUserSuccess(t *testing.T) {
+func TestUsersDataPlugin_GetUserSuccess(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -124,7 +124,7 @@ func TestGetUserSuccess(t *testing.T) {
   })
 }
 
-func TestGetUserErrorIdNotExists(t *testing.T) {
+func TestUsersDataPlugin_GetUserErrorIdNotExists(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -139,7 +139,7 @@ func TestGetUserErrorIdNotExists(t *testing.T) {
   })
 }
 
-func TestGetUserErrorTableNotExists(t *testing.T) {
+func TestUsersDataPlugin_GetUserErrorTableNotExists(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -154,7 +154,7 @@ func TestGetUserErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateUserSuccess(t *testing.T) {
+func TestUsersDataPlugin_CreateUserSuccess(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -169,7 +169,7 @@ func TestCreateUserSuccess(t *testing.T) {
   })
 }
 
-func TestCreateUserErrorTableNotExists(t *testing.T) {
+func TestUsersDataPlugin_CreateUserErrorTableNotExists(t *testing.T) {
   dropUsersTable()
 
   createdUserId, err := usersData.CreateUser(mock.TestingUser)
@@ -183,7 +183,7 @@ func TestCreateUserErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
+func TestUsersDataPlugin_CreateUserErrorNameAlreadyExists(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -198,7 +198,7 @@ func TestCreateUserErrorNameAlreadyExists(t *testing.T) {
   })
 }
 
-func TestCreateUserErrorGroupNotExists(t *testing.T) {
+func TestUsersDataPlugin_CreateUserErrorGroupNotExists(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -214,7 +214,7 @@ func TestCreateUserErrorGroupNotExists(t *testing.T) {
   })
 }
 
-func TestDeleteUserSuccess(t *testing.T) {
+func TestUsersDataPlugin_DeleteUserSuccess(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 
@@ -225,7 +225,7 @@ func TestDeleteUserSuccess(t *testing.T) {
   })
 }
 
-func TestDeleteUserErrorTableNotExists(t *testing.T) {
+func TestUsersDataPlugin_DeleteUserErrorTableNotExists(t *testing.T) {
   dropUsersTable()
 
   err := usersData.DeleteUser(1)
@@ -235,7 +235,7 @@ func TestDeleteUserErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestDeleteUserErrorNotExists(t *testing.T) {
+func TestUsersDataPlugin_DeleteUserErrorNotExists(t *testing.T) {
   initUsersTable()
   defer dropUsersTable()
 

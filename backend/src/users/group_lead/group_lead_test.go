@@ -13,7 +13,7 @@ var (
   groupLead = NewGroupLead(mockGroupLeadData)
 )
 
-func TestAssignTaskToWorkerSuccess(t *testing.T) {
+func TestGroupLead_AssignTaskToWorkerSuccess(t *testing.T) {
   testTask := models.Task{
     Title: "title",
     Description: "desc",
@@ -30,7 +30,7 @@ func TestAssignTaskToWorkerSuccess(t *testing.T) {
   })
 }
 
-func TestAssignTaskToWorkerErrorWorkerIdNotExists(t *testing.T) {
+func TestGroupLead_AssignTaskToWorkerErrorWorkerIdNotExists(t *testing.T) {
   testTask := models.Task{
     Title: "title",
     Description: "desc",
@@ -48,7 +48,7 @@ func TestAssignTaskToWorkerErrorWorkerIdNotExists(t *testing.T) {
   })
 }
 
-func TestAssignTaskToWorkerInternalError(t *testing.T) {
+func TestGroupLead_AssignTaskToWorkerInternalError(t *testing.T) {
   testTask := models.Task{
     Title: "title",
     Description: "desc",
@@ -66,7 +66,7 @@ func TestAssignTaskToWorkerInternalError(t *testing.T) {
   })
 }
 
-func TestGetTasksByGroupIdSuccess(t *testing.T) {
+func TestGroupLead_GetTasksByGroupIdSuccess(t *testing.T) {
   var testTask = models.Task{
     Title: "title",
     Description: "desc",
@@ -86,7 +86,7 @@ func TestGetTasksByGroupIdSuccess(t *testing.T) {
   })
 }
 
-func TestGetTasksByGroupIdInternalError(t *testing.T) {
+func TestGroupLead_GetTasksByGroupIdInternalError(t *testing.T) {
   tasks, err := groupLead.GetTasksByGroupId(mock.GroupIdError)
 
   AssertErrorsEqual(err, mock.GetTasksByGroupIdInternalError, func() {

@@ -115,7 +115,7 @@ func TestMain(m *testing.M) {
   os.Exit(m.Run())
 }
 
-func TestRequestWithBadData(t *testing.T) {
+func TestAdminRequestHandler_RequestWithBadData(t *testing.T) {
   var response mock.AllGroupsResponse
   responseBody := makeRequest(t, http.MethodPost, "admin/group", mock.BadRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
@@ -131,7 +131,7 @@ func TestRequestWithBadData(t *testing.T) {
   })
 }
 
-func TestGetAllGroupsSuccess(t *testing.T) {
+func TestAdminRequestHandler_GetAllGroupsSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -150,7 +150,7 @@ func TestGetAllGroupsSuccess(t *testing.T) {
   })
 }
 
-func TestGetAllGroupsErrorTableNotExists(t *testing.T) {
+func TestAdminRequestHandler_GetAllGroupsErrorTableNotExists(t *testing.T) {
   dropTestTables()
 
   var response mock.ErroredResponse
@@ -169,7 +169,7 @@ func TestGetAllGroupsErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateGroupSuccess(t *testing.T) {
+func TestAdminRequestHandler_CreateGroupSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -188,7 +188,7 @@ func TestCreateGroupSuccess(t *testing.T) {
   })
 }
 
-func TestCreateGroupErrorIncorrectName(t *testing.T) {
+func TestAdminRequestHandler_CreateGroupErrorIncorrectName(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -208,7 +208,7 @@ func TestCreateGroupErrorIncorrectName(t *testing.T) {
   })
 }
 
-func TestCreateGroupErrorGroupAlreadyExists(t *testing.T) {
+func TestAdminRequestHandler_CreateGroupErrorGroupAlreadyExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -228,7 +228,7 @@ func TestCreateGroupErrorGroupAlreadyExists(t *testing.T) {
   })
 }
 
-func TestDeleteGroupSuccess(t *testing.T) {
+func TestAdminRequestHandler_DeleteGroupSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -253,7 +253,7 @@ func TestDeleteGroupSuccess(t *testing.T) {
   })
 }
 
-func TestDeleteGroupBadGroupId(t *testing.T) {
+func TestAdminRequestHandler_DeleteGroupBadGroupId(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -273,7 +273,7 @@ func TestDeleteGroupBadGroupId(t *testing.T) {
   })
 }
 
-func TestDeleteGroupErrorIdNotExists(t *testing.T) {
+func TestAdminRequestHandler_DeleteGroupErrorIdNotExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -293,7 +293,7 @@ func TestDeleteGroupErrorIdNotExists(t *testing.T) {
   })
 }
 
-func TestGetAllUsers(t *testing.T) {
+func TestAdminRequestHandler_GetAllUsers(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -312,7 +312,7 @@ func TestGetAllUsers(t *testing.T) {
   })
 }
 
-func TestGetAllUsersErrorTableNotExists(t *testing.T) {
+func TestAdminRequestHandler_GetAllUsersErrorTableNotExists(t *testing.T) {
   dropTestTables()
 
   var response mock.ErroredResponse
@@ -331,7 +331,7 @@ func TestGetAllUsersErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestCreateUserSuccess(t *testing.T) {
+func TestAdminRequestHandler_CreateUserSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -351,7 +351,7 @@ func TestCreateUserSuccess(t *testing.T) {
   })
 }
 
-func TestCreateUserErrorIncorrectName(t *testing.T) {
+func TestAdminRequestHandler_CreateUserErrorIncorrectName(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -371,7 +371,7 @@ func TestCreateUserErrorIncorrectName(t *testing.T) {
   })
 }
 
-func TestCreateUserErrorIncorrectGroupId(t *testing.T) {
+func TestAdminRequestHandler_CreateUserErrorIncorrectGroupId(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -392,7 +392,7 @@ func TestCreateUserErrorIncorrectGroupId(t *testing.T) {
   })
 }
 
-func TestCreateUserErrorAlreadyExists(t *testing.T) {
+func TestAdminRequestHandler_CreateUserErrorAlreadyExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -412,7 +412,7 @@ func TestCreateUserErrorAlreadyExists(t *testing.T) {
   })
 }
 
-func TestDeleteUserSuccess(t *testing.T) {
+func TestAdminRequestHandler_DeleteUserSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -437,7 +437,7 @@ func TestDeleteUserSuccess(t *testing.T) {
   })
 }
 
-func TestDeleteUserErrorIncorrectId(t *testing.T) {
+func TestAdminRequestHandler_DeleteUserErrorIncorrectId(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -457,7 +457,7 @@ func TestDeleteUserErrorIncorrectId(t *testing.T) {
   })
 }
 
-func TestDeleteUserErrorNotExists(t *testing.T) {
+func TestAdminRequestHandler_DeleteUserErrorNotExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -477,7 +477,7 @@ func TestDeleteUserErrorNotExists(t *testing.T) {
   })
 }
 
-func TestGetAllTasksSuccess(t *testing.T) {
+func TestAdminRequestHandler_GetAllTasksSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -498,7 +498,7 @@ func TestGetAllTasksSuccess(t *testing.T) {
   })
 }
 
-func TestGetAllTasksErrorTableNotExists(t *testing.T) {
+func TestAdminRequestHandler_GetAllTasksErrorTableNotExists(t *testing.T) {
   dropTestTables()
 
   var response mock.ErroredResponse
@@ -517,7 +517,7 @@ func TestGetAllTasksErrorTableNotExists(t *testing.T) {
   })
 }
 
-func TestAssignTasksToWorkGroupSuccess(t *testing.T) {
+func TestAdminRequestHandler_AssignTasksToWorkGroupSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -539,7 +539,7 @@ func TestAssignTasksToWorkGroupSuccess(t *testing.T) {
   })
 }
 
-func TestAssignTasksToWorkGroupErrorIncorrectGroupId(t *testing.T) {
+func TestAdminRequestHandler_AssignTasksToWorkGroupErrorIncorrectGroupId(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -559,7 +559,7 @@ func TestAssignTasksToWorkGroupErrorIncorrectGroupId(t *testing.T) {
   })
 }
 
-func TestAssignTasksToWorkGroupErrorIncorrectTaskTitle(t *testing.T) {
+func TestAdminRequestHandler_AssignTasksToWorkGroupErrorIncorrectTaskTitle(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -579,7 +579,7 @@ func TestAssignTasksToWorkGroupErrorIncorrectTaskTitle(t *testing.T) {
   })
 }
 
-func TestAssignTasksToWorkGroupErrorIncorrectTaskDescription(t *testing.T) {
+func TestAdminRequestHandler_AssignTasksToWorkGroupErrorIncorrectTaskDescription(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -599,7 +599,7 @@ func TestAssignTasksToWorkGroupErrorIncorrectTaskDescription(t *testing.T) {
   })
 }
 
-func TestAssignTasksToWorkGroupErrorGroupNotExists(t *testing.T) {
+func TestAdminRequestHandler_AssignTasksToWorkGroupErrorGroupNotExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -619,7 +619,7 @@ func TestAssignTasksToWorkGroupErrorGroupNotExists(t *testing.T) {
   })
 }
 
-func TestDeleteTaskSuccess(t *testing.T) {
+func TestAdminRequestHandler_DeleteTaskSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -640,7 +640,7 @@ func TestDeleteTaskSuccess(t *testing.T) {
   })
 }
 
-func TestDeleteTaskErrorIncorrectId(t *testing.T) {
+func TestAdminRequestHandler_DeleteTaskErrorIncorrectId(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
@@ -660,7 +660,7 @@ func TestDeleteTaskErrorIncorrectId(t *testing.T) {
   })
 }
 
-func TestDeleteTaskErrorNotExists(t *testing.T) {
+func TestAdminRequestHandler_DeleteTaskErrorNotExists(t *testing.T) {
   initTestTables()
   defer dropTestTables()
 
