@@ -9,7 +9,8 @@ import (
 
 const (
   AllTasksQuery = "SELECT * FROM tasks"
-  GetTaskById = "SELECT * FROM tasks WHERE id = ?"
+  GetTasksByGroupId = "SELECT * FROM tasks WHERE group_id = ?"
+  GetTasksByUserId = "SELECT * FROM tasks WHERE user_id = ?"
   AddTaskQuery = "INSERT INTO tasks VALUES(NULL, ?, ?, ?, ?, ?, ?)"
   AssignTaskToWorkerQuery = "UPDATE tasks SET user_id = ? WHERE id = ?"
   MarkTaskAsCompleteQuery = "UPDATE tasks SET is_complete = 1 WHERE id = ?"
@@ -28,12 +29,24 @@ func NewDataPlugin(driver *sql.DB) DataPlugin {
 }
 
 func (t DataPlugin) GetAllTasks() ([]models.Task, error) {
-  tasksRows, err := t.database.Query(AllTasksQuery)
+  return t.getTasksSequence(AllTasksQuery)
+}
+
+func (t DataPlugin) GetTasksByGroupId(groupId uint) ([]models.Task, error) {
+  return t.getTasksSequence(GetTasksByGroupId, groupId)
+}
+
+func (t DataPlugin) GetTasksByUserId(userId uint) ([]models.Task, error) {
+  return t.getTasksSequence(GetTasksByUserId, userId)
+}
+
+func (t DataPlugin) getTasksSequence(query string, args ...interface{}) ([]models.Task, error) {
+  tasksRows, err := t.database.Query(query, args...)
   if err != nil {
     return nil, err
   }
-  var tasks []models.Task
 
+  var tasks []models.Task
   for tasksRows.Next() {
     var task models.Task
     err = tasksRows.Scan(

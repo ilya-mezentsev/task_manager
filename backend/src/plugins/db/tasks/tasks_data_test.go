@@ -51,7 +51,7 @@ func initTasksTable() {
 func getTaskById(taskId uint) models.Task {
   var task models.Task
 
-  taskRow := database.QueryRow(GetTaskById, taskId)
+  taskRow := database.QueryRow("SELECT * FROM tasks WHERE id = ?", taskId)
   err := taskRow.Scan(
     &task.ID, &task.Title, &task.Description, &task.GroupId,
     &task.UserId, &task.IsComplete, &task.Comment,
@@ -85,7 +85,95 @@ func TestGetAllTasksErrorTableNotExists(t *testing.T) {
 
   tasks, err := tasksData.GetAllTasks()
   Assert(err != nil, func() {
-    t.Log("should not be err")
+    t.Log("should be err")
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByGroupIdSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  tasks, err := tasksData.GetTasksByGroupId(1)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(mock.TasksListEqual(tasks, mock.TestingTasksByGroupId), func() {
+    t.Log(GetExpectationString(mock.TestingTasksByGroupId, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByGroupIdThatNotExists(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  tasks, err := tasksData.GetTasksByGroupId(4)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByGroupIdErrorTableNotExists(t *testing.T) {
+  dropTasksTable()
+
+  tasks, err := tasksData.GetTasksByGroupId(1)
+  Assert(err != nil, func() {
+    t.Log("should be err")
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByUserIdSuccess(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  tasks, err := tasksData.GetTasksByUserId(1)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(mock.TasksListEqual(tasks, mock.TestingTasksByUserId), func() {
+    t.Log(GetExpectationString(mock.TestingTasksByUserId, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByUserIdThatNotExists(t *testing.T) {
+  initTasksTable()
+  defer dropTasksTable()
+
+  tasks, err := tasksData.GetTasksByUserId(4)
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(tasks == nil, func() {
+    t.Log(GetExpectationString(nil, tasks))
+    t.Fail()
+  })
+}
+
+func TestGetTasksByUserIdErrorTableNotExists(t *testing.T) {
+  dropTasksTable()
+
+  tasks, err := tasksData.GetTasksByUserId(1)
+  Assert(err != nil, func() {
+    t.Log("should be err")
     t.Fail()
   })
   Assert(tasks == nil, func() {

@@ -20,12 +20,12 @@ const (
 
 var (
   TestingTasksQueries = []string{
-    "insert into tasks(id, title, group_id) values(1, 'title1', 1)",
+    "insert into tasks(id, title, group_id, user_id) values(1, 'title1', 1, 1)",
     "insert into tasks(id, title, group_id) values(2, 'title2', 2)",
     "insert into tasks(id, title, group_id) values(3, 'title1', 3)",
   }
   TestingTasks = []models.Task{
-    {ID: 1, Title: "title1", GroupId: 1},
+    {ID: 1, Title: "title1", GroupId: 1, UserId: 1},
     {ID: 2, Title: "title2", GroupId: 2},
     {ID: 3, Title: "title1", GroupId: 3},
   }
@@ -33,6 +33,12 @@ var (
     {ID: 4, Title: "title1", GroupId: 1},
     {ID: 5, Title: "title2", GroupId: 2},
     {ID: 6, Title: "title1", GroupId: 3},
+  }
+  TestingTasksByGroupId = []models.Task{
+    {ID: 1, Title: "title1", GroupId: 1, UserId: 1},
+  }
+  TestingTasksByUserId = []models.Task{
+    {ID: 1, Title: "title1", GroupId: 1, UserId: 1},
   }
   TestingTask = models.Task{ID: 4, Title: "title4", GroupId: 1}
   TaskWithNotExistsGroupId = models.Task{ID: 4, Title: "title4", GroupId: 11}
