@@ -1,51 +1,26 @@
 package api
 
 import (
-  "database/sql"
   "encoding/json"
-  "fmt"
+  "math"
   "mock"
   mock2 "mock/plugins"
   "net/http"
-  "os"
   "plugins"
   "plugins/code"
   "plugins/db"
-  "plugins/db/groups"
-  "plugins/db/tasks"
-  "plugins/db/users"
   "testing"
   . "utils"
 )
 
-var (
-  groupLeadTestingHelpers mock.TestingHelpers
-)
-
 func init() {
   var coder = code.NewCoder("123456789012345678901234")
-  groupLeadTestingHelpers.Token, _ = coder.Encrypt(map[string]interface{}{
+  testingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
     "role": "admin",
   })
 
-  dbFile := os.Getenv("TEST_DB_FILE")
-  if dbFile == "" {
-    fmt.Println("TEST_DB_FILE env var is not set")
-    os.Exit(1)
-  }
-
-  var err error
-  groupLeadTestingHelpers.Database, err = sql.Open("sqlite3", dbFile)
-  if err != nil {
-    fmt.Println("An error while opening db file:", err)
-    os.Exit(1)
-  }
-
-  InitGroupLeadRequestHandler(plugins.NewDBProxy(groupLeadTestingHelpers.Database))
-  groupLeadTestingHelpers.GroupsData = groups.NewDataPlugin(groupLeadTestingHelpers.Database)
-  groupLeadTestingHelpers.UsersData = users.NewDataPlugin(groupLeadTestingHelpers.Database)
-  groupLeadTestingHelpers.TasksData = tasks.NewDataPlugin(groupLeadTestingHelpers.Database)
-  db.ExecQuery(groupLeadTestingHelpers.Database, mock2.TurnOnForeignKeys)
+  InitGroupLeadRequestHandler(plugins.NewDBProxy(testingHelper.Database))
+  db.ExecQuery(testingHelper.Database, mock2.TurnOnForeignKeys)
 }
 
 func TestGroupLeadRequestHandler_GetGroupTasksSuccess(t *testing.T) {
@@ -60,8 +35,119 @@ func TestGroupLeadRequestHandler_GetGroupTasksSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
+  assertStatusIsOk(t, response.Status)
   Assert(mock2.TasksListEqual(response.Data, mock2.TestingTasksByGroupId), func() {
     t.Log(GetExpectationString(mock2.TestingTasksByGroupId, response.Data))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_GetTasksByIncorrectGroupIdError(t *testing.T) {
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "group/lead/tasks", mock.GroupTasksIncorrectIdRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectGroupIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_GetTasksByGroupIdErrorTableNotExists(t *testing.T) {
+  dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "group/lead/tasks", mock.GroupTasksRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.GetTasksByGroupIdInternalError.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_AssignTaskToWorkerSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.EmptyDataResponse
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/task", mock.AssignTaskRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  tasks, _ := testingHelper.TasksData.GetAllTasks()
+  Assert(tasks[0].UserId == 1, func() {
+    t.Log(GetExpectationString(1, tasks[0].UserId))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_AssignTaskToWorkerErrorTaskIdNotExists(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/task", mock.AssignTaskIdNotExistsRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.UnableToAssingTaskIdNotExists.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_AssignTaskToWorkerErrorIncorrectWorkerId(t *testing.T) {
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/task", mock.AssignTaskIncorrectWorkerIdRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectUserIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_AssignTaskToWorkerErrorIncorrectTaskId(t *testing.T) {
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/task", mock.AssignTaskIncorrectTaskIdRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectTaskIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()
   })
 }

@@ -25,12 +25,12 @@ import (
 )
 
 var (
-  adminTestingHelper mock.TestingHelpers
+  testingHelper mock.TestingHelpers
 )
 
 func init() {
   var coder = code.NewCoder("123456789012345678901234")
-  adminTestingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
+  testingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
     "role": "admin",
   })
 
@@ -41,32 +41,32 @@ func init() {
   }
 
   var err error
-  adminTestingHelper.Database, err = sql.Open("sqlite3", dbFile)
+  testingHelper.Database, err = sql.Open("sqlite3", dbFile)
   if err != nil {
     fmt.Println("An error while opening db file:", err)
     os.Exit(1)
   }
 
-  InitAdminRequestHandler(plugins.NewDBProxy(adminTestingHelper.Database))
-  adminTestingHelper.GroupsData = groups.NewDataPlugin(adminTestingHelper.Database)
-  adminTestingHelper.UsersData = users.NewDataPlugin(adminTestingHelper.Database)
-  adminTestingHelper.TasksData = tasks.NewDataPlugin(adminTestingHelper.Database)
-  db.ExecQuery(adminTestingHelper.Database, mock2.TurnOnForeignKeys)
+  InitAdminRequestHandler(plugins.NewDBProxy(testingHelper.Database))
+  testingHelper.GroupsData = groups.NewDataPlugin(testingHelper.Database)
+  testingHelper.UsersData = users.NewDataPlugin(testingHelper.Database)
+  testingHelper.TasksData = tasks.NewDataPlugin(testingHelper.Database)
+  db.ExecQuery(testingHelper.Database, mock2.TurnOnForeignKeys)
 }
 
 func dropTestTables() {
   for _, q := range mock.DropTestTablesQueries {
-    db.ExecQuery(adminTestingHelper.Database, q)
+    db.ExecQuery(testingHelper.Database, q)
   }
 }
 
 func initTestTables() {
   dropTestTables()
   for _, q := range mock.CreateTestTablesQueries {
-    db.ExecQuery(adminTestingHelper.Database, q)
+    db.ExecQuery(testingHelper.Database, q)
   }
   for _, q := range mock.AddDataToTestTablesQueries {
-    db.ExecQuery(adminTestingHelper.Database, q)
+    db.ExecQuery(testingHelper.Database, q)
   }
 }
 
@@ -86,7 +86,7 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
   })
 
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
-  req.Header.Set("TM-Session-Token", adminTestingHelper.Token)
+  req.Header.Set("TM-Session-Token", testingHelper.Token)
   resp, err := client.Do(req)
   if err != nil {
     panic(err)
@@ -245,7 +245,7 @@ func TestAdminRequestHandler_DeleteGroupSuccess(t *testing.T) {
     t.Log(GetExpectationString(nil, response.Data))
     t.Fail()
   })
-  actualGroups, _ := adminTestingHelper.GroupsData.GetAllGroups()
+  actualGroups, _ := testingHelper.GroupsData.GetAllGroups()
   expectedGroups := mock2.TestingGroups[1:]
   Assert(mock2.GroupListEqual(expectedGroups, actualGroups), func() {
     t.Log(GetExpectationString(expectedGroups, actualGroups))
@@ -344,7 +344,7 @@ func TestAdminRequestHandler_CreateUserSuccess(t *testing.T) {
     t.Fail()
   })
   assertStatusIsOk(t, response.Status)
-  allUsers, _ := adminTestingHelper.UsersData.GetAllUsers()
+  allUsers, _ := testingHelper.UsersData.GetAllUsers()
   actualUser := allUsers[len(allUsers)-1]
   Assert(actualUser == mock.CreatedUser, func() {
     t.Log(GetExpectationString(mock.CreatedUser, actualUser))
@@ -429,7 +429,7 @@ func TestAdminRequestHandler_DeleteUserSuccess(t *testing.T) {
     t.Log(GetExpectationString(nil, response.Data))
     t.Fail()
   })
-  actualUsers, _ := adminTestingHelper.UsersData.GetAllUsers()
+  actualUsers, _ := testingHelper.UsersData.GetAllUsers()
   expectedUsers := mock2.TestingUsers[1:]
   Assert(mock2.UserListEqual(expectedUsers, actualUsers), func() {
     t.Log(GetExpectationString(expectedUsers, actualUsers))
@@ -491,7 +491,7 @@ func TestAdminRequestHandler_GetAllTasksSuccess(t *testing.T) {
   })
   assertStatusIsOk(t, response.Status)
   actualTasks := response.Data
-  expectedTasks, _ := adminTestingHelper.TasksData.GetAllTasks()
+  expectedTasks, _ := testingHelper.TasksData.GetAllTasks()
   Assert(mock2.TasksListEqual(expectedTasks, actualTasks), func() {
     t.Log(GetExpectationString(expectedTasks, actualTasks))
     t.Fail()
@@ -530,7 +530,7 @@ func TestAdminRequestHandler_AssignTasksToWorkGroupSuccess(t *testing.T) {
     t.Fail()
   })
   assertStatusIsOk(t, response.Status)
-  allTasks, _ := adminTestingHelper.TasksData.GetAllTasks()
+  allTasks, _ := testingHelper.TasksData.GetAllTasks()
   addedTask := allTasks[len(allTasks)-1]
   expectedTask := mock.CreatedTask
   Assert(addedTask == expectedTask, func() {
@@ -632,7 +632,7 @@ func TestAdminRequestHandler_DeleteTaskSuccess(t *testing.T) {
     t.Fail()
   })
   assertStatusIsOk(t, response.Status)
-  actualTasks, _ := adminTestingHelper.TasksData.GetAllTasks()
+  actualTasks, _ := testingHelper.TasksData.GetAllTasks()
   expectedTasks := mock2.TestingTasks[1:]
   Assert(mock2.TasksListEqual(actualTasks, expectedTasks), func() {
     t.Log(GetExpectationString(expectedTasks, actualTasks))

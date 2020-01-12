@@ -63,6 +63,7 @@ var parsingData = map[string]ErrorParsingData{
     errorTemplate: "unable to assign task: %s",
     errorsDetail: map[error]string{
       db.WorkerIdNotExists: "worker id not exists",
+      db.TaskIdNotExists: "task id not exists",
     },
   },
   "GetTasksByGroupId": {

@@ -26,6 +26,11 @@ type (
     GroupId uint `json:"group_id"`
   }
 
+  AssignTaskToGroupWorkerRequest struct {
+    WorkerId uint `json:"worker_id"`
+    Task `json:"task"`
+  }
+
   DeleteTaskRequest struct {
     TaskId uint `json:"task_id"`
   }

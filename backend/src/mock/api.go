@@ -76,6 +76,11 @@ const (
   DeleteTaskRequestDataNotExists = `{"task_id": 4}`
 
   GroupTasksRequestData = `{"group_id": 1}`
+  GroupTasksIncorrectIdRequestData = DeleteGroupRequestDataIncorrectId
+  AssignTaskRequestData = `{"worker_id": 1, "task": {"id": 1}}`
+  AssignTaskIdNotExistsRequestData = `{"worker_id": 1, "task": {"id": 11}}`
+  AssignTaskIncorrectWorkerIdRequestData = `{"worker_id": 18446744073709551615, "task": {"id": 1}}`
+  AssignTaskIncorrectTaskIdRequestData = `{"worker_id": 1, "task": {"id": 18446744073709551615}}`
 )
 
 var (

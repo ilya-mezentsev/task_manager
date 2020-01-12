@@ -16,6 +16,7 @@ var (
   assigningError = errors.New("assigning error")
   groupIdError = errors.New("getting all tasks error")
   WorkerIdNotExistsError = errors.New("unable to assign task: worker id not exists")
+  UnableToAssingTaskIdNotExists = errors.New("unable to assign task: task id not exists")
   AssignTaskInternalError = errors.New("unable to assign task: internal error")
   GetTasksByGroupIdInternalError = errors.New("unable to get tasks by group id: internal error")
 )
