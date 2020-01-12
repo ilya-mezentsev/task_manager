@@ -1,6 +1,7 @@
 package api
 
 import (
+  "api/middleware"
   "encoding/json"
   "github.com/gorilla/mux"
   "io/ioutil"
@@ -12,6 +13,7 @@ var router *mux.Router
 
 func init() {
   router = mux.NewRouter()
+  router.Use(middleware.RequiredAuthCookieOrHeader)
 }
 
 type ErrorResponse struct {

@@ -64,6 +64,8 @@ func makeLoginRequest(t *testing.T, method, endpoint, data string) *http.Respons
   })
 
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
+  // TODO avoid this hack
+  req.Header.Set("TM-Session-Token", "backdoor for RequiredAuthCookieOrHeader middleware")
   resp, err := client.Do(req)
   if err != nil {
     panic(err)

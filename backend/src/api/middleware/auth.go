@@ -8,7 +8,8 @@ import (
 )
 
 const (
-  tokenKey = "TM-Session-Token"
+  cookieAuthTokenKey = "TM-Auth-Token"
+  headerAuthTokenKey = "TM-Session-Token"
   RoleAdmin = "admin"
   RoleGroupLead = "group_lead"
   RoleGroupWorker = "group_worker"
@@ -25,16 +26,24 @@ func init() {
   coder = code.NewCoder(coderKey)
 }
 
+func hasHeaderAuthToken(r *http.Request) bool {
+  return r.Header.Get(headerAuthTokenKey) != ""
+}
+
+func setHeaderAuthToken(r *http.Request, value string) {
+  r.Header.Set(headerAuthTokenKey, value)
+}
+
 func SetTokenForAdmin(r *http.Request) {
-  r.Header.Set(tokenKey, getTokenWithRole(RoleAdmin))
+  setHeaderAuthToken(r, getTokenWithRole(RoleAdmin))
 }
 
 func SetTokenForGroupLead(r *http.Request) {
-  r.Header.Set(tokenKey, getTokenWithRole(RoleGroupLead))
+  setHeaderAuthToken(r, getTokenWithRole(RoleGroupLead))
 }
 
 func SetTokenForGroupWorker(r *http.Request) {
-  r.Header.Set(tokenKey, getTokenWithRole(RoleGroupWorker))
+  setHeaderAuthToken(r, getTokenWithRole(RoleGroupWorker))
 }
 
 func getTokenWithRole(role string) string {
@@ -49,7 +58,7 @@ func getTokenWithRole(role string) string {
 }
 
 func getAuthTokenData(r *http.Request) (map[string]interface{}, error) {
-  token := r.Header.Get(tokenKey)
+  token := r.Header.Get(headerAuthTokenKey)
   decoded, err := coder.Decrypt(token)
   if err != nil {
     log.Printf("cannot decode token: %s\n", token)
