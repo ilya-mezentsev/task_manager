@@ -4,6 +4,8 @@ import (
   "crypto/md5"
   "encoding/hex"
   "fmt"
+  "reflect"
+  "runtime"
 )
 
 func Assert(condition bool, onFalseFn func()) {
@@ -24,4 +26,8 @@ func GetHash(key string) string {
   h := md5.New()
   h.Write([]byte(key))
   return hex.EncodeToString(h.Sum(nil))
+}
+
+func GetFunctionName(i interface{}) string {
+  return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }

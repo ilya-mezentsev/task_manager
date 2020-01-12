@@ -1,6 +1,7 @@
 package code
 
 import (
+  "fmt"
   "testing"
   . "utils"
 )
@@ -33,8 +34,12 @@ func TestCoder_Decrypt(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(len(decrypted) == len(expected), func() {
-    t.Log(GetExpectationString(expected, decrypted))
+  Assert(fmt.Sprintf("%v", decrypted["user_id"]) == fmt.Sprintf("%v", expected["user_id"]), func() {
+    t.Log(GetExpectationString(expected["user_id"], decrypted["user_id"]))
+    t.Fail()
+  })
+  Assert(decrypted["role"] == expected["role"], func() {
+    t.Log(GetExpectationString(expected["role"], decrypted["role"]))
     t.Fail()
   })
 }

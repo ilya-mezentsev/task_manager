@@ -12,7 +12,6 @@ import (
 
 type (
   TestingHelpers struct {
-    Token string
     Database *sql.DB
     GroupsData groups.DataPlugin
     UsersData users.DataPlugin

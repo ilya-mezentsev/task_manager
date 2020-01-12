@@ -2,6 +2,7 @@ package api
 
 import (
   "api/helpers"
+  "api/middleware"
   "interfaces"
   "models"
   "net/http"
@@ -23,6 +24,7 @@ func InitGroupWorkerRequestHandler(groupWorkerDataPlugin interfaces.GroupWorkerD
 
 func bindGroupWorkerRoutesToHandlers() {
   api := router.PathPrefix("/api/group/worker").Subrouter()
+  api.Use(middleware.RequiredGroupWorkerRole)
 
   api.HandleFunc("/tasks", groupWorkerRequestHandler.GetTasksByWorkerId).Methods(http.MethodGet)
   api.HandleFunc("/task/comment", groupWorkerRequestHandler.CommentTask).Methods(http.MethodPatch)

@@ -2,6 +2,7 @@ package api
 
 import (
   "api/helpers"
+  "api/middleware"
   "interfaces"
   "models"
   "net/http"
@@ -23,6 +24,7 @@ func InitGroupLeadRequestHandler(groupLeadDataPlugin interfaces.GroupLeadData) {
 
 func bindGroupLeadRoutesToHandlers() {
   api := router.PathPrefix("/api/group/lead").Subrouter()
+  api.Use(middleware.RequiredGroupLeadRole)
 
   api.HandleFunc("/tasks", groupLeadRequestHandler.GetTasksByGroupId).Methods(http.MethodGet)
   api.HandleFunc("/task", groupLeadRequestHandler.AssignTaskToWorker).Methods(http.MethodPost)

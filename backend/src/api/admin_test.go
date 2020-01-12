@@ -1,6 +1,7 @@
 package api
 
 import (
+  "api/middleware"
   "bytes"
   "database/sql"
   "encoding/json"
@@ -15,25 +16,18 @@ import (
   "net/http/httptest"
   "os"
   "plugins"
-  "plugins/code"
   "plugins/db"
   "plugins/db/groups"
   "plugins/db/tasks"
   "plugins/db/users"
+  "strings"
   "testing"
   . "utils"
 )
 
-var (
-  testingHelper mock.TestingHelpers
-  coder = code.NewCoder("123456789012345678901234")
-)
+var testingHelper mock.TestingHelpers
 
 func init() {
-  testingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
-    "role": "admin",
-  })
-
   dbFile := os.Getenv("TEST_DB_FILE")
   if dbFile == "" {
     fmt.Println("TEST_DB_FILE env var is not set")
@@ -85,8 +79,17 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
     t.Fail()
   })
 
+  var setTokenFn func(r *http.Request)
+  switch {
+  case strings.Contains(endpoint, "admin"):
+    setTokenFn = middleware.SetTokenForAdmin
+  case strings.Contains(endpoint, "lead"):
+    setTokenFn = middleware.SetTokenForGroupLead
+  default:
+    setTokenFn = middleware.SetTokenForGroupWorker
+  }
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
-  req.Header.Set("TM-Session-Token", testingHelper.Token)
+  setTokenFn(req)
   resp, err := client.Do(req)
   if err != nil {
     panic(err)

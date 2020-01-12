@@ -13,10 +13,6 @@ import (
 )
 
 func init() {
-  testingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
-    "role": "admin",
-  })
-
   InitGroupLeadRequestHandler(plugins.NewDBProxy(testingHelper.Database))
   db.ExecQuery(testingHelper.Database, mock2.TurnOnForeignKeys)
 }
