@@ -58,7 +58,7 @@ func TestLoginRequestHandler_LoginSuccess(t *testing.T) {
   defer dropTestTables()
 
   resp := makeLoginRequest(
-    t, http.MethodPost, "session/login", `{"user_name": "tm_admin", "user_password": "tm_password"}`)
+    t, http.MethodPost, "session/login", `{"user_name": "tm_login", "user_password": "tm_password"}`)
   authCookie, err := getAuthCookie(resp)
 
   Assert(err == nil, func() {
