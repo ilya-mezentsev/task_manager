@@ -25,4 +25,8 @@ type (
     AddCommentToTask(taskId uint, comment string) error
     MarkTaskAsCompleted(taskId uint) error
   }
+
+  LoginData interface {
+    GetUserByCredentials(name, password string) (models.User, error)
+  }
 )
