@@ -8,9 +8,9 @@ import (
 
 const (
   tokenKey = "TM-Session-Token"
-  roleAdmin = "admin"
-  roleGroupLead = "group_lead"
-  roleGroupWorker = "group_worker"
+  RoleAdmin = "admin"
+  RoleGroupLead = "group_lead"
+  RoleGroupWorker = "group_worker"
 )
 
 var coder code.Coder
@@ -20,15 +20,15 @@ func init() {
 }
 
 func SetTokenForAdmin(r *http.Request) {
-  r.Header.Set(tokenKey, getTokenWithRole(roleAdmin))
+  r.Header.Set(tokenKey, getTokenWithRole(RoleAdmin))
 }
 
 func SetTokenForGroupLead(r *http.Request) {
-  r.Header.Set(tokenKey, getTokenWithRole(roleGroupLead))
+  r.Header.Set(tokenKey, getTokenWithRole(RoleGroupLead))
 }
 
 func SetTokenForGroupWorker(r *http.Request) {
-  r.Header.Set(tokenKey, getTokenWithRole(roleGroupWorker))
+  r.Header.Set(tokenKey, getTokenWithRole(RoleGroupWorker))
 }
 
 func getTokenWithRole(role string) string {
@@ -55,16 +55,16 @@ func getAuthTokenData(r *http.Request) (map[string]interface{}, error) {
 
 func isAdmin(tokenData map[string]interface{}) bool {
   role, found := tokenData["role"]
-  return found && role == roleAdmin
+  return found && role == RoleAdmin
 }
 
 func isGroupLead(tokenData map[string]interface{}) bool {
   role, found := tokenData["role"]
-  return found && role == roleGroupLead
+  return found && role == RoleGroupLead
 }
 
 func isGroupWorker(tokenData map[string]interface{}) bool {
   role, found := tokenData["role"]
   // coz group lead is group worker too
-  return found && (role == roleGroupLead || role == roleGroupWorker)
+  return found && (role == RoleGroupLead || role == RoleGroupWorker)
 }

@@ -17,8 +17,10 @@ type AdminRequestHandler struct {
 }
 
 func InitAdminRequestHandler(adminDataPlugin interfaces.AdminData) {
-  adminRequestHandler.admin = NewAdmin(adminDataPlugin)
-  adminRequestHandler.checker = helpers.NewInputChecker()
+  adminRequestHandler = AdminRequestHandler{
+    admin: NewAdmin(adminDataPlugin),
+    checker: helpers.NewInputChecker(),
+  }
   bindAdminRoutesToHandlers()
 }
 

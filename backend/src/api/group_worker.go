@@ -17,8 +17,10 @@ type GroupWorkerRequestHandler struct {
 }
 
 func InitGroupWorkerRequestHandler(groupWorkerDataPlugin interfaces.GroupWorkerData) {
-  groupWorkerRequestHandler.groupWorker = NewGroupWorker(groupWorkerDataPlugin)
-  groupWorkerRequestHandler.checker = helpers.NewInputChecker()
+  groupWorkerRequestHandler = GroupWorkerRequestHandler{
+    groupWorker: NewGroupWorker(groupWorkerDataPlugin),
+    checker: helpers.NewInputChecker(),
+  }
   bindGroupWorkerRoutesToHandlers()
 }
 

@@ -95,6 +95,8 @@ const (
 )
 
 var (
+  AdminAuthCookieValue =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4ifQ.6ZyYQatKgUHGaWvfT2-aJ4uYhCRi9PHtT374eMKIC7w"
   DropTestTablesQueries = []string{
     mock.DropGroupsTable, mock.DropUsersTable, mock.DropTasksTable,
   }

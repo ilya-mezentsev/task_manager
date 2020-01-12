@@ -17,8 +17,10 @@ type GroupLeadRequestHandler struct {
 }
 
 func InitGroupLeadRequestHandler(groupLeadDataPlugin interfaces.GroupLeadData) {
-  groupLeadRequestHandler.groupLead = NewGroupLead(groupLeadDataPlugin)
-  groupLeadRequestHandler.checker = helpers.NewInputChecker()
+  groupLeadRequestHandler = GroupLeadRequestHandler{
+    groupLead: NewGroupLead(groupLeadDataPlugin),
+    checker: helpers.NewInputChecker(),
+  }
   bindGroupLeadRoutesToHandlers()
 }
 

@@ -14,6 +14,7 @@ var (
   IncorrectGroupIdTemplate = "incorrect group id: %v"
 
   IncorrectUserNameTemplate = "incorrect user name: '%s'"
+  IncorrectUserPasswordTemplate = "incorrect user password: '%s'"
   IncorrectUserGroupIdTemplate = "incorrect user group id: %v"
   IncorrectUserIdTemplate = "incorrect user id: %v"
 
@@ -33,6 +34,10 @@ func getIncorrectGroupIdError(groupId uint) error {
 
 func getIncorrectUserNameError(userName string) error {
   return fmt.Errorf(IncorrectUserNameTemplate, userName)
+}
+
+func getIncorrectUserPasswordError(userPassword string) error {
+  return fmt.Errorf(IncorrectUserPasswordTemplate, userPassword)
 }
 
 func getIncorrectUserGroupIdError(groupId uint) error {

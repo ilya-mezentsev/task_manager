@@ -47,4 +47,9 @@ type (
   }
 
   CompleteTaskRequest DeleteTaskRequest
+
+  LoginRequest struct {
+    UserName string `json:"user_name"`
+    UserPassword string `json:"user_password"`
+  }
 )
