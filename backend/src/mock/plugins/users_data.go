@@ -67,6 +67,7 @@ var (
   TestingUserWithNotExistsGroupId = models.User{
     GroupId: 11,
   }
+  TestingCredentials = [2]string{"name1", "some_pass"}
 )
 
 func UserListEqual(l1 , l2 []models.User) bool {

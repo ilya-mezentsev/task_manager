@@ -11,6 +11,7 @@ const (
   AllUsersQuery = "SELECT * FROM users"
   GetUsersByGroupId = "SELECT * FROM users WHERE group_id = ?"
   GetUserById = "SELECT * FROM users WHERE id = ?"
+  GetUserByCredentials = "SELECT * FROM users WHERE name = ? AND password = ?"
   CreateUserQuery = "INSERT INTO users VALUES(NULL, ?, ?, ?, ?)"
   DeleteUserQuery = "DELETE FROM users WHERE id = ?"
   UserNameAlreadyExistsMessage = "UNIQUE constraint failed: users.name"
@@ -32,6 +33,17 @@ func (u DataPlugin) GetAllUsers() ([]models.User, error) {
 
 func (u DataPlugin) GetUsersByGroupId(groupId uint) ([]models.User, error) {
   return u.getUsersSequence(GetUsersByGroupId, groupId)
+}
+
+func (u DataPlugin) GetUserByCredentials(name, password string) (models.User, error) {
+  users, err := u.getUsersSequence(GetUserByCredentials, name, password)
+  if err != nil {
+    return models.User{}, err
+  } else if len(users) == 0 {
+    return models.User{}, db.UserNotFoundByCredentials
+  }
+
+  return users[0], nil
 }
 
 func (u DataPlugin) getUsersSequence(query string, args ...interface{}) ([]models.User, error) {

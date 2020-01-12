@@ -3,6 +3,8 @@ package db
 import "errors"
 
 var (
+  UserNotFoundByCredentials = errors.New("user not found")
+
   UserIdNotExists = errors.New("user id not exists")
   UserNameAlreadyExists = errors.New("user name already exists")
   WorkGroupAlreadyExists = errors.New("work group already exists")

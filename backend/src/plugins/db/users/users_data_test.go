@@ -4,6 +4,7 @@ import (
   "database/sql"
   "fmt"
   mock "mock/plugins"
+  "models"
   "os"
   "plugins/db"
   "testing"
@@ -75,6 +76,50 @@ func TestUsersDataPlugin_GetAllUsersErrorTableNotExists(t *testing.T) {
   })
   Assert(users == nil, func() {
     t.Log("should not be users:", users)
+    t.Fail()
+  })
+}
+
+func TestUsersDataPlugin_GetUserByCredentialsSuccess(t *testing.T) {
+  initUsersTable()
+  defer dropUsersTable()
+
+  user, err := usersData.GetUserByCredentials(mock.TestingCredentials[0], mock.TestingCredentials[1])
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(user == mock.TestingUsers[0], func() {
+    t.Log(GetExpectationString(mock.TestingUsers[0], user))
+    t.Fail()
+  })
+}
+
+func TestUsersDataPlugin_GetUserByCredentialsErrorTableNotExists(t *testing.T) {
+  dropUsersTable()
+
+  user, err := usersData.GetUserByCredentials(mock.TestingCredentials[0], mock.TestingCredentials[1])
+  Assert(err != nil, func() {
+    t.Log("should be error")
+    t.Fail()
+  })
+  Assert(user == models.User{}, func() {
+    t.Log(GetExpectationString(models.User{}, user))
+    t.Fail()
+  })
+}
+
+func TestUsersDataPlugin_GetUserByCredentialsErrorUserNotExists(t *testing.T) {
+  initUsersTable()
+  defer dropUsersTable()
+
+  user, err := usersData.GetUserByCredentials("", "")
+  AssertErrorsEqual(err, db.UserNotFoundByCredentials, func() {
+    t.Log(GetExpectationString(db.UserNotFoundByCredentials, err))
+    t.Fail()
+  })
+  Assert(user == models.User{}, func() {
+    t.Log(GetExpectationString(models.User{}, user))
     t.Fail()
   })
 }
