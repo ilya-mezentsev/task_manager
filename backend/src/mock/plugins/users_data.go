@@ -18,30 +18,30 @@ const (
 
 var (
   TestingUsersQueries = []string{
-    "insert into users values(1, 'name1', 1, 'some_pass', 0);",
-    "insert into users values(2, 'name2', 2, 'some_pass', 0);",
-    "insert into users values(3, 'name3', 1, 'some_pass', 1);",
+    "insert into users values(1, 'name1', 1, 'e261f61e493f309cca25ee89e98518c0', 0);",
+    "insert into users values(2, 'name2', 2, 'e261f61e493f309cca25ee89e98518c0', 0);",
+    "insert into users values(3, 'name3', 1, 'e261f61e493f309cca25ee89e98518c0', 1);",
   }
   TestingUsers = []models.User{
     {
       ID: 1,
       Name: "name1",
       GroupId: 1,
-      Password: "some_pass",
+      Password: "e261f61e493f309cca25ee89e98518c0",
       IsGroupLead: false,
     },
     {
       ID: 2,
       Name: "name2",
       GroupId: 2,
-      Password: "some_pass",
+      Password: "e261f61e493f309cca25ee89e98518c0",
       IsGroupLead: false,
     },
     {
       ID: 3,
       Name: "name3",
       GroupId: 1,
-      Password: "some_pass",
+      Password: "e261f61e493f309cca25ee89e98518c0",
       IsGroupLead: true,
     },
   }
@@ -50,7 +50,7 @@ var (
       ID: 2,
       Name: "name2",
       GroupId: 2,
-      Password: "some_pass",
+      Password: "e261f61e493f309cca25ee89e98518c0",
       IsGroupLead: false,
     },
   }
@@ -58,7 +58,7 @@ var (
   TestingUser = models.User{
     Name: "name4",
     GroupId: 3,
-    Password: "some_pass",
+    Password: "e261f61e493f309cca25ee89e98518c0",
     IsGroupLead: false,
   }
   TestingUserWithExistsName = models.User{
@@ -67,7 +67,7 @@ var (
   TestingUserWithNotExistsGroupId = models.User{
     GroupId: 11,
   }
-  TestingCredentials = [2]string{"name1", "some_pass"}
+  TestingCredentials = [2]string{"name1", "e261f61e493f309cca25ee89e98518c0"}
 )
 
 func UserListEqual(l1 , l2 []models.User) bool {

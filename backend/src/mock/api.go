@@ -92,11 +92,15 @@ const (
   CompleteTaskRequestData = `{"task_id": 1}`
   CompleteTaskIncorrectIdRequestData = `{"task_id": 18446744073709551615}`
   CompleteTaskIdNotExistsRequestData = `{"task_id": 11}`
+
+  AdminLoginRequestData = `{"user_name": "tm_login", "user_password": "tm_password"}`
+  GroupLeadLoginRequestData = `{"user_name": "name3", "user_password": "some_pass"}`
+  GroupWorkerLoginRequestData = `{"user_name": "name2", "user_password": "some_pass"}`
+  IncorrectUserNameLoginRequestData = `{"user_name": "", "user_password": "some_pass"}`
+  IncorrectUserPasswordLoginRequestData = `{"user_name": "name", "user_password": ""}`
 )
 
 var (
-  AdminAuthCookieValue =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4ifQ.6ZyYQatKgUHGaWvfT2-aJ4uYhCRi9PHtT374eMKIC7w"
   DropTestTablesQueries = []string{
     mock.DropGroupsTable, mock.DropUsersTable, mock.DropTasksTable,
   }

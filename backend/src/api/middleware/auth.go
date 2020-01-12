@@ -3,6 +3,7 @@ package middleware
 import (
   "log"
   "net/http"
+  "os"
   "plugins/code"
 )
 
@@ -16,7 +17,12 @@ const (
 var coder code.Coder
 
 func init() {
-  coder = code.NewCoder("123456789012345678901234")
+  coderKey := os.Getenv("CODER_KEY")
+  if coderKey == "" {
+    panic("CODER_KEY is not set")
+  }
+
+  coder = code.NewCoder(coderKey)
 }
 
 func SetTokenForAdmin(r *http.Request) {

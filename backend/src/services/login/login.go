@@ -4,6 +4,7 @@ import (
   "api/middleware"
   "interfaces"
   "plugins/db"
+  "utils"
 )
 
 var (
@@ -37,7 +38,7 @@ func isAdmin(name, password string) bool {
 }
 
 func (l Service) getRoleFromStorage(name, password string) (string, error) {
-  user, err := l.dataProvider.GetUserByCredentials(name, password)
+  user, err := l.dataProvider.GetUserByCredentials(name, utils.GetHash(password))
   switch err {
   case nil:
     break
