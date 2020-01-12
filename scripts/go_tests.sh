@@ -16,7 +16,7 @@ function setFoldersWithTests() {
   for dir in $(find . -type d)
   do
     # should skip github libs
-    if [[ ${dir} == *github* ]]; then
+    if [[ ${dir} == *github* || ${dir} != *api* ]]; then
       continue
     fi
     if tests=$(find ${GOPATH}/src/${dir} -maxdepth 1 -name '*_test.go'); [[ ${tests} != "" ]]; then

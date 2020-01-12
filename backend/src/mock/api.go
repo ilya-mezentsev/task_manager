@@ -77,10 +77,20 @@ const (
 
   GroupTasksRequestData = `{"group_id": 1}`
   GroupTasksIncorrectIdRequestData = DeleteGroupRequestDataIncorrectId
-  AssignTaskRequestData = `{"worker_id": 1, "task": {"id": 1}}`
-  AssignTaskIdNotExistsRequestData = `{"worker_id": 1, "task": {"id": 11}}`
-  AssignTaskIncorrectWorkerIdRequestData = `{"worker_id": 18446744073709551615, "task": {"id": 1}}`
-  AssignTaskIncorrectTaskIdRequestData = `{"worker_id": 1, "task": {"id": 18446744073709551615}}`
+  AssignTaskRequestData = `{"user_id": 1, "task": {"id": 1}}`
+  AssignTaskIdNotExistsRequestData = `{"user_id": 1, "task": {"id": 11}}`
+  AssignTaskIncorrectWorkerIdRequestData = `{"user_id": 18446744073709551615, "task": {"id": 1}}`
+  AssignTaskIncorrectTaskIdRequestData = `{"user_id": 1, "task": {"id": 18446744073709551615}}`
+
+  GetTasksByUserIdRequestData = `{"user_id": 1}`
+  GetTasksByIncorrectUserIdRequestData = `{"user_id": 18446744073709551615}`
+  CommentTaskRequestData = `{"task_id": 1, "comment": "hello world"}`
+  CommentTaskIncorrectIdRequestData = `{"task_id": 18446744073709551615, "comment": "hello world"}`
+  IncorrectCommentTaskRequestData = `{"task_id": 1, "comment": ""}`
+  CommentTaskIdNotExistsRequestData = `{"task_id": 11, "comment": "hello world"}`
+  CompleteTaskRequestData = `{"task_id": 1}`
+  CompleteTaskIncorrectIdRequestData = `{"task_id": 18446744073709551615}`
+  CompleteTaskIdNotExistsRequestData = `{"task_id": 11}`
 )
 
 var (

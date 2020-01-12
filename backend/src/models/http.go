@@ -27,11 +27,22 @@ type (
   }
 
   AssignTaskToGroupWorkerRequest struct {
-    WorkerId uint `json:"worker_id"`
+    WorkerId uint `json:"user_id"`
     Task `json:"task"`
+  }
+
+  GroupWorkerTasksRequest struct {
+    WorkerId uint `json:"user_id"`
+  }
+
+  CommentTaskRequest struct {
+    TaskId uint `json:"task_id"`
+    Comment string `json:"comment"`
   }
 
   DeleteTaskRequest struct {
     TaskId uint `json:"task_id"`
   }
+
+  CompleteTaskRequest DeleteTaskRequest
 )

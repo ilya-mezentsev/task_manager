@@ -20,6 +20,7 @@ var (
   IncorrectTaskTitleTemplate = "incorrect task title: '%s'"
   IncorrectTaskDescriptionTemplate = "incorrect task description: '%s'"
   IncorrectTaskIdTemplate = "incorrect task id: %v"
+  IncorrectTaskComment = "incorrect task comment: %s"
 )
 
 func getIncorrectGroupNameError(groupName string) error {
@@ -52,4 +53,8 @@ func getIncorrectTaskDescriptionError(description string) error {
 
 func getIncorrectTaskIdError(taskId uint) error {
   return fmt.Errorf(IncorrectTaskIdTemplate, taskId)
+}
+
+func getIncorrectTaskCommentError(comment string) error {
+  return fmt.Errorf(IncorrectTaskComment, comment)
 }

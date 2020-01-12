@@ -3,6 +3,7 @@ package api
 import (
   "api/helpers"
   "interfaces"
+  "models"
   "net/http"
   . "users/group_worker"
 )
@@ -16,20 +17,70 @@ type GroupWorkerRequestHandler struct {
 
 func InitGroupWorkerRequestHandler(groupWorkerDataPlugin interfaces.GroupWorkerData) {
   groupWorkerRequestHandler.groupWorker = NewGroupWorker(groupWorkerDataPlugin)
-  groupLeadRequestHandler.checker = helpers.NewInputChecker()
+  groupWorkerRequestHandler.checker = helpers.NewInputChecker()
   bindGroupWorkerRoutesToHandlers()
 }
 
 func bindGroupWorkerRoutesToHandlers() {
   api := router.PathPrefix("/api/group/worker").Subrouter()
 
-  api.HandleFunc("tasks", groupWorkerRequestHandler.GetAllTasks).Methods(http.MethodGet)
-  api.HandleFunc("task/comment", groupWorkerRequestHandler.CommentTask).Methods(http.MethodPatch)
-  api.HandleFunc("task/complete", groupWorkerRequestHandler.CompleteTask).Methods(http.MethodPatch)
+  api.HandleFunc("/tasks", groupWorkerRequestHandler.GetTasksByWorkerId).Methods(http.MethodGet)
+  api.HandleFunc("/task/comment", groupWorkerRequestHandler.CommentTask).Methods(http.MethodPatch)
+  api.HandleFunc("/task/complete", groupWorkerRequestHandler.CompleteTask).Methods(http.MethodPatch)
 }
 
-func (handler GroupWorkerRequestHandler) GetAllTasks(w http.ResponseWriter, r *http.Request) {}
+func (handler GroupWorkerRequestHandler) GetTasksByWorkerId(w http.ResponseWriter, r *http.Request) {
+  defer sendErrorIfPanicked(w)
 
-func (handler GroupWorkerRequestHandler) CommentTask(w http.ResponseWriter, r *http.Request) {}
+  var groupWorkerTasksReq models.GroupWorkerTasksRequest
+  decodeRequestBody(r, &groupWorkerTasksReq)
 
-func (handler GroupWorkerRequestHandler) CompleteTask(w http.ResponseWriter, r *http.Request) {}
+  if !handler.checker.IsSafeUint64(groupWorkerTasksReq.WorkerId) {
+    panic(getIncorrectUserIdError(groupWorkerTasksReq.WorkerId))
+  }
+
+  tasks, err := handler.groupWorker.GetTasksByUserId(groupWorkerTasksReq.WorkerId)
+  if err != nil {
+    panic(err)
+  }
+
+  encodeAndSendResponse(w, tasks)
+}
+
+func (handler GroupWorkerRequestHandler) CommentTask(w http.ResponseWriter, r *http.Request) {
+  defer sendErrorIfPanicked(w)
+
+  var commentTaskReq models.CommentTaskRequest
+  decodeRequestBody(r, &commentTaskReq)
+
+  if !handler.checker.IsSafeUint64(commentTaskReq.TaskId) {
+    panic(getIncorrectTaskIdError(commentTaskReq.TaskId))
+  } else if !handler.checker.IsLongTextCorrect(commentTaskReq.Comment) {
+    panic(getIncorrectTaskCommentError(commentTaskReq.Comment))
+  }
+
+  err := handler.groupWorker.AddCommentToTask(commentTaskReq.TaskId, commentTaskReq.Comment)
+  if err != nil {
+    panic(err)
+  }
+
+  encodeAndSendResponse(w, nil)
+}
+
+func (handler GroupWorkerRequestHandler) CompleteTask(w http.ResponseWriter, r *http.Request) {
+  defer sendErrorIfPanicked(w)
+
+  var completeTaskReq models.CompleteTaskRequest
+  decodeRequestBody(r, &completeTaskReq)
+
+  if !handler.checker.IsSafeUint64(completeTaskReq.TaskId) {
+    panic(getIncorrectTaskIdError(completeTaskReq.TaskId))
+  }
+
+  err := handler.groupWorker.MarkTaskAsCompleted(completeTaskReq.TaskId)
+  if err != nil {
+    panic(err)
+  }
+
+  encodeAndSendResponse(w, nil)
+}
