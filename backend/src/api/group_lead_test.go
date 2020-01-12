@@ -7,14 +7,12 @@ import (
   mock2 "mock/plugins"
   "net/http"
   "plugins"
-  "plugins/code"
   "plugins/db"
   "testing"
   . "utils"
 )
 
 func init() {
-  var coder = code.NewCoder("123456789012345678901234")
   testingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
     "role": "admin",
   })

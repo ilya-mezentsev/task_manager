@@ -26,10 +26,10 @@ import (
 
 var (
   testingHelper mock.TestingHelpers
+  coder = code.NewCoder("123456789012345678901234")
 )
 
 func init() {
-  var coder = code.NewCoder("123456789012345678901234")
   testingHelper.Token, _ = coder.Encrypt(map[string]interface{}{
     "role": "admin",
   })
