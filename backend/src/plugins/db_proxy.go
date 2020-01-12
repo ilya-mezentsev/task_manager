@@ -47,6 +47,18 @@ func (proxy DBProxy) GetTasksByGroupId(groupId uint) ([]models.Task, error) {
   return tasksByGroupId, nil
 }
 
+func (proxy DBProxy) GetTasksByUserId(userId uint) ([]models.Task, error) {
+  log.Printf("requesting tasks by user id: <%d>\n", userId)
+
+  tasksByUserId, err := proxy.tasksData.GetTasksByUserId(userId)
+  if err != nil {
+    log.Printf("error while requesting tasks by user id (id <%d>): %v\n", userId, err)
+    return nil, err
+  }
+
+  return tasksByUserId, nil
+}
+
 func (proxy DBProxy) AssignTasksToGroup(groupId uint, tasks []models.Task) error {
   log.Printf("assigning tasks to work group (id <%d>)\n", groupId)
   for i, task := range tasks {

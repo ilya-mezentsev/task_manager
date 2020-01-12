@@ -1,6 +1,7 @@
 package api
 
 import (
+  "api/helpers"
   "interfaces"
   "net/http"
   . "users/group_worker"
@@ -10,13 +11,16 @@ var groupWorkerRequestHandler GroupWorkerRequestHandler
 
 type GroupWorkerRequestHandler struct {
   groupWorker GroupWorker
+  checker helpers.InputChecker
 }
 
 func InitGroupWorkerRequestHandler(groupWorkerDataPlugin interfaces.GroupWorkerData) {
   groupWorkerRequestHandler.groupWorker = NewGroupWorker(groupWorkerDataPlugin)
+  groupLeadRequestHandler.checker = helpers.NewInputChecker()
+  bindGroupWorkerRoutesToHandlers()
 }
 
-func BindGroupWorkerRoutesToHandlers() {
+func bindGroupWorkerRoutesToHandlers() {
   api := router.PathPrefix("/api/group/worker").Subrouter()
 
   api.HandleFunc("tasks", groupWorkerRequestHandler.GetAllTasks).Methods(http.MethodGet)
