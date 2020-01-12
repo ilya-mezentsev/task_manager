@@ -16,9 +16,10 @@ var (
   assigningError = errors.New("assigning error")
   groupIdError = errors.New("getting all tasks error")
   WorkerIdNotExistsError = errors.New("unable to assign task: worker id not exists")
-  UnableToAssingTaskIdNotExists = errors.New("unable to assign task: task id not exists")
+  UnableToAssignTaskIdNotExists = errors.New("unable to assign task: task id not exists")
   AssignTaskInternalError = errors.New("unable to assign task: internal error")
   GetTasksByGroupIdInternalError = errors.New("unable to get tasks by group id: internal error")
+  GetUsersByGroupIdInternalError = errors.New("unable to get users by group id: internal error")
 )
 
 type GroupLeadDataMock struct {
@@ -63,4 +64,12 @@ func (gld GroupLeadDataMock) GetTasksByGroupId(groupId uint) ([]models.Task, err
 
   tasks := gld.WorkersTasks[groupId]
   return tasks, nil
+}
+
+func (gld GroupLeadDataMock) GetUsersByGroupId(groupId uint) ([]models.User, error) {
+  if groupId == GroupIdError {
+    return nil, groupIdError
+  }
+
+  return []models.User{}, nil
 }

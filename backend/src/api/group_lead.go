@@ -26,8 +26,27 @@ func bindGroupLeadRoutesToHandlers() {
   api := router.PathPrefix("/api/group/lead").Subrouter()
   api.Use(middleware.RequiredGroupLeadRole)
 
+  api.HandleFunc("/users", groupLeadRequestHandler.GetUsersByGroupId).Methods(http.MethodGet)
   api.HandleFunc("/tasks", groupLeadRequestHandler.GetTasksByGroupId).Methods(http.MethodGet)
   api.HandleFunc("/task", groupLeadRequestHandler.AssignTaskToWorker).Methods(http.MethodPost)
+}
+
+func (handler GroupLeadRequestHandler) GetUsersByGroupId(w http.ResponseWriter, r *http.Request) {
+  defer sendErrorIfPanicked(w)
+
+  var workGroupUsersReq models.WorkGroupUsersRequest
+  decodeRequestBody(r, &workGroupUsersReq)
+
+  if !handler.checker.IsSafeUint64(workGroupUsersReq.GroupId) {
+    panic(getIncorrectGroupIdError(workGroupUsersReq.GroupId))
+  }
+
+  users, err := handler.groupLead.GetUsersByGroupId(workGroupUsersReq.GroupId)
+  if err != nil {
+    panic(err)
+  }
+
+  encodeAndSendResponse(w, users)
 }
 
 func (handler GroupLeadRequestHandler) AssignTaskToWorker(w http.ResponseWriter, r *http.Request) {

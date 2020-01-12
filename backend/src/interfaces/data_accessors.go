@@ -16,6 +16,7 @@ type (
   }
 
   GroupLeadData interface {
+    GetUsersByGroupId(groupId uint) ([]models.User, error)
     AssignTaskToWorker(workerId uint, task models.Task) error
     GetTasksByGroupId(groupId uint) ([]models.Task, error)
   }

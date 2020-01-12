@@ -134,6 +134,18 @@ func (proxy DBProxy) GetAllUsers() ([]models.User, error) {
   return allUsers, nil
 }
 
+func (proxy DBProxy) GetUsersByGroupId(groupId uint) ([]models.User, error) {
+  log.Printf("requesting user by group id: <%d>\n", groupId)
+
+  usersByGroupId, err := proxy.usersData.GetUsersByGroupId(groupId)
+  if err != nil {
+    log.Printf("error while requesting users by group id (id <%d>): %v\n", groupId, err)
+    return nil, err
+  }
+
+  return usersByGroupId, nil
+}
+
 func (proxy DBProxy) CreateUser(user models.User) error {
   log.Printf("creating user (%v)\n", user)
 

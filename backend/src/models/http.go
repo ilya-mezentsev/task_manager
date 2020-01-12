@@ -26,6 +26,8 @@ type (
     GroupId uint `json:"group_id"`
   }
 
+  WorkGroupUsersRequest WorkGroupTasksRequest
+
   AssignTaskToGroupWorkerRequest struct {
     WorkerId uint `json:"user_id"`
     Task `json:"task"`

@@ -69,6 +69,9 @@ var parsingData = map[string]ErrorParsingData{
   "GetTasksByGroupId": {
     errorTemplate: "unable to get tasks by group id: %s",
   },
+  "GetUsersByGroupId": {
+    errorTemplate: "unable to get users by group id: %s",
+  },
 
   // group worker errors
   "GetTasksByUserId": {

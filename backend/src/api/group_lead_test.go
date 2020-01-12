@@ -72,6 +72,62 @@ func TestGroupLeadRequestHandler_GetTasksByGroupIdErrorTableNotExists(t *testing
   })
 }
 
+func TestGroupLeadRequestHandler_GetUsersByGroupIdSuccess(t *testing.T) {
+  initTestTables()
+  defer dropTestTables()
+
+  var response mock.AllUsersResponse
+  responseBody := makeRequest(t, http.MethodGet, "group/lead/users", mock.GroupUsersRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsOk(t, response.Status)
+  expectedUsers, _ := testingHelper.UsersData.GetUsersByGroupId(1)
+  Assert(mock2.UserListEqual(response.Data, expectedUsers), func() {
+    t.Log(GetExpectationString(expectedUsers, response.Data))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_GetUsersByGroupId(t *testing.T) {
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "group/lead/users", mock.GroupUsersIncorrectIdRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := getIncorrectGroupIdError(math.MaxUint64).Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
+func TestGroupLeadRequestHandler_GetUsersByGroupIdErrorTableNotExists(t *testing.T) {
+  dropTestTables()
+
+  var response mock.ErroredResponse
+  responseBody := makeRequest(t, http.MethodGet, "group/lead/users", mock.GroupUsersRequestData)
+  err := json.NewDecoder(responseBody).Decode(&response)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  assertStatusIsError(t, response.Status)
+  expectedError := mock.GetUsersByGroupIdInternalError.Error()
+  Assert(response.ErrorDetail == expectedError, func() {
+    t.Log(GetExpectationString(expectedError, response.ErrorDetail))
+    t.Fail()
+  })
+}
+
 func TestGroupLeadRequestHandler_AssignTaskToWorkerSuccess(t *testing.T) {
   initTestTables()
   defer dropTestTables()
@@ -105,7 +161,7 @@ func TestGroupLeadRequestHandler_AssignTaskToWorkerErrorTaskIdNotExists(t *testi
     t.Fail()
   })
   assertStatusIsError(t, response.Status)
-  expectedError := mock.UnableToAssingTaskIdNotExists.Error()
+  expectedError := mock.UnableToAssignTaskIdNotExists.Error()
   Assert(response.ErrorDetail == expectedError, func() {
     t.Log(GetExpectationString(expectedError, response.ErrorDetail))
     t.Fail()

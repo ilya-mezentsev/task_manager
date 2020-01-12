@@ -2,6 +2,7 @@ package group_lead
 
 import (
   "mock"
+  mock2 "mock/plugins"
   "models"
   "testing"
   . "utils"
@@ -95,6 +96,32 @@ func TestGroupLead_GetTasksByGroupIdInternalError(t *testing.T) {
   })
   Assert(tasks == nil, func() {
     t.Log(GetExpectationString(nil, tasks))
+    t.Fail()
+  })
+}
+
+func TestGroupLead_GetUsersByGroupIdSuccess(t *testing.T) {
+  users, err := groupLead.GetUsersByGroupId(safeWorkerId)
+
+  Assert(err == nil, func() {
+    t.Log("should not be error:", err)
+    t.Fail()
+  })
+  Assert(mock2.UserListEqual(users, []models.User{}), func() {
+    t.Log(GetExpectationString([]models.User{}, users))
+    t.Fail()
+  })
+}
+
+func TestGroupLead_GetUsersByGroupIdSError(t *testing.T) {
+  users, err := groupLead.GetUsersByGroupId(mock.GroupIdError)
+
+  AssertErrorsEqual(err, mock.GetUsersByGroupIdInternalError, func() {
+    t.Log(GetExpectationString(mock.GetUsersByGroupIdInternalError, err))
+    t.Fail()
+  })
+  Assert(users == nil, func() {
+    t.Log(GetExpectationString(nil, users))
     t.Fail()
   })
 }

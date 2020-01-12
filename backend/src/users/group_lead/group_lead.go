@@ -30,3 +30,12 @@ func (gl GroupLead) GetTasksByGroupId(groupId uint) ([]models.Task, error) {
 
   return tasks, nil
 }
+
+func (gl GroupLead) GetUsersByGroupId(groupId uint) ([]models.User, error) {
+  usersByGroupId, err := gl.dataProvider.GetUsersByGroupId(groupId)
+  if err != nil {
+    return nil, users.ParseError("GetUsersByGroupId", err)
+  }
+
+  return usersByGroupId, nil
+}
