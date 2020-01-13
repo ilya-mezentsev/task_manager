@@ -24,6 +24,7 @@ func requiredRole(isRoleMatchFn func(map[string]interface{})bool, next http.Hand
     if err != nil {
       log.Println("error:", err)
       http.Error(w, "Forbidden", http.StatusForbidden)
+      return
     }
 
     if isRoleMatchFn(tokenData) {

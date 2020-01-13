@@ -3,10 +3,13 @@ package main
 import (
   "api"
   "database/sql"
+  "github.com/gorilla/mux"
   "log"
   "net/http"
   "os"
   "plugins"
+  "regexp"
+  "time"
 )
 
 var staticFilesDirPath string
@@ -40,5 +43,18 @@ func init() {
 func main() {
   r := api.GetRouter()
   r.PathPrefix("/").Handler(http.FileServer(http.Dir(staticFilesDirPath)))
-  _ = http.ListenAndServe(":8181", r)
+  r.Methods("GET").MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
+   match, _ := regexp.MatchString(`/(^api)`, r.URL.Path)
+
+   return match
+  }).Handler(http.RedirectHandler("/", http.StatusPermanentRedirect))
+
+  srv := &http.Server{
+    Handler: r,
+    Addr: "127.0.0.1:8181",
+    WriteTimeout: 15 * time.Second,
+    ReadTimeout: 15 * time.Second,
+  }
+
+  log.Fatal(srv.ListenAndServe())
 }

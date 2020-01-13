@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AdminComponent } from './admin/admin.component';
 import { GroupComponent } from './group/group.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { GroupComponent } from './group/group.component';
     LoginComponent,
     NotFoundComponent,
     AdminComponent,
-    GroupComponent
+    GroupComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
