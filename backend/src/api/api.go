@@ -14,6 +14,10 @@ func init() {
   router = mux.NewRouter()
 }
 
+func GetRouter() *mux.Router {
+  return router
+}
+
 type ErrorResponse struct {
   Status string `json:"status"`
   ErrorDetail string `json:"error_detail"`

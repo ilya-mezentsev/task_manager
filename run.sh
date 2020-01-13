@@ -8,6 +8,7 @@ declare -A scriptsDescriptions=(
   ['go_tests']='run go tests'
   ['ng_tests']='run angular tests'
   ['push_all']='push all files to repository'
+  ['server']='run go server'
 )
 
 function run() {

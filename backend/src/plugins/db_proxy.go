@@ -4,9 +4,39 @@ import (
   "database/sql"
   "log"
   "models"
+  "os"
   "plugins/db/groups"
   "plugins/db/tasks"
   "plugins/db/users"
+)
+
+const (
+  turnOnForeignKeys = "PRAGMA foreign_keys = ON;"
+  createUsersTable = `
+  create table if not exists users(
+    id integer not null primary key autoincrement,
+    name text not null unique,
+    group_id integer not null,
+    password text not null,
+    is_group_lead integer default 0,
+    foreign key(group_id) references groups(id) on delete cascade
+  )`
+  createGroupsTable = `
+  create table if not exists groups(
+    id integer not null primary key autoincrement,
+    name text not null unique
+  )`
+  createTasksTable = `
+  create table if not exists tasks(
+    id integer not null primary key autoincrement,
+    title text not null,
+    description text default '',
+    group_id integer not null,
+    user_id integer default 0,
+    is_complete integer default 0,
+    comment text default '',
+    foreign key(group_id) references groups(id) on delete cascade
+  )`
 )
 
 type DBProxy struct {
@@ -20,6 +50,24 @@ func NewDBProxy(db *sql.DB) DBProxy {
     groupsData: groups.NewDataPlugin(db),
     tasksData: tasks.NewDataPlugin(db),
     usersData: users.NewDataPlugin(db),
+  }
+}
+
+func (proxy DBProxy) InitDBStructure(db *sql.DB) {
+  for _, q := range []string{
+    turnOnForeignKeys, createGroupsTable, createUsersTable, createTasksTable,
+  } {
+    statement, err := db.Prepare(q)
+    if err != nil {
+      log.Println("An error while preparing db statement:", err)
+      os.Exit(1)
+    }
+
+    _, err = statement.Exec()
+    if err != nil {
+      log.Println("An error while creating db structure:", err)
+      os.Exit(1)
+    }
   }
 }
 
