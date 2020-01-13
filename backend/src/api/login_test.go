@@ -64,8 +64,6 @@ func makeLoginRequest(t *testing.T, method, endpoint, data string) *http.Respons
   })
 
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
-  // TODO avoid this hack
-  req.Header.Set("TM-Session-Token", "backdoor for RequiredAuthCookieOrHeader middleware")
   resp, err := client.Do(req)
   if err != nil {
     panic(err)
@@ -76,7 +74,7 @@ func makeLoginRequest(t *testing.T, method, endpoint, data string) *http.Respons
 
 func getAuthCookie(response *http.Response) (*http.Cookie, error) {
   for _, cookie := range response.Cookies() {
-    if cookie.Name == "TM-Auth-Token" {
+    if cookie.Name == "TM-Session-Token" {
       return cookie, nil
     }
   }

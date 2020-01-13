@@ -6,24 +6,6 @@ import (
   "utils"
 )
 
-func RequiredAuthCookieOrHeader(next http.Handler) http.Handler {
-  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    if hasHeaderAuthToken(r) {
-      next.ServeHTTP(w, r)
-      return
-    }
-
-    cookie, err := r.Cookie(cookieAuthTokenKey)
-    if err != nil {
-      log.Println("error while getting cookie:", err)
-      http.Error(w, "Forbidden", http.StatusForbidden)
-    }
-
-    setHeaderAuthToken(r, cookie.Value)
-    next.ServeHTTP(w, r)
-  })
-}
-
 func RequiredAdminRole(next http.Handler) http.Handler {
   return requiredRole(isAdmin, next)
 }

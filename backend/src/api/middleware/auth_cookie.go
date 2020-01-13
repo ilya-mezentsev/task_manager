@@ -14,19 +14,19 @@ func CreatAuthCookie(value string) *http.Cookie {
   }
 
   return &http.Cookie{
-    Name:     cookieAuthTokenKey,
-    Value:    token,
-    Path:     "/",
+    Name: cookieAuthTokenKey,
+    Value: token,
+    Path: "/",
     HttpOnly: true,
-    MaxAge:   3600,
+    MaxAge: 3600,
   }
 }
 
 func GetExpiredAuthCookie() *http.Cookie {
   return &http.Cookie{
-    Name:    cookieAuthTokenKey,
-    Value:   "",
-    Path:    "/",
+    Name: cookieAuthTokenKey,
+    Value: "",
+    Path: "/",
     Expires: time.Unix(0, 0),
   }
 }
