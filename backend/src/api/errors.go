@@ -21,7 +21,11 @@ var (
   IncorrectTaskTitleTemplate = "incorrect task title: '%s'"
   IncorrectTaskDescriptionTemplate = "incorrect task description: '%s'"
   IncorrectTaskIdTemplate = "incorrect task id: %v"
-  IncorrectTaskComment = "incorrect task comment: %s"
+  IncorrectTaskCommentTemplate = "incorrect task comment: %s"
+
+  NoAuthTokenInCookie = "no auth token in cookie"
+  NoSessionInToken = "no session in cookie"
+  UnableToDecodeSession = "unable to decode session data"
 )
 
 func getIncorrectGroupNameError(groupName string) error {
@@ -61,5 +65,9 @@ func getIncorrectTaskIdError(taskId uint) error {
 }
 
 func getIncorrectTaskCommentError(comment string) error {
-  return fmt.Errorf(IncorrectTaskComment, comment)
+  return fmt.Errorf(IncorrectTaskCommentTemplate, comment)
+}
+
+func getSessionError(message string) error {
+  return fmt.Errorf(message)
 }

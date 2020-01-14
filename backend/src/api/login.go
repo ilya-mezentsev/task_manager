@@ -34,7 +34,24 @@ func bindLoginRoutesToHandlers() {
 }
 
 func (handler LoginRequestHandler) GetSession(w http.ResponseWriter, r *http.Request) {
+  defer sendErrorIfPanicked(w)
 
+  tokenData, err := middleware.GetAuthTokenData(r)
+  if err != nil {
+    panic(getSessionError(NoAuthTokenInCookie))
+  }
+  sessionData, found := tokenData["session"]
+  if !found {
+    panic(getSessionError(NoSessionInToken))
+  }
+
+  var userSession models.UserSession
+  err = json.Unmarshal([]byte(sessionData.(string)), &userSession)
+  if err != nil {
+    panic(getSessionError(UnableToDecodeSession))
+  }
+
+  encodeAndSendResponse(w, userSession)
 }
 
 func (handler LoginRequestHandler) Login(w http.ResponseWriter, r *http.Request) {

@@ -43,6 +43,10 @@ type (
     Status string `json:"status"`
     Data interface{} `json:"data"`
   }
+  SessionDataResponse struct {
+    Status string `json:"status"`
+    Data models.UserSession `json:"data"`
+  }
 )
 
 const (
@@ -105,6 +109,11 @@ const (
 )
 
 var (
+  AdminSession = models.UserSession{
+    ID: 0,
+    Name: "tm_login",
+    Role: "admin",
+  }
   DropTestTablesQueries = []string{
     mock.DropGroupsTable, mock.DropUsersTable, mock.DropTasksTable,
   }
