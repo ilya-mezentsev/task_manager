@@ -82,11 +82,17 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
   var setTokenFn func(r *http.Request)
   switch {
   case strings.Contains(endpoint, "admin"):
-    setTokenFn = middleware.SetTokenForAdmin
+    setTokenFn = func(r *http.Request) {
+      middleware.SetAuthCookie(r, mock.AdminSessionData)
+    }
   case strings.Contains(endpoint, "lead"):
-    setTokenFn = middleware.SetTokenForGroupLead
+    setTokenFn = func(r *http.Request) {
+      middleware.SetAuthCookie(r, mock.GroupLeadSessionData)
+    }
   default:
-    setTokenFn = middleware.SetTokenForGroupWorker
+    setTokenFn = func(r *http.Request) {
+      middleware.SetAuthCookie(r, mock.GroupWorkerSessionData)
+    }
   }
   req.Header.Set("Content-Type", "application/json; charset=utf-8")
   setTokenFn(req)

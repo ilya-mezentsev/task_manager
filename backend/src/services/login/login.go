@@ -3,6 +3,7 @@ package login
 import (
   "api/middleware"
   "interfaces"
+  "models"
   "plugins/db"
   "utils"
 )
@@ -24,12 +25,15 @@ func NewLoginService(provider interfaces.LoginData) Service {
   return Service{dataProvider: provider}
 }
 
-func (l Service) GetUserRole(name, password string) (string, error) {
+func (l Service) GetSessionUserData(name, password string) (models.UserSession, error) {
   switch {
   case isAdmin(name, password):
-    return middleware.RoleAdmin, nil
+    return models.UserSession{
+      Name: adminLogin,
+      Role: middleware.RoleAdmin,
+    }, nil
   default:
-    return l.getRoleFromStorage(name, password)
+    return l.createSessionFromStorage(name, password)
   }
 }
 
@@ -37,20 +41,22 @@ func isAdmin(name, password string) bool {
   return name == adminLogin && password == adminPassword
 }
 
-func (l Service) getRoleFromStorage(name, password string) (string, error) {
+func (l Service) createSessionFromStorage(name, password string) (models.UserSession, error) {
   user, err := l.dataProvider.GetUserByCredentials(name, utils.GetHash(password))
   switch err {
   case nil:
     break
   case db.UserNotFoundByCredentials:
-    return "", UnableToLoginUserNotFound
+    return models.UserSession{}, UnableToLoginUserNotFound
   default:
-    return "", UnableToLoginUserInternalError
+    return models.UserSession{}, UnableToLoginUserInternalError
   }
 
+  userSession := models.UserSession{ID: user.ID, Name: name}
   if user.IsGroupLead {
-    return middleware.RoleGroupLead, nil
+    userSession.Role = middleware.RoleGroupLead
   } else {
-    return middleware.RoleGroupWorker, nil
+    userSession.Role = middleware.RoleGroupWorker
   }
+  return userSession, nil
 }

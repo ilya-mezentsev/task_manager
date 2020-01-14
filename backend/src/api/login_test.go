@@ -19,33 +19,17 @@ import (
   . "utils"
 )
 
-var (
-  adminAuthCookieValue, groupLeadAuthCookieValue, groupWorkerAuthCookieVaue string
-)
+var coder code.Coder
 
 func init() {
   coderKey := os.Getenv("CODER_KEY")
   if coderKey == "" {
     panic("CODER_KEY is not set")
   }
-  setupCookieValues(coderKey)
+  coder = code.NewCoder(coderKey)
 
   InitLoginRequestHandler(plugins.NewDBProxy(testingHelper.Database))
   db.ExecQuery(testingHelper.Database, mock2.TurnOnForeignKeys)
-}
-
-func setupCookieValues(coderKey string) {
-  coder := code.NewCoder(coderKey)
-
-  adminAuthCookieValue, _ = coder.Encrypt(map[string]interface{}{
-    "role": middleware.RoleAdmin,
-  })
-  groupLeadAuthCookieValue, _ = coder.Encrypt(map[string]interface{}{
-    "role": middleware.RoleGroupLead,
-  })
-  groupWorkerAuthCookieVaue, _ = coder.Encrypt(map[string]interface{}{
-    "role": middleware.RoleGroupWorker,
-  })
 }
 
 func makeLoginRequest(t *testing.T, method, endpoint, data string) *http.Response {
@@ -93,8 +77,9 @@ func TestLoginRequestHandler_LoginAdminSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(authCookie.Value == adminAuthCookieValue, func() {
-    t.Log(GetExpectationString(adminAuthCookieValue, authCookie.Value))
+  decryptedToken, _ := coder.Decrypt(authCookie.Value)
+  Assert(decryptedToken["session"] == mock.AdminSessionData, func() {
+    t.Log(GetExpectationString(mock.AdminSessionData, decryptedToken["session"]))
     t.Fail()
   })
 }
@@ -110,8 +95,9 @@ func TestLoginRequestHandler_LoginGroupLeadSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(authCookie.Value == groupLeadAuthCookieValue, func() {
-    t.Log(GetExpectationString(groupLeadAuthCookieValue, authCookie.Value))
+  decryptedToken, _ := coder.Decrypt(authCookie.Value)
+  Assert(decryptedToken["session"] == mock.GroupLeadSessionData, func() {
+    t.Log(GetExpectationString(mock.GroupLeadSessionData, decryptedToken["session"]))
     t.Fail()
   })
 }
@@ -127,8 +113,9 @@ func TestLoginRequestHandler_LoginGroupWorkerSuccess(t *testing.T) {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(authCookie.Value == groupWorkerAuthCookieVaue, func() {
-    t.Log(GetExpectationString(groupWorkerAuthCookieVaue, authCookie.Value))
+  decryptedToken, _ := coder.Decrypt(authCookie.Value)
+  Assert(decryptedToken["session"] == mock.GroupWorkerSessionData, func() {
+    t.Log(GetExpectationString(mock.GroupWorkerSessionData, decryptedToken["session"]))
     t.Fail()
   })
 }

@@ -3,6 +3,7 @@ package api
 import (
   "api/helpers"
   "api/middleware"
+  "encoding/json"
   "interfaces"
   "models"
   "net/http"
@@ -27,8 +28,13 @@ func InitLoginRequestHandler(loginDataPlugin interfaces.LoginData) {
 func bindLoginRoutesToHandlers() {
   api := router.PathPrefix("/api/session").Subrouter()
 
+  api.HandleFunc("/", loginRequestHandler.GetSession).Methods(http.MethodGet)
   api.HandleFunc("/login", loginRequestHandler.Login).Methods(http.MethodPost)
   api.HandleFunc("/logout", loginRequestHandler.Logout).Methods(http.MethodPost)
+}
+
+func (handler LoginRequestHandler) GetSession(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func (handler LoginRequestHandler) Login(w http.ResponseWriter, r *http.Request) {
@@ -43,12 +49,13 @@ func (handler LoginRequestHandler) Login(w http.ResponseWriter, r *http.Request)
     panic(getIncorrectUserPasswordError(loginReq.UserPassword))
   }
 
-  userRole, err := handler.loginService.GetUserRole(loginReq.UserName, loginReq.UserPassword)
+  userSession, err := handler.loginService.GetSessionUserData(loginReq.UserName, loginReq.UserPassword)
   if err != nil {
     panic(err)
   }
 
-  http.SetCookie(w, middleware.CreatAuthCookie(userRole))
+  jsonUserSession, _ := json.Marshal(userSession)
+  http.SetCookie(w, middleware.CreatAuthCookie(string(jsonUserSession)))
   encodeAndSendResponse(w, nil)
 }
 

@@ -7,7 +7,7 @@ import (
 
 func CreatAuthCookie(value string) *http.Cookie {
   token, err := coder.Encrypt(map[string]interface{}{
-    "role": value,
+    "session": value,
   })
   if err != nil {
     panic(err)

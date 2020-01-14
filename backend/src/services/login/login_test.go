@@ -13,46 +13,46 @@ var (
 )
 
 func TestLoginService_GetUserRoleAdmin(t *testing.T) {
-  role, err := ls.GetUserRole(services.AdminLogin, services.AdminPassword)
+  userSession, err := ls.GetSessionUserData(services.AdminLogin, services.AdminPassword)
 
   Assert(err == nil, func() {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(role == middleware.RoleAdmin, func() {
-    t.Log(GetExpectationString(middleware.RoleAdmin, role))
+  Assert(userSession.Role == middleware.RoleAdmin, func() {
+    t.Log(GetExpectationString(middleware.RoleAdmin, userSession.Role))
     t.Fail()
   })
 }
 
 func TestLoginService_GetUserRoleWorkLead(t *testing.T) {
-  role, err := ls.GetUserRole(services.GroupLeadLogin, services.DefaultPassword)
+  userSession, err := ls.GetSessionUserData(services.GroupLeadLogin, services.DefaultPassword)
 
   Assert(err == nil, func() {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(role == middleware.RoleGroupLead, func() {
-    t.Log(GetExpectationString(middleware.RoleGroupLead, role))
+  Assert(userSession.Role == middleware.RoleGroupLead, func() {
+    t.Log(GetExpectationString(middleware.RoleGroupLead, userSession.Role))
     t.Fail()
   })
 }
 
 func TestLoginService_GetUserRoleGroupWorker(t *testing.T) {
-  role, err := ls.GetUserRole(services.GroupWorkerLogin, services.DefaultPassword)
+  userSession, err := ls.GetSessionUserData(services.GroupWorkerLogin, services.DefaultPassword)
 
   Assert(err == nil, func() {
     t.Log("should not be error:", err)
     t.Fail()
   })
-  Assert(role == middleware.RoleGroupWorker, func() {
-    t.Log(GetExpectationString(middleware.RoleGroupWorker, role))
+  Assert(userSession.Role == middleware.RoleGroupWorker, func() {
+    t.Log(GetExpectationString(middleware.RoleGroupWorker, userSession.Role))
     t.Fail()
   })
 }
 
 func TestLoginService_GetUserRoleErrorUserNotFound(t *testing.T) {
-  _, err := ls.GetUserRole(services.NotExistsLogin, services.DefaultPassword)
+  _, err := ls.GetSessionUserData(services.NotExistsLogin, services.DefaultPassword)
 
   AssertErrorsEqual(err, UnableToLoginUserNotFound, func() {
     t.Log(GetExpectationString(UnableToLoginUserNotFound, err))
@@ -61,7 +61,7 @@ func TestLoginService_GetUserRoleErrorUserNotFound(t *testing.T) {
 }
 
 func TestLoginService_GetUserRoleInternalError(t *testing.T) {
-  _, err := ls.GetUserRole(services.ErroredLogin, services.DefaultPassword)
+  _, err := ls.GetSessionUserData(services.ErroredLogin, services.DefaultPassword)
 
   AssertErrorsEqual(err, UnableToLoginUserInternalError, func() {
     t.Log(GetExpectationString(UnableToLoginUserInternalError, err))

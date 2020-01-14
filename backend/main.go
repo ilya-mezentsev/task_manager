@@ -35,6 +35,7 @@ func init() {
   dbProxy.InitDBStructure(database)
   r := api.GetRouter()
   r.PathPrefix("/").Handler(http.FileServer(http.Dir(staticFilesDirPath)))
+  api.InitLoginRequestHandler(dbProxy)
   api.InitAdminRequestHandler(dbProxy)
   api.InitGroupLeadRequestHandler(dbProxy)
   api.InitGroupWorkerRequestHandler(dbProxy)

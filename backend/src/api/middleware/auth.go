@@ -25,23 +25,11 @@ func init() {
   coder = code.NewCoder(coderKey)
 }
 
-func setAuthCookie(r *http.Request, value string) {
+func SetAuthCookie(r *http.Request, value string) {
   r.AddCookie(CreatAuthCookie(value))
 }
 
-func SetTokenForAdmin(r *http.Request) {
-  setAuthCookie(r, RoleAdmin)
-}
-
-func SetTokenForGroupLead(r *http.Request) {
-  setAuthCookie(r, RoleGroupLead)
-}
-
-func SetTokenForGroupWorker(r *http.Request) {
-  setAuthCookie(r, RoleGroupWorker)
-}
-
-func getAuthTokenData(r *http.Request) (map[string]interface{}, error) {
+func GetAuthTokenData(r *http.Request) (map[string]interface{}, error) {
   cookie, err := r.Cookie(cookieAuthTokenKey)
   if err != nil {
     log.Println("auth cookie not found")
@@ -57,18 +45,14 @@ func getAuthTokenData(r *http.Request) (map[string]interface{}, error) {
   return decoded, nil
 }
 
-func isAdmin(tokenData map[string]interface{}) bool {
-  role, found := tokenData["role"]
-  return found && role == RoleAdmin
+func isAdmin(role string) bool {
+  return role == RoleAdmin
 }
 
-func isGroupLead(tokenData map[string]interface{}) bool {
-  role, found := tokenData["role"]
-  return found && role == RoleGroupLead
+func isGroupLead(role string) bool {
+  return role == RoleGroupLead
 }
 
-func isGroupWorker(tokenData map[string]interface{}) bool {
-  role, found := tokenData["role"]
-  // coz group lead is group worker too
-  return found && (role == RoleGroupLead || role == RoleGroupWorker)
+func isGroupWorker(role string) bool {
+  return role == RoleGroupLead || role == RoleGroupWorker
 }
