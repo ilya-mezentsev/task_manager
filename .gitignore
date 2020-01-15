@@ -4,3 +4,4 @@ static
 test_report
 *.db
 github.com
+backend/main

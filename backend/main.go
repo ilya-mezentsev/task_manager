@@ -10,15 +10,7 @@ import (
   "time"
 )
 
-var staticFilesDirPath string
-
 func init() {
-  staticFilesDirPath = os.Getenv("STATIC_DIR")
-  if staticFilesDirPath == "" {
-    log.Println("STATIC_DIR env var is not set")
-    os.Exit(1)
-  }
-
   dbFile := os.Getenv("DB_FILE")
   if dbFile == "" {
     log.Println("DB_FILE env var is not set")
@@ -33,8 +25,6 @@ func init() {
 
   dbProxy := plugins.NewDBProxy(database)
   dbProxy.InitDBStructure(database)
-  r := api.GetRouter()
-  r.PathPrefix("/").Handler(http.FileServer(http.Dir(staticFilesDirPath)))
   api.InitLoginRequestHandler(dbProxy)
   api.InitAdminRequestHandler(dbProxy)
   api.InitGroupLeadRequestHandler(dbProxy)

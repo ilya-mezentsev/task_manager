@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build": "ng build --output-path=../backend/static",
     "build-local": "ng build --output-path=../backend/static",
     "test": "jest",
     "lint": "ng lint",

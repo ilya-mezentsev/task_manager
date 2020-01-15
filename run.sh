@@ -2,6 +2,7 @@
 
 SCRIPTS_FOLDER=$(pwd)/scripts
 declare -A scriptsDescriptions=(
+  ['build']='compile angular and golang'
   ['help']='show this help'
   ['calc_go_lines']='calculate lines of *.go files'
   ['all_tests']='run all tests in project'

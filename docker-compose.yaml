@@ -1,0 +1,19 @@
+version: "3.6"
+services:
+  go_api:
+    build: "./backend"
+    environment:
+      - GOPATH=/go
+      - CODER_KEY=123456789012345678901234
+      - DB_FILE=/go/data/data.db
+    command: /bin/sh -c "go build -o main && ./main"
+    ports:
+      - "8181"
+  nginx:
+    build: "./nginx"
+    ports:
+      - "80:80"
+    volumes:
+      - ${STATIC_DIR}:/var/www/html
+    depends_on:
+      - "go_api"
