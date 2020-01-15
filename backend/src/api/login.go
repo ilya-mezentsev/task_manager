@@ -73,7 +73,7 @@ func (handler LoginRequestHandler) Login(w http.ResponseWriter, r *http.Request)
 
   jsonUserSession, _ := json.Marshal(userSession)
   http.SetCookie(w, middleware.CreatAuthCookie(string(jsonUserSession)))
-  encodeAndSendResponse(w, nil)
+  encodeAndSendResponse(w, userSession)
 }
 
 func (handler LoginRequestHandler) Logout(w http.ResponseWriter, _ *http.Request) {

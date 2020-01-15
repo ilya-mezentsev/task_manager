@@ -1,15 +1,21 @@
 <div class="row">
   <div class="col s8 offset-s2">
+    <div class="col s12">
+      <h5>Welcome to Task-Manager</h5>
+    </div>
     <div class="input-field col s12">
-      <input id="login" type="text" class="validate">
+      <input id="login" type="text" class="validate" [(ngModel)]="login">
       <label for="login">Your login</label>
     </div>
     <div class="input-field col s12">
-      <input id="password" type="password" class="validate">
+      <input id="password" type="password" class="validate" [(ngModel)]="password">
       <label for="password">Your password</label>
     </div>
     <div class="col s12">
-      <a class="waves-effect waves-light btn"><i class="material-icons right">send</i>button</a>
+      <a class="waves-effect waves-light btn" (click)="tryLogin()">
+        <i class="material-icons right">send</i>
+        Login
+      </a>
     </div>
   </div>
 </div>
