@@ -1,5 +1,5 @@
 export class ApiRequestBuilder {
-  public static getLoginRequest(login: string, password: string): {userName: string, userPassword: string} {
-    return {userName: login, userPassword: password};
+  public static getLoginRequest(login: string, password: string): {user_name: string, user_password: string} {
+    return {user_name: login, user_password: password};
   }
 }

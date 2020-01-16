@@ -4,8 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --output-path=../backend/static",
-    "build-local": "ng build --output-path=../backend/static",
+    "build": "ng build --output-path=dist/task_manager",
     "test": "jest",
     "lint": "ng lint",
     "e2e": "ng e2e"
