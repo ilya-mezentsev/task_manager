@@ -9,4 +9,4 @@ export interface UserSession {
   role: 'admin' | 'group_lead' | 'group_worker';
 }
 
-export type LoginResponse = ApiResponse<UserSession>;
+export type SessionResponse = ApiResponse<UserSession>;

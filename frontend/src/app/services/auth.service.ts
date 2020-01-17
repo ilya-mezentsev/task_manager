@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ApiUrlBuilder} from './helpers/api-url-builder';
-import {ApiRequestBuilder} from './helpers/api-request-builder';
-import {LoginResponse} from './interfaces/api';
+import {ApiUrlBuilder} from '../helpers/api-url-builder';
+import {ApiRequestBuilder} from '../helpers/api-request-builder';
+import {SessionResponse} from '../interfaces/api';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +15,16 @@ export class AuthService {
     private readonly http: HttpClient
   ) {}
 
-  public async login(login: string, password: string): Promise<LoginResponse> {
+  public async login(login: string, password: string): Promise<SessionResponse> {
     return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.loginEndpoint),
       ApiRequestBuilder.getLoginRequest(login, password)
-    ).toPromise() as LoginResponse;
+    ).toPromise() as SessionResponse;
   }
 
-  public async getSession(): Promise<LoginResponse> {
+  public async getSession(): Promise<SessionResponse> {
     return await this.http.get(
       ApiUrlBuilder.getApiUrlRequest(this.sessionEndpoint)
-    ).toPromise() as LoginResponse;
+    ).toPromise() as SessionResponse;
   }
 }
