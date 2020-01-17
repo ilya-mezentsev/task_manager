@@ -2,11 +2,22 @@ package code
 
 import (
   "fmt"
+  "os"
   "testing"
   . "utils"
 )
 
-var coder = NewCoder("123456789012345678901234")
+var coder Coder
+
+func init() {
+  coderKey := os.Getenv("CODER_KEY")
+  if coderKey == "" {
+    fmt.Println("CODER_KEY env var is not set")
+    os.Exit(1)
+  }
+
+  coder = NewCoder(coderKey)
+}
 
 func TestCoder_Encrypt(t *testing.T) {
   expected := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoxfQ.vwUFq3FTIuPbi8U6bVmzfgSHbbV5pyq6D4mrCBlvu6A"

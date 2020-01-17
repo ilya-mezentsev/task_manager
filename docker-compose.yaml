@@ -4,7 +4,7 @@ services:
     build: "./backend"
     environment:
       - GOPATH=/go
-      - CODER_KEY=123456789012345678901234
+      - CODER_KEY=${CODER_KEY}
       - DB_FILE=/go/data/data.db
     command: /bin/sh -c "go build -o main && ./main"
     ports:
