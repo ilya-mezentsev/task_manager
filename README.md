@@ -16,13 +16,7 @@ $ touch data/test_data.db # testing purposes
 ```bash
 $ cp .example.env .env
 ```
-#### Build Angular project:
-```bash
-$ cd frontend/
-
-$ npm install && npm run build
-```
-#### Start static Nginx and Golang API by docker-compose:
+#### This command will start Angular serve (hot-reload), Golang API and Nginx (proxy server to another two containers):
 ```bash
 $ source .env && docker-compose up --build
 ```
@@ -36,4 +30,4 @@ http://localhost:80
 ```bash
 $ bash run.sh
 ```
-##### This script can run each *.sh file from scripts folder with environment variables from .env file
+#### This script can run each *.sh file from scripts folder with environment variables from .env file
