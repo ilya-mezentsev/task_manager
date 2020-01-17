@@ -10,6 +10,17 @@ services:
     ports:
     - "8080"
 
+  ng_app:
+    build: "./frontend"
+    ports:
+      - '8081:4200'
+      - '49153:49153'
+    volumes:
+    - /home/ilya/prog/projects/task_manager/frontend/:/usr/src/app/
+    command: bash -c "npm start"
+    depends_on:
+      - "go_api"
+
   nginx:
     build: "./nginx"
     ports:
@@ -17,4 +28,4 @@ services:
     volumes:
       - ${STATIC_DIR}:/var/www/
     depends_on:
-      - "go_api"
+      - "ng_app"
