@@ -3,10 +3,10 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-export type LoginResponse = ApiResponse<UserSession>;
-
 export interface UserSession {
   id: number;
   name: string;
-  role: string;
+  role: 'admin' | 'group_lead' | 'group_worker';
 }
+
+export type LoginResponse = ApiResponse<UserSession>;
