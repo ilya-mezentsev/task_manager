@@ -8,4 +8,4 @@ RUN go get github.com/mattn/go-sqlite3
 RUN go get github.com/dgrijalva/jwt-go
 
 COPY . .
-EXPOSE 8181
+EXPOSE 8080

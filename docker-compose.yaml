@@ -1,4 +1,4 @@
-version: "3.6"
+version: "2"
 services:
   go_api:
     build: "./backend"
@@ -8,12 +8,13 @@ services:
       - DB_FILE=/go/data/data.db
     command: /bin/sh -c "go build -o main && ./main"
     ports:
-      - "8181"
+    - "8080"
+
   nginx:
     build: "./nginx"
     ports:
       - "80:80"
     volumes:
-      - ${STATIC_DIR}:/var/www/html
+      - ${STATIC_DIR}:/var/www/
     depends_on:
       - "go_api"

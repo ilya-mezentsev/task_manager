@@ -34,7 +34,7 @@ func init() {
 func main() {
   srv := &http.Server{
     Handler: api.GetRouter(),
-    Addr: "127.0.0.1:8181",
+    Addr: "0.0.0.0:8080",
     WriteTimeout: 15 * time.Second,
     ReadTimeout: 15 * time.Second,
   }
