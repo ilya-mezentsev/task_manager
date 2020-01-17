@@ -25,7 +25,5 @@ services:
     build: "./nginx"
     ports:
       - "80:80"
-    volumes:
-      - ${STATIC_DIR}:/var/www/
     depends_on:
       - "ng_app"
