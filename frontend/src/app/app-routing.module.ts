@@ -22,6 +22,7 @@ const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     canActivate: [AuthGuard],
+    data: { roles: ['admin'] },
     children: [
       { path: '', redirectTo: 'tasks-list', pathMatch: 'full' },
       { path: 'create-group', component: CreateGroupComponent },
@@ -37,11 +38,23 @@ const routes: Routes = [
     path: 'group',
     component: GroupComponent,
     canActivate: [AuthGuard],
+    data: { roles: ['group_lead', 'group_worker'] },
     children: [
-      { path: '', redirectTo: 'my-tasks-list', pathMatch: 'full' },
-      { path: 'my-tasks-list', component: WorkerTasksListComponent },
-      { path: 'assign-tasks', component: AssignTasksComponent },
-      { path: 'group-tasks', component: GroupTasksListComponent }
+      { path: '', redirectTo: 'tasks-list', pathMatch: 'full' },
+      { path: 'tasks-list', component: WorkerTasksListComponent },
+      {
+        path: 'assign-tasks',
+        component: AssignTasksComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['group_lead'] }
+      },
+      {
+        path: 'group-tasks',
+        component: GroupTasksListComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['group_lead'] }
+      },
+      { path: '**', redirectTo: 'tasks-list' }
     ]
   },
   { path: '**', component: NotFoundComponent }
