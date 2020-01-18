@@ -1,1 +1,10 @@
-<p>groups-list works!</p>
+<div class="col s12">
+  <ul *ngIf="groupsExist(); else noGroups">
+    <li *ngFor="let group of groups">
+      {{group.name}}
+    </li>
+  </ul>
+  <ng-template #noGroups>
+    <p>No groups created</p>
+  </ng-template>
+</div>
