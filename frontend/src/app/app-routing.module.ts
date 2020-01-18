@@ -11,6 +11,9 @@ import {CreateTasksComponent} from './admin/create-tasks/create-tasks.component'
 import {GroupsListComponent} from './admin/groups-list/groups-list.component';
 import {UsersListComponent} from './admin/users-list/users-list.component';
 import {TasksListComponent} from './admin/tasks-list/tasks-list.component';
+import {WorkerTasksListComponent} from './group/worker-tasks-list/worker-tasks-list.component';
+import {AssignTasksComponent} from './group/assign-tasks/assign-tasks.component';
+import {GroupTasksListComponent} from './group/group-tasks-list/group-tasks-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -33,7 +36,13 @@ const routes: Routes = [
   {
     path: 'group',
     component: GroupComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'my-tasks-list', pathMatch: 'full' },
+      { path: 'my-tasks-list', component: WorkerTasksListComponent },
+      { path: 'assign-tasks', component: AssignTasksComponent },
+      { path: 'group-tasks', component: GroupTasksListComponent }
+    ]
   },
   { path: '**', component: NotFoundComponent }
 ];
