@@ -19,12 +19,12 @@ export class AuthService {
     return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.loginEndpoint),
       ApiRequestBuilder.getLoginRequest(login, password)
-    ).toPromise() as SessionResponse;
+    ).toPromise() as SessionResponse | ApiErrorResponse;
   }
 
   public async getSession(): Promise<SessionResponse | ApiErrorResponse> {
     return await this.http.get(
       ApiUrlBuilder.getApiUrlRequest(this.sessionEndpoint)
-    ).toPromise() as SessionResponse;
+    ).toPromise() as SessionResponse | ApiErrorResponse;
   }
 }
