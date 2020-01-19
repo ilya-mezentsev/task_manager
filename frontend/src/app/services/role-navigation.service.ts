@@ -16,6 +16,14 @@ export class RoleNavigationService {
   }
 
   private static getNavigationSegmentBy(userRole: UserRole): string {
-    return userRole.replace('_', '-');
+    switch (userRole) {
+      case 'admin':
+        return 'admin';
+      case 'group_lead':
+      case 'group_worker':
+        return 'group';
+      default:
+        return 'not-found';
+    }
   }
 }

@@ -12,8 +12,8 @@ import {GroupsListComponent} from './admin/groups-list/groups-list.component';
 import {UsersListComponent} from './admin/users-list/users-list.component';
 import {TasksListComponent} from './admin/tasks-list/tasks-list.component';
 import {WorkerTasksListComponent} from './group/worker-tasks-list/worker-tasks-list.component';
-import {AssignTasksComponent} from './group/assign-tasks/assign-tasks.component';
 import {GroupTasksListComponent} from './group/group-tasks-list/group-tasks-list.component';
+import {GroupUsersListComponent} from './group/group-users-list/group-users-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -43,8 +43,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'tasks-list', pathMatch: 'full' },
       { path: 'tasks-list', component: WorkerTasksListComponent },
       {
-        path: 'assign-tasks',
-        component: AssignTasksComponent,
+        path: 'group-users',
+        component: GroupUsersListComponent,
         canActivate: [AuthGuard],
         data: { roles: ['group_lead'] }
       },

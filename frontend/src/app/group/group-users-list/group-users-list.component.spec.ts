@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssignTasksComponent } from './assign-tasks.component';
+import { GroupUsersListComponent } from './group-users-list.component';
 
-describe('AssignTasksComponent', () => {
-  let component: AssignTasksComponent;
-  let fixture: ComponentFixture<AssignTasksComponent>;
+describe('GroupUsersListComponent', () => {
+  let component: GroupUsersListComponent;
+  let fixture: ComponentFixture<GroupUsersListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssignTasksComponent ]
+      declarations: [ GroupUsersListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AssignTasksComponent);
+    fixture = TestBed.createComponent(GroupUsersListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

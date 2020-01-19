@@ -17,9 +17,9 @@ import { GroupsListComponent } from './admin/groups-list/groups-list.component';
 import { UsersListComponent } from './admin/users-list/users-list.component';
 import { TasksListComponent } from './admin/tasks-list/tasks-list.component';
 import { CreateTasksComponent } from './admin/create-tasks/create-tasks.component';
-import { AssignTasksComponent } from './group/assign-tasks/assign-tasks.component';
 import { GroupTasksListComponent } from './group/group-tasks-list/group-tasks-list.component';
 import { WorkerTasksListComponent } from './group/worker-tasks-list/worker-tasks-list.component';
+import { GroupUsersListComponent } from './group/group-users-list/group-users-list.component';
 
 @NgModule({
   declarations: [
@@ -36,9 +36,9 @@ import { WorkerTasksListComponent } from './group/worker-tasks-list/worker-tasks
     UsersListComponent,
     TasksListComponent,
     CreateTasksComponent,
-    AssignTasksComponent,
     GroupTasksListComponent,
-    WorkerTasksListComponent
+    WorkerTasksListComponent,
+    GroupUsersListComponent
   ],
   imports: [
     BrowserModule,
