@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {StorageService} from '../services/storage.service';
-import {UserSession} from '../interfaces/api';
+import {UserRole, UserSession} from '../interfaces/api';
 
 @Component({
   selector: 'app-group',
@@ -17,7 +17,7 @@ export class GroupComponent implements OnInit {
   ngOnInit() {
     const session: UserSession = this.storage.getSession();
     if (session != null) {
-      this.isGroupLead = session.role === 'group_lead';
+      this.isGroupLead = session.role === UserRole.GroupLead;
     }
   }
 }

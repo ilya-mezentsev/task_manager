@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ApiUrlBuilder} from '../helpers/api-url-builder';
 import {ApiRequestBuilder} from '../helpers/api-request-builder';
-import {ApiErrorResponse, SessionResponse} from '../interfaces/api';
+import {ApiDefaultResponse, ApiErrorResponse, SessionResponse} from '../interfaces/api';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,17 @@ import {ApiErrorResponse, SessionResponse} from '../interfaces/api';
 export class AuthService {
   private readonly sessionEndpoint: string = '/session/';
   private readonly loginEndpoint: string = '/session/login';
+  private readonly logoutEndpoint: string = '/session/logout';
 
   constructor(
     private readonly http: HttpClient
   ) {}
+
+  public async logout(): Promise<ApiDefaultResponse | ApiErrorResponse> {
+    return await this.http.post(
+      ApiUrlBuilder.getApiUrlRequest(this.logoutEndpoint), null
+    ).toPromise() as ApiDefaultResponse | ApiErrorResponse;
+  }
 
   public async login(login: string, password: string): Promise<SessionResponse | ApiErrorResponse> {
     return await this.http.post(

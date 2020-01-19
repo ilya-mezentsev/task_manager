@@ -1,16 +1,29 @@
 interface ResponseWithStatus {
-  status: 'ok' | 'error';
+  status: ResponseStatus;
+}
+
+export enum ResponseStatus {
+  Ok = 'ok',
+  Error = 'error'
+}
+
+export enum UserRole {
+  Admin = 'admin',
+  GroupLead = 'group_lead',
+  GroupWorker = 'group_worker'
 }
 
 export interface ApiResponse<T> extends ResponseWithStatus {
   data: T;
 }
 
+export interface ApiDefaultResponse extends ResponseWithStatus {
+  data: null;
+}
+
 export interface ApiErrorResponse extends ResponseWithStatus {
   error_detail: string;
 }
-
-export type UserRole = 'admin' | 'group_lead' | 'group_worker';
 
 export interface UserSession {
   id: number;

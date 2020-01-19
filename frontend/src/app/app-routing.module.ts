@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './login/login.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {AdminComponent} from './admin/admin.component';
@@ -14,6 +14,7 @@ import {TasksListComponent} from './admin/tasks-list/tasks-list.component';
 import {WorkerTasksListComponent} from './group/worker-tasks-list/worker-tasks-list.component';
 import {GroupTasksListComponent} from './group/group-tasks-list/group-tasks-list.component';
 import {GroupUsersListComponent} from './group/group-users-list/group-users-list.component';
+import {UserRole} from './interfaces/api';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -22,7 +23,7 @@ const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['admin'] },
+    data: { roles: [UserRole.Admin] },
     children: [
       { path: '', redirectTo: 'tasks-list', pathMatch: 'full' },
       { path: 'create-group', component: CreateGroupComponent },
@@ -38,7 +39,7 @@ const routes: Routes = [
     path: 'group',
     component: GroupComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['group_lead', 'group_worker'] },
+    data: { roles: [UserRole.GroupWorker, UserRole.GroupLead] },
     children: [
       { path: '', redirectTo: 'tasks-list', pathMatch: 'full' },
       { path: 'tasks-list', component: WorkerTasksListComponent },
@@ -46,13 +47,13 @@ const routes: Routes = [
         path: 'group-users',
         component: GroupUsersListComponent,
         canActivate: [AuthGuard],
-        data: { roles: ['group_lead'] }
+        data: { roles: [UserRole.GroupLead] }
       },
       {
         path: 'group-tasks',
         component: GroupTasksListComponent,
         canActivate: [AuthGuard],
-        data: { roles: ['group_lead'] }
+        data: { roles: [UserRole.GroupLead] }
       },
       { path: '**', redirectTo: 'tasks-list' }
     ]

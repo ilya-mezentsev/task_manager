@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {SessionResponse, UserRole} from '../interfaces/api';
 
@@ -17,10 +17,10 @@ export class RoleNavigationService {
 
   private static getNavigationSegmentBy(userRole: UserRole): string {
     switch (userRole) {
-      case 'admin':
+      case UserRole.Admin:
         return 'admin';
-      case 'group_lead':
-      case 'group_worker':
+      case UserRole.GroupLead:
+      case UserRole.GroupWorker:
         return 'group';
       default:
         return 'not-found';
