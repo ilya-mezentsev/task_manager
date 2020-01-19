@@ -16,11 +16,7 @@ $ cp .example.env .env
 ```
 #### This command will start Angular serve (hot-reload), Golang API and Nginx (proxy server to another two containers):
 ```bash
-$ source .env && bash run.sh dev --build
-```
-#### After sourcing .env file and first build of containers use this command:
-```bash
-$ bash run.sh dev
+$ bash run.sh dev [--build] # use --build flag for first building of containers
 ```
 #### Open in browser:
 ```
