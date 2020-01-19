@@ -5,6 +5,7 @@ declare -A scriptsDescriptions=(
   ['build']='compile angular and golang'
   ['help']='show this help'
   ['calc_go_lines']='calculate lines of *.go files'
+  ['calc_ng_lines']='calculate lines of all files in angular app'
   ['go_tests']='run go tests'
   ['push_all']='push all files to repository'
   ['create_test_data']='make requests for creating testing: group, users and tasks'
