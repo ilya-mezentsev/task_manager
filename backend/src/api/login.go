@@ -26,7 +26,7 @@ func InitLoginRequestHandler(loginDataPlugin interfaces.LoginData) {
 }
 
 func bindLoginRoutesToHandlers() {
-  api := router.PathPrefix("/api/session").Subrouter()
+  api := router.PathPrefix("/session").Subrouter()
 
   api.HandleFunc("/", loginRequestHandler.GetSession).Methods(http.MethodGet)
   api.HandleFunc("/login", loginRequestHandler.Login).Methods(http.MethodPost)

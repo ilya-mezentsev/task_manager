@@ -25,7 +25,7 @@ func InitGroupWorkerRequestHandler(groupWorkerDataPlugin interfaces.GroupWorkerD
 }
 
 func bindGroupWorkerRoutesToHandlers() {
-  api := router.PathPrefix("/api/group/worker").Subrouter()
+  api := router.PathPrefix("/group/worker").Subrouter()
   api.Use(middleware.RequiredGroupWorkerRole)
 
   api.HandleFunc("/tasks", groupWorkerRequestHandler.GetTasksByWorkerId).Methods(http.MethodGet)

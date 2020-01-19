@@ -25,7 +25,7 @@ func InitGroupLeadRequestHandler(groupLeadDataPlugin interfaces.GroupLeadData) {
 }
 
 func bindGroupLeadRoutesToHandlers() {
-  api := router.PathPrefix("/api/group/lead").Subrouter()
+  api := router.PathPrefix("/group/lead").Subrouter()
   api.Use(middleware.RequiredGroupLeadRole)
 
   api.HandleFunc("/users", groupLeadRequestHandler.GetUsersByGroupId).Methods(http.MethodGet)

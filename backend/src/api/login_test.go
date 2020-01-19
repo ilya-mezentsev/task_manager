@@ -47,7 +47,7 @@ func makeLoginRequest(method, endpoint, data string) *http.Response {
   defer srv.Close()
 
   client := &http.Client{}
-  req := prepareRequest(method, fmt.Sprintf("%s/api/%s", srv.URL, endpoint), data)
+  req := prepareRequest(method, fmt.Sprintf("%s/%s", srv.URL, endpoint), data)
   resp, err := client.Do(req)
   if err != nil {
     panic(err)
@@ -61,7 +61,7 @@ func makeLoginRequestWithCookie(method, endpoint, data string, cookie *http.Cook
   defer srv.Close()
 
   client := &http.Client{}
-  req := prepareRequest(method, fmt.Sprintf("%s/api/%s", srv.URL, endpoint), data)
+  req := prepareRequest(method, fmt.Sprintf("%s/%s", srv.URL, endpoint), data)
   req.AddCookie(cookie)
   resp, err := client.Do(req)
   if err != nil {
