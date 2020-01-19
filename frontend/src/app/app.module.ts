@@ -21,6 +21,7 @@ import { GroupTasksListComponent } from './group/group-tasks-list/group-tasks-li
 import { WorkerTasksListComponent } from './group/worker-tasks-list/worker-tasks-list.component';
 import { GroupUsersListComponent } from './group/group-users-list/group-users-list.component';
 import { LogoutComponent } from './share/logout/logout.component';
+import { TaskActionsComponent } from './share/task-actions/task-actions.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { LogoutComponent } from './share/logout/logout.component';
     GroupTasksListComponent,
     WorkerTasksListComponent,
     GroupUsersListComponent,
-    LogoutComponent
+    LogoutComponent,
+    TaskActionsComponent
   ],
   imports: [
     BrowserModule,

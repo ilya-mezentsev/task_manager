@@ -1,1 +1,31 @@
-<p>tasks-list works!</p>
+<div class="col s12">
+  <h5>All tasks:</h5>
+  <table>
+    <colgroup>
+      <col span="1" style="width: 30%;">
+      <col span="1" style="width: 40%;">
+      <col span="1" style="width: 30%;">
+    </colgroup>
+
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of tasks">
+        <td>{{task.title}}</td>
+        <td>{{task.description}}</td>
+        <td>
+          <app-task-actions
+            [userRole]="userRole"
+            [taskId]="task.id"
+            (deleteTaskEmitter)="deleteTask($event)"
+          ></app-task-actions>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

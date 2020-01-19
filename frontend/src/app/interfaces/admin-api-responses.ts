@@ -5,3 +5,15 @@ export interface Group {
 }
 
 export type GroupsListResponse = ApiResponse<Group[]>;
+
+export interface Task {
+  id: number;
+  title: string;
+  description: string;
+  group_id: number;
+  user_id: number;
+  is_complete: boolean;
+  comment: string;
+}
+
+export type TasksListResponse = ApiResponse<Task[]>;
