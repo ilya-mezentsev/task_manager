@@ -1,0 +1,10 @@
+version: "2"
+services:
+  nginx:
+    build: "./nginx/prod"
+    ports:
+      - "80:80"
+    depends_on:
+      - "go_api"
+    volumes:
+      - ${STATIC_DIR}:/var/www/html

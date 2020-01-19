@@ -1,15 +1,5 @@
 version: "2"
 services:
-  go_api:
-    build: "./backend"
-    environment:
-      - GOPATH=/go
-      - CODER_KEY=${CODER_KEY}
-      - DB_FILE=/go/data/data.db
-    command: /bin/sh -c "go build -o main && ./main"
-    ports:
-    - "8080"
-
   ng_app:
     build: "./frontend"
     ports:
@@ -22,7 +12,7 @@ services:
       - "go_api"
 
   nginx:
-    build: "./nginx"
+    build: "./nginx/dev"
     ports:
       - "80:80"
     depends_on:

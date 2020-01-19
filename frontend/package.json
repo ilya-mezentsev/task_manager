@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --poll",
-    "build": "ng build --output-path=dist/task_manager",
+    "build": "ng build --output-path=dist/task_manager --prod",
     "test": "jest",
     "lint": "ng lint",
     "e2e": "ng e2e"
