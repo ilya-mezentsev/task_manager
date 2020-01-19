@@ -6,7 +6,6 @@ declare -A scriptsDescriptions=(
   ['help']='show this help'
   ['calc_go_lines']='calculate lines of *.go files'
   ['go_tests']='run go tests'
-  ['ng_tests']='run angular tests'
   ['push_all']='push all files to repository'
   ['server']='run go server'
 )
