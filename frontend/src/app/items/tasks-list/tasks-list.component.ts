@@ -1,14 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Task} from '../../interfaces/admin-api-responses';
 import {UserRole} from '../../interfaces/api';
 
 @Component({
-  selector: 'app-task-actions',
-  templateUrl: './task-actions.component.html',
-  styleUrls: ['./task-actions.component.scss']
+  selector: 'app-tasks-list',
+  templateUrl: './tasks-list.component.html',
+  styleUrls: ['./tasks-list.component.scss']
 })
-export class TaskActionsComponent implements OnInit {
+export class TasksListComponent implements OnInit {
+  @Input() public tasks: Task[];
   @Input() public userRole: UserRole;
-  @Input() public taskId: number;
   @Output() public deleteTaskEmitter = new EventEmitter<number>();
   @Output() public assignTaskToWorkerEmitter = new EventEmitter<number>();
   @Output() public commentTaskEmitter = new EventEmitter<number>();
@@ -16,20 +17,20 @@ export class TaskActionsComponent implements OnInit {
 
   constructor() { }
 
-  public deleteTask(): void {
-    this.deleteTaskEmitter.emit(this.taskId);
+  public deleteTask(taskId: number): void {
+    this.deleteTaskEmitter.emit(taskId);
   }
 
-  public assignTask(): void {
-    this.assignTaskToWorkerEmitter.emit(this.taskId);
+  public assignTask(taskId: number): void {
+    this.assignTaskToWorkerEmitter.emit(taskId);
   }
 
-  public commentTask(): void {
-    this.commentTaskEmitter.emit(this.taskId);
+  public commentTask(taskId: number): void {
+    this.commentTaskEmitter.emit(taskId);
   }
 
-  public completeTask(): void {
-    this.completeTaskEmitter.emit(this.taskId);
+  public completeTask(taskId: number): void {
+    this.completeTaskEmitter.emit(taskId);
   }
 
   public get admin(): UserRole {
@@ -46,4 +47,5 @@ export class TaskActionsComponent implements OnInit {
 
   ngOnInit() {
   }
+
 }

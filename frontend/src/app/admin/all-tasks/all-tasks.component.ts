@@ -4,7 +4,7 @@ import {AdminApiRequesterService} from '../../services/admin-api-requester.servi
 import {Task, TasksListResponse} from '../../interfaces/admin-api-responses';
 
 @Component({
-  selector: 'app-tasks-list',
+  selector: 'app-all-tasks',
   templateUrl: './all-tasks.component.html',
   styleUrls: ['./all-tasks.component.scss']
 })
