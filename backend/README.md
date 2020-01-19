@@ -20,7 +20,8 @@ $ curl localhost/api/session/ -H "Cookie: TM-Session-Token=$sessionToken"
   "data": {
     "id": 0,
     "name": "tm_login",
-    "role": "admin"
+    "role": "admin",
+    "group_id": 0
   }
 }
 ```
@@ -44,7 +45,8 @@ Set-Cookie: TM-Session-Token=sessionToken; Path=/; Max-Age=3600; HttpOnly
   "data": {
     "id": 0,
     "name": "tm_login",
-    "role": "admin"
+    "role": "admin",
+    "group_id": 0
   }
 }
 ```

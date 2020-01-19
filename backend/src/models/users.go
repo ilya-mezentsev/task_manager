@@ -13,5 +13,6 @@ type (
     ID uint `json:"id"`
     Name string `json:"name"`
     Role string `json:"role"`
+    GroupId uint `db:"group_id" json:"group_id"`
   }
 )

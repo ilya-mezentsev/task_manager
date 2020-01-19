@@ -52,7 +52,7 @@ func (l Service) createSessionFromStorage(name, password string) (models.UserSes
     return models.UserSession{}, UnableToLoginUserInternalError
   }
 
-  userSession := models.UserSession{ID: user.ID, Name: name}
+  userSession := models.UserSession{ID: user.ID, Name: name, GroupId: user.GroupId}
   if user.IsGroupLead {
     userSession.Role = middleware.RoleGroupLead
   } else {

@@ -103,9 +103,9 @@ const (
   IncorrectUserNameLoginRequestData = `{"user_name": "", "user_password": "some_pass"}`
   IncorrectUserPasswordLoginRequestData = `{"user_name": "name", "user_password": ""}`
 
-  AdminSessionData = `{"id":0,"name":"tm_login","role":"admin"}`
-  GroupLeadSessionData = `{"id":3,"name":"name3","role":"group_lead"}`
-  GroupWorkerSessionData = `{"id":2,"name":"name2","role":"group_worker"}`
+  AdminSessionData = `{"id":0,"name":"tm_login","role":"admin","group_id":0}`
+  GroupLeadSessionData = `{"id":3,"name":"name3","role":"group_lead","group_id":1}`
+  GroupWorkerSessionData = `{"id":2,"name":"name2","role":"group_worker","group_id":2}`
 )
 
 var (

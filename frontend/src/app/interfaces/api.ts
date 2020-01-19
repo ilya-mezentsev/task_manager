@@ -16,6 +16,7 @@ export interface UserSession {
   id: number;
   name: string;
   role: UserRole;
+  group_id: number;
 }
 
 export type SessionResponse = ApiResponse<UserSession>;
