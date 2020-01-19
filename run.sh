@@ -7,6 +7,7 @@ declare -A scriptsDescriptions=(
   ['calc_go_lines']='calculate lines of *.go files'
   ['go_tests']='run go tests'
   ['push_all']='push all files to repository'
+  ['create_test_data']='make requests for creating testing: group, users and tasks'
   ['server']='run go server'
 )
 
