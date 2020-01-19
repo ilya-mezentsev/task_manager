@@ -71,7 +71,7 @@ func makeRequest(t *testing.T, method, endpoint, data string) io.ReadCloser {
   client := &http.Client{}
   req, err := http.NewRequest(
     method,
-    fmt.Sprintf("%s/api/%s", srv.URL, endpoint),
+    fmt.Sprintf("%s/%s", srv.URL, endpoint),
     bytes.NewBuffer([]byte(data)),
   )
   Assert(err == nil, func() {
