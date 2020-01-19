@@ -16,7 +16,7 @@ services:
       - '8081:4200'
       - '49153:49153'
     volumes:
-    - /home/ilya/prog/projects/task_manager/frontend/:/usr/src/app/
+    - ${FRONTEND_DIR}:/usr/src/app/
     command: bash -c "npm start"
     depends_on:
       - "go_api"

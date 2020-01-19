@@ -10,8 +10,11 @@ import {UserRole} from '../../interfaces/api';
 export class TasksListComponent implements OnInit {
   @Input() public tasks: Task[];
   @Input() public userRole: UserRole;
+  // admin
   @Output() public deleteTaskEmitter = new EventEmitter<number>();
+  // group lead
   @Output() public assignTaskToWorkerEmitter = new EventEmitter<number>();
+  // group worker
   @Output() public commentTaskEmitter = new EventEmitter<number>();
   @Output() public completeTaskEmitter = new EventEmitter<number>();
 

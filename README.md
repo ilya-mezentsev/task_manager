@@ -9,8 +9,6 @@ $ cd task_manager/backend
 $ mkdir data/
 
 $ touch data/data.db
-
-$ touch data/test_data.db # testing purposes
 ```
 #### Create .env file (in root project folder) and replace default values in created .env file by your local:
 ```bash
