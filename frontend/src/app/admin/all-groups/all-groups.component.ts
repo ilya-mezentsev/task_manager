@@ -4,11 +4,11 @@ import {Group, GroupsListResponse} from '../../interfaces/admin-api-responses';
 import {ApiErrorResponse} from '../../interfaces/api';
 
 @Component({
-  selector: 'app-groups-list',
-  templateUrl: './groups-list.component.html',
-  styleUrls: ['./groups-list.component.scss']
+  selector: 'app-all-groups',
+  templateUrl: './all-groups.component.html',
+  styleUrls: ['./all-groups.component.scss']
 })
-export class GroupsListComponent implements OnInit {
+export class AllGroupsComponent implements OnInit {
   public groups: Group[] = [];
 
   constructor(

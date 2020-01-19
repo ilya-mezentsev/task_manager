@@ -13,9 +13,9 @@ import { NavigationComponent as AdminNavigationComponent } from './admin/navigat
 import { NavigationComponent as GroupNavigationComponent } from './group/navigation/navigation.component';
 import { CreateGroupComponent } from './admin/create-group/create-group.component';
 import { CreateUserComponent } from './admin/create-user/create-user.component';
-import { GroupsListComponent } from './admin/groups-list/groups-list.component';
-import { UsersListComponent } from './admin/users-list/users-list.component';
-import { TasksListComponent } from './admin/tasks-list/tasks-list.component';
+import { AllGroupsComponent } from './admin/all-groups/all-groups.component';
+import { AllUsersComponent } from './admin/all-users/all-users.component';
+import { AllTasksComponent } from './admin/all-tasks/all-tasks.component';
 import { CreateTasksComponent } from './admin/create-tasks/create-tasks.component';
 import { GroupTasksListComponent } from './group/group-tasks-list/group-tasks-list.component';
 import { WorkerTasksListComponent } from './group/worker-tasks-list/worker-tasks-list.component';
@@ -34,9 +34,9 @@ import { TaskActionsComponent } from './share/task-actions/task-actions.componen
     GroupNavigationComponent,
     CreateGroupComponent,
     CreateUserComponent,
-    GroupsListComponent,
-    UsersListComponent,
-    TasksListComponent,
+    AllGroupsComponent,
+    AllUsersComponent,
+    AllTasksComponent,
     CreateTasksComponent,
     GroupTasksListComponent,
     WorkerTasksListComponent,

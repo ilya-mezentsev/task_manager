@@ -5,10 +5,10 @@ import {Task, TasksListResponse} from '../../interfaces/admin-api-responses';
 
 @Component({
   selector: 'app-tasks-list',
-  templateUrl: './tasks-list.component.html',
-  styleUrls: ['./tasks-list.component.scss']
+  templateUrl: './all-tasks.component.html',
+  styleUrls: ['./all-tasks.component.scss']
 })
-export class TasksListComponent implements OnInit {
+export class AllTasksComponent implements OnInit {
   public userRole: UserRole = UserRole.Admin;
   public tasks: Task[] = [];
 
