@@ -5,12 +5,13 @@ cookieHeader="Cookie: TM-Session-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJz
 echo 'create group...'
 curl -X POST localhost/api/admin/group -H "${cookieHeader}" -d '{"group_name": "my_group"}' && echo
 
-echo 'create users...'
+echo 'create group lead...'
 curl -X POST localhost/api/admin/user -H "${cookieHeader}" \
 -d '{"user": {"name": "lead", "group_id": 1, "is_group_lead": true}}' && echo
 
+echo 'create group worker...'
 curl -X POST localhost/api/admin/user -H "${cookieHeader}" \
--d '{"user": {"name": "worker", "group_id": 1, "is_group_lead": true}}' && echo
+-d '{"user": {"name": "worker", "group_id": 1, "is_group_lead": false}}' && echo
 
 echo 'create tasks...'
 curl -X POST localhost/api/admin/tasks -H "${cookieHeader}" \

@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
   }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
+    debugger;
     const roles: string[] = next.data.roles as Array<string>;
     const session: UserSession = this.storage.getSession();
     if (session !== null) {
