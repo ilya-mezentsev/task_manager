@@ -2,17 +2,9 @@
 #### Application for managing tasks by users (admin, group leads and group workers)
 
 ### Local deployment
-#### Create DB file:
+#### Prepare local workspace (run in root project folder):
 ```bash
-$ cd task_manager/backend
-
-$ mkdir data/
-
-$ touch data/data.db
-```
-#### Create .env file (in root project folder) and replace default values in created .env file by your local:
-```bash
-$ cp .example.env .env
+$ bash prepare_workspace.sh $(pwd)
 ```
 #### This command will start Angular serve (hot-reload), Golang API and Nginx (proxy server to another two containers):
 ```bash
