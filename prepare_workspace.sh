@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 function prepareFolders() {
-  mkdir $1/test_report
-  mkdir $1/data
+  mkdir $1/backend/test_report
+  mkdir $1/backend/data
 }
 
 function prepareFiles() {
   touch $1/.env
-  touch $1/data/data.db
-  touch $1/data/test_data.db
+  touch $1/backend/data/data.db
+  touch $1/backend/data/test_data.db
 }
 
 function compileAngularProject() {
