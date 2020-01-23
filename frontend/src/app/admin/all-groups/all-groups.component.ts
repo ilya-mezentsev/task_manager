@@ -20,9 +20,8 @@ export class AllGroupsComponent implements OnInit {
   }
 
   public deleteGroup(groupId: number): void {
-    console.log(`trying to delete group: id <${groupId}>`);
-    // this.adminAdiRequester.deleteGroupById(groupId)
-      // .catch(err => console.log(err));
+    this.adminAdiRequester.deleteGroupById(groupId)
+      .catch(err => console.log(err));
   }
 
   ngOnInit() {
