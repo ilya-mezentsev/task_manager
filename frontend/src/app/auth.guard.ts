@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     this.loginUrlTree = this.router.parseUrl('login');
   }
 
-  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<true | UrlTree> {
     const roles: string[] = next.data.roles as Array<string>;
     const session: UserSession = this.storage.getSession();
     if (session !== null) {
@@ -30,12 +30,12 @@ export class AuthGuard implements CanActivate {
     return await this.loadAndCheckSession(roles);
   }
 
-  private async loadAndCheckSession(roles: string[]): Promise<boolean | UrlTree> {
+  private async loadAndCheckSession(roles: string[]): Promise<true | UrlTree> {
     try {
       const sessionResponse = await this.authService.getSession();
       if (sessionResponse.status === 'error') {
         console.log(`an error while getting session: ${(sessionResponse as ApiErrorResponse).error_detail}`);
-        return false;
+        return this.loginUrlTree;
       } else {
         const session = (sessionResponse as SessionResponse).data;
         this.storage.saveSession(session);
