@@ -1,9 +1,13 @@
 <div class="col s12">
-  <ul *ngIf="groupsExist(); else noGroups">
-    <li *ngFor="let group of groups">
-      {{group.name}}
+  <ul class="collection" *ngIf="groupsExist(); else noGroups">
+    <li class="collection-item" *ngFor="let group of groups">
+      <div>
+        {{group.name}}
+        <a (click)="deleteGroup(group.id)" class="secondary-content"><i class="material-icons">delete</i></a>
+      </div>
     </li>
   </ul>
+
   <ng-template #noGroups>
     <p>No groups created</p>
   </ng-template>
