@@ -1,12 +1,13 @@
 import {ApiDefaultResponse, ApiResponse} from './api';
 
 export interface Group {
+  id: number;
   name: string;
 }
 
 export type GroupsListResponse = ApiResponse<Group[]>;
 
-export type deleteGroupResponse = ApiDefaultResponse;
+export type DeleteGroupResponse = ApiDefaultResponse;
 
 export interface Task {
   id: number;

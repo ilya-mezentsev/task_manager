@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {GroupsListResponse, TasksListResponse, deleteGroupResponse} from '../interfaces/admin-api-responses';
+import {GroupsListResponse, TasksListResponse, DeleteGroupResponse} from '../interfaces/admin-api-responses';
 import {HttpClient} from '@angular/common/http';
 import {HttpHeaders} from '@angular/common/http';
 import {ApiUrlBuilder} from '../helpers/api-url-builder';
@@ -10,6 +10,7 @@ import {ApiErrorResponse} from '../interfaces/api';
 })
 export class AdminApiRequesterService {
   private readonly groupsListEndpoint = '/admin/groups';
+  private readonly groupApiEndpoint = '/admin/group';
   private readonly tasksListEndpoint = '/admin/tasks';
 
   constructor(
@@ -22,7 +23,7 @@ export class AdminApiRequesterService {
     ).toPromise() as GroupsListResponse | ApiErrorResponse;
   }
 
-  public async deleteGroupById(id: number): Promise<deleteGroupResponse | ApiErrorResponse> {
+  public async deleteGroupById(id: number): Promise<DeleteGroupResponse | ApiErrorResponse> {
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -33,9 +34,9 @@ export class AdminApiRequesterService {
     };
 
     return await this.http.delete(
-      ApiUrlBuilder.getApiUrlRequest(this.groupsListEndpoint),
+      ApiUrlBuilder.getApiUrlRequest(this.groupApiEndpoint),
       options
-    ).toPromise() as deleteGroupResponse | ApiErrorResponse;
+    ).toPromise() as DeleteGroupResponse | ApiErrorResponse;
   }
 
   public async getTasksList(): Promise<TasksListResponse | ApiErrorResponse> {
