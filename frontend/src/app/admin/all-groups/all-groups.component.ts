@@ -22,10 +22,6 @@ export class AllGroupsComponent implements OnInit {
     return this.groups.length > 0;
   }
 
-  public deleteGroupFromHtml(groupId): void {
-
-  }
-
   public deleteGroup(groupId: number): void {
     const r = this.adminApiRequester.deleteGroupById(2);
     r.then(result => {
