@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ApiErrorResponse, ResponseStatus, UserRole} from '../../interfaces/api';
 import {AdminApiRequesterService} from '../../services/admin-api-requester.service';
 import {Task, TasksListResponse} from '../../interfaces/admin-api-responses';
+import {NotifierService} from '../../services/notifier.service';
 
 @Component({
   selector: 'app-all-tasks',
@@ -13,7 +14,8 @@ export class AllTasksComponent implements OnInit {
   public tasks: Task[] = [];
 
   constructor(
-    private readonly adminAdiRequester: AdminApiRequesterService
+    private readonly adminApiRequester: AdminApiRequesterService,
+    private readonly notifierService: NotifierService
   ) { }
 
   public deleteTask(taskId: number): void {
@@ -21,7 +23,7 @@ export class AllTasksComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.adminAdiRequester.getTasksList()
+    this.adminApiRequester.getTasksList()
       .then(res => {
         if (res.status === ResponseStatus.Ok) {
           this.tasks = (res as TasksListResponse).data;

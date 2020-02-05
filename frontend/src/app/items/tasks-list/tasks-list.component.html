@@ -9,6 +9,7 @@
   <tr>
     <th>Title</th>
     <th>Description</th>
+    <th *ngIf="userRole == admin">Group</th>
     <th></th>
   </tr>
   </thead>
@@ -16,6 +17,7 @@
     <tr *ngFor="let task of tasks">
       <td>{{task.title}}</td>
       <td>{{task.description}}</td>
+      <td *ngIf="userRole == admin">{{task.group_id}}</td>
       <td>
         <div [ngSwitch]="userRole">
           <div *ngSwitchCase="admin">
