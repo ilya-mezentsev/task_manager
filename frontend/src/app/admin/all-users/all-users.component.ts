@@ -23,18 +23,17 @@ export class AllUsersComponent implements OnInit {
     return this.users.length > 0;
   }
 
-  public deleteGroup(groupId: number): void {
-    // const r = this.adminApiRequester.deleteGroupById(groupId);
-    // r.then(result => {
-    //   if (result.status === ResponseStatus.Ok) {
-    //     this.groups = this.groups.filter(group => group.id !== groupId);
-    //     this.notifierService.send('Done');
-    //   } else {
-    //     this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
-    //     return Promise.reject((result as ApiErrorResponse).error_detail);
-    //   }
-    // });
-    this.notifierService.send('ok');
+  public deleteUser(userId: number): void {
+    const r = this.adminApiRequester.deleteUserById(userId);
+    r.then(result => {
+      if (result.status === ResponseStatus.Ok) {
+        this.users = this.users.filter(user => user.id !== userId);
+        this.notifierService.send('Done');
+      } else {
+        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        return Promise.reject((result as ApiErrorResponse).error_detail);
+      }
+    });
   }
 
   ngOnInit() {

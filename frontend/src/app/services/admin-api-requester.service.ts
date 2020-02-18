@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import {GroupsListResponse, TasksListResponse, DeleteGroupResponse, DeleteTaskResponse, UsersListResponse} from '../interfaces/admin-api-responses';
+import {GroupsListResponse, TasksListResponse, DeleteGroupResponse, DeleteTaskResponse, UsersListResponse,
+  DeleteUserResponse, addNewGroupResponse} from '../interfaces/admin-api-responses';
 import {HttpClient} from '@angular/common/http';
 import {HttpHeaders} from '@angular/common/http';
 import {ApiUrlBuilder} from '../helpers/api-url-builder';
@@ -12,8 +13,9 @@ export class AdminApiRequesterService {
   private readonly groupsListEndpoint = '/admin/groups';
   private readonly groupApiEndpoint = '/admin/group';
   private readonly tasksListEndpoint = '/admin/tasks';
-  private readonly taskEndpoint = '/admin/task';
+  private readonly taskApiEndpoint = '/admin/task';
   private  readonly usersListEndpoint = '/admin/users';
+  private readonly userApiEndpoint = '/admin/user';
 
   constructor(
     private readonly http: HttpClient
@@ -41,6 +43,22 @@ export class AdminApiRequesterService {
     ).toPromise() as DeleteGroupResponse | ApiErrorResponse;
   }
 
+  public async deleteUserById(id: number): Promise<DeleteUserResponse | ApiErrorResponse> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: {
+        user_id: id
+      }
+    };
+
+    return await this.http.delete(
+      ApiUrlBuilder.getApiUrlRequest(this.userApiEndpoint),
+      options
+    ).toPromise() as DeleteUserResponse | ApiErrorResponse;
+  }
+
   public async deleteTaskById(id: number): Promise<DeleteTaskResponse | ApiErrorResponse> {
     const options = {
       headers: new HttpHeaders({
@@ -52,9 +70,18 @@ export class AdminApiRequesterService {
     };
 
     return await this.http.delete(
-      ApiUrlBuilder.getApiUrlRequest(this.taskEndpoint),
+      ApiUrlBuilder.getApiUrlRequest(this.taskApiEndpoint),
       options
     ).toPromise() as DeleteGroupResponse | ApiErrorResponse;
+  }
+
+  public async addNewGroup(groupName: string): Promise<addNewGroupResponse | ApiErrorResponse> {
+    const body = {group_name: groupName};
+
+    return await this.http.post(
+      ApiUrlBuilder.getApiUrlRequest(this.groupApiEndpoint),
+      body
+    ).toPromise() as addNewGroupResponse | ApiErrorResponse;
   }
 
   public async getTasksList(): Promise<TasksListResponse | ApiErrorResponse> {

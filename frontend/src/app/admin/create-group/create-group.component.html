@@ -1,1 +1,11 @@
-<p>create-group works!</p>
+<br>
+<div class="row">
+  <div class="col s3"></div>
+  <div class="input-field col s6">
+    <input id="groupName" type="text" class="validate"
+           #newGroup
+           (keyup.enter)="addGroup(newGroup.value)">
+    <label class="active" for="groupName">Group Name</label>
+    <button (click)="addGroup(newGroup.value)" class="btn waves-effect waves-light">Add</button>
+  </div>
+</div>

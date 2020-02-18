@@ -5,9 +5,9 @@ cookieHeader="Cookie: TM-Session-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJz
 #echo 'create group...'
 #curl -X POST localhost/api/admin/group -H "${cookieHeader}" -d '{"group_name": "my_group"}' && echo
 #curl -X POST localhost/api/admin/group -H "${cookieHeader}" -d '{"group_name": "my_group2"}' && echo
-#curl -X POST localhost/api/admin/group -H "${cookieHeader}" -d '{"group_name": "my_group3"}' && echo
+curl -X POST localhost/api/admin/group -H "${cookieHeader}" -d '{"group_name": "ilyapidor"}' && echo
 
-#curl localhost/api/admin/groups -H "${cookieHeader}" && echo
+curl localhost/api/admin/groups -H "${cookieHeader}" && echo
 
 #echo 'create group lead...'
 #curl -X POST localhost/api/admin/user -H "${cookieHeader}" \
@@ -23,7 +23,7 @@ cookieHeader="Cookie: TM-Session-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJz
 #  && echo
 
 #curl -X POST localhost/api/admin/user -H "${cookieHeader}" \
-# -d '{"user": {"name": "name4", "group_id": 14, "is_group_lead": false}}'\
+# -d '{"user": {"name": "nam", "group_id": 15, "is_group_lead": false}}'\
 #&& echo
 
-curl localhost/api/admin/users -H "${cookieHeader}" && echo
+#curl localhost/api/admin/users -H "${cookieHeader}" && echo

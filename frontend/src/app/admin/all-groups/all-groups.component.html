@@ -4,10 +4,12 @@
       <col span="1" style="width: 30%;">
       <col span="1" style="width: 40%;">
       <col span="1" style="width: 40%;">
+      <col span="1" style="width: 40%;">
     </colgroup>
 
     <thead>
     <tr>
+      <th>Group ID</th>
       <th>Name</th>
       <th></th>
       <th></th>
@@ -15,6 +17,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let group of groups">
+      <td>{{group.id}}</td>
       <td>{{group.name}}</td>
       <td></td>
       <td><a class="waves-effect waves-light btn" (click)="deleteGroup(group.id)">Delete group</a></td>
