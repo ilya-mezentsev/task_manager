@@ -5,7 +5,17 @@ export interface Group {
   name: string;
 }
 
+export interface User {
+  id: number;
+  name: string;
+  group_id: number;
+  password: string;
+  is_group_lead: boolean;
+}
+
 export type GroupsListResponse = ApiResponse<Group[]>;
+
+export type UsersListResponse = ApiResponse<User[]>;
 
 export type DeleteGroupResponse = ApiDefaultResponse;
 

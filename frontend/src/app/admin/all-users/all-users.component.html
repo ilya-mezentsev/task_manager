@@ -1,1 +1,28 @@
-<p>users-list works!</p>
+<div class="col s12">
+  <table *ngIf="usersExist(); else noUsers">
+    <colgroup>
+      <col span="1" style="width: 30%;">
+      <col span="1" style="width: 40%;">
+      <col span="1" style="width: 40%;">
+    </colgroup>
+
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.name}}</td>
+      <td></td>
+<!--      <td><a class="waves-effect waves-light btn" (click)="deleteGroup(group.id)">Delete group</a></td>-->
+    </tr>
+    </tbody>
+  </table>
+  <ng-template #noUsers>
+    <p>No users created</p>
+  </ng-template>
+</div>
+

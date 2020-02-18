@@ -47,7 +47,7 @@ export class AllGroupsComponent implements OnInit {
   private processGroupsListResponse(groupsList: GroupsListResponse | ApiErrorResponse): void {
     if (groupsList.status === 'error') {
       console.log(`error while getting groups list: ${(groupsList as ApiErrorResponse).error_detail}`);
-      this.notifierService.send(`error while getting groups list: ${(groupsList as ApiErrorResponse).error_detail}`)
+      this.notifierService.send(`error while getting groups list: ${(groupsList as ApiErrorResponse).error_detail}`);
     } else {
       const groups: Group[] = (groupsList as GroupsListResponse).data;
       this.groups = groups == null

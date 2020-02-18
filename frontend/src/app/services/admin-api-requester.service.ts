@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {GroupsListResponse, TasksListResponse, DeleteGroupResponse, DeleteTaskResponse} from '../interfaces/admin-api-responses';
+import {GroupsListResponse, TasksListResponse, DeleteGroupResponse, DeleteTaskResponse, UsersListResponse} from '../interfaces/admin-api-responses';
 import {HttpClient} from '@angular/common/http';
 import {HttpHeaders} from '@angular/common/http';
 import {ApiUrlBuilder} from '../helpers/api-url-builder';
@@ -13,6 +13,7 @@ export class AdminApiRequesterService {
   private readonly groupApiEndpoint = '/admin/group';
   private readonly tasksListEndpoint = '/admin/tasks';
   private readonly taskEndpoint = '/admin/task';
+  private  readonly usersListEndpoint = '/admin/users';
 
   constructor(
     private readonly http: HttpClient
@@ -60,5 +61,11 @@ export class AdminApiRequesterService {
     return await this.http.get(
       ApiUrlBuilder.getApiUrlRequest(this.tasksListEndpoint)
     ).toPromise() as TasksListResponse | ApiErrorResponse;
+  }
+
+  public async getUsersList(): Promise<UsersListResponse | ApiErrorResponse> {
+    return await this.http.get(
+      ApiUrlBuilder.getApiUrlRequest(this.usersListEndpoint)
+    ).toPromise() as UsersListResponse | ApiErrorResponse;
   }
 }
