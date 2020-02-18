@@ -23,10 +23,11 @@ export class AllGroupsComponent implements OnInit {
   }
 
   public deleteGroup(groupId: number): void {
-    const r = this.adminApiRequester.deleteGroupById(2);
+    const r = this.adminApiRequester.deleteGroupById(groupId);
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
         this.groups = this.groups.filter(group => group.id !== groupId);
+        this.notifierService.send('Done');
       } else {
         this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
         return Promise.reject((result as ApiErrorResponse).error_detail);

@@ -17,7 +17,7 @@ curl localhost/api/admin/groups -H "${cookieHeader}" && echo
 #curl -X POST localhost/api/admin/user -H "${cookieHeader}" \
 #-d '{"user": {"name": "worker", "group_id": 1, "is_group_lead": false}}' && echo
 
-#echo 'create tasks...'
+echo 'create tasks...'
 curl -X POST localhost/api/admin/tasks -H "${cookieHeader}" \
-  -d '{"group_id": 13, "tasks": [{"title": "task1", "description": "perform task1"},{"title": "task2", "description": "perform task2"}]}'\
+  -d '{"group_id": 15, "tasks": [{"title": "task1", "description": "perform task1"},{"title": "task2", "description": "perform task2"}]}'\
   && echo

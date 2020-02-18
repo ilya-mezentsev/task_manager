@@ -19,7 +19,16 @@ export class AllTasksComponent implements OnInit {
   ) { }
 
   public deleteTask(taskId: number): void {
-    console.log(`trying to delete task: id <${taskId}>`);
+    const r = this.adminApiRequester.deleteTaskById(taskId);
+    r.then(result => {
+      if (result.status === ResponseStatus.Ok) {
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
+        this.notifierService.send('Done');
+      } else {
+        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        return Promise.reject((result as ApiErrorResponse).error_detail);
+      }
+    });
   }
 
   ngOnInit() {
