@@ -25,6 +25,10 @@ export type DeleteUserResponse = ApiDefaultResponse;
 
 export type addNewGroupResponse = ApiDefaultResponse;
 
+export type addNewUserResponse = ApiDefaultResponse;
+
+export type addNewTaskResponse = ApiDefaultResponse;
+
 export interface Task {
   id: number;
   title: string;

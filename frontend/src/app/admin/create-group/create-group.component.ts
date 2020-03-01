@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AdminApiRequesterService} from '../../services/admin-api-requester.service';
-import {Group} from '../../interfaces/admin-api-responses';
-import {ApiErrorResponse} from '../../interfaces/api';
-import {ResponseStatus} from '../../interfaces/api';
+import {ApiErrorResponse, ResponseStatus} from '../../interfaces/api';
 import {NotifierService} from '../../services/notifier.service';
 
 @Component({
