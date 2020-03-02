@@ -24,6 +24,7 @@ export class ApiRequesterService {
         group_id: groupId
       }
     };
+    console.log(options);
     return await this.http.get(
       ApiUrlBuilder.getApiUrlRequest(this.groupsUsersEndpoint),
       options

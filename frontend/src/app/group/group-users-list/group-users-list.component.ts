@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiRequesterService} from '../../services/api-requester.service';
 import {User, UsersListResponse} from '../../interfaces/api-responses';
-import {ApiErrorResponse, UserSession} from '../../interfaces/api';
-import {ResponseStatus} from '../../interfaces/api';
+import {ApiErrorResponse, UserSession, ResponseStatus} from '../../interfaces/api';
 import {NotifierService} from '../../services/notifier.service';
 
 @Component({
@@ -11,7 +10,7 @@ import {NotifierService} from '../../services/notifier.service';
   styleUrls: ['./group-users-list.component.scss']
 })
 export class GroupUsersListComponent implements OnInit {
-  //public userGroup: UserSession = UserSession.group_id;
+  // public userGroup: UserSession = UserSession.group_id;
   public users: User[] = [];
 
   constructor(
@@ -24,7 +23,7 @@ export class GroupUsersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiRequester.getUsersList(15)
+    this.apiRequester.getUsersList(14)
       .then(usersList => this.processUsersListResponse(usersList))
       .catch(err => {
         console.log(err);
