@@ -16,18 +16,18 @@ export class ApiRequesterService {
   ) { }
 
   public async getUsersList(groupId: number): Promise<UsersListResponse | ApiErrorResponse> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: {
-        group_id: groupId
-      }
-    };
-    console.log(options);
-    return await this.http.get(
+    // const options = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json'
+    //   }),
+    //   body: {
+    //     group_id: groupId
+    //   }
+    // };
+    const body = {group_id: groupId};
+    return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.groupsUsersEndpoint),
-      options
+      body
     ).toPromise() as UsersListResponse | ApiErrorResponse;
   }
 
@@ -40,7 +40,7 @@ export class ApiRequesterService {
         user_id: userId
       }
     };
-    return await this.http.get(
+    return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.tasksListEndpoint),
       options
     ).toPromise() as TasksListResponse | ApiErrorResponse;

@@ -28,8 +28,8 @@ func bindGroupLeadRoutesToHandlers() {
   api := router.PathPrefix("/group/lead").Subrouter()
   api.Use(middleware.RequiredGroupLeadRole)
 
-  api.HandleFunc("/users", groupLeadRequestHandler.GetUsersByGroupId).Methods(http.MethodGet)
-  api.HandleFunc("/tasks", groupLeadRequestHandler.GetTasksByGroupId).Methods(http.MethodGet)
+  api.HandleFunc("/users", groupLeadRequestHandler.GetUsersByGroupId).Methods(http.MethodPost)
+  api.HandleFunc("/tasks", groupLeadRequestHandler.GetTasksByGroupId).Methods(http.MethodPost)
   api.HandleFunc("/task", groupLeadRequestHandler.AssignTaskToWorker).Methods(http.MethodPost)
 }
 
