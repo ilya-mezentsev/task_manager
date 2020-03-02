@@ -13,7 +13,7 @@ export class AdminApiRequesterService {
   private readonly groupApiEndpoint = '/admin/group';
   private readonly tasksListEndpoint = '/admin/tasks';
   private readonly taskApiEndpoint = '/admin/task';
-  private  readonly usersListEndpoint = '/admin/users';
+  private readonly usersListEndpoint = '/admin/users';
   private readonly userApiEndpoint = '/admin/user';
 
   constructor(
@@ -108,10 +108,17 @@ export class AdminApiRequesterService {
   }
 
   public async addNewTask(groupId: number, taskTitle: string, taskDescription: string): Promise<addNewTaskResponse | ApiErrorResponse> {
-    const body = {group_id: groupId, tasks: [{title: taskTitle, description: taskDescription}]};
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: {
+        group_id: groupId, tasks: [{title: taskTitle, description: taskDescription}]
+      }
+    };
     return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.tasksListEndpoint),
-      body
+      options
     ).toPromise() as addNewTaskResponse | ApiErrorResponse;
   }
 }

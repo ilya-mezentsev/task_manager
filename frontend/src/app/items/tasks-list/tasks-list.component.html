@@ -1,5 +1,6 @@
 <table>
   <colgroup>
+    <col span="1" style="width: 15%;">
     <col span="1" style="width: 30%;">
     <col span="1" style="width: 40%;">
     <col span="1" style="width: 30%;">
@@ -7,6 +8,7 @@
 
   <thead>
   <tr>
+    <th>ID</th>
     <th>Title</th>
     <th>Description</th>
     <th *ngIf="userRole == admin">Group ID</th>
@@ -15,6 +17,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let task of tasks">
+      <td>{{task.id}}</td>
       <td>{{task.title}}</td>
       <td>{{task.description}}</td>
       <td *ngIf="userRole == admin">{{task.group_id}}</td>
