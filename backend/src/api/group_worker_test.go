@@ -22,7 +22,7 @@ func TestGroupWorkerRequestHandler_GetTasksByWorkerIdSuccess(t *testing.T) {
   defer dropTestTables()
 
   var response mock.TasksResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/worker/tasks", mock.GetTasksByUserIdRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/worker/tasks", mock.GetTasksByUserIdRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -39,7 +39,7 @@ func TestGroupWorkerRequestHandler_GetTasksByWorkerIdSuccess(t *testing.T) {
 
 func TestGroupWorkerRequestHandler_GetTasksByIncorrectWorkerIdError(t *testing.T) {
   var response mock.ErroredResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/worker/tasks", mock.GetTasksByIncorrectUserIdRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/worker/tasks", mock.GetTasksByIncorrectUserIdRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -58,7 +58,7 @@ func TestGroupWorkerRequestHandler_GetTasksByWorkerIdInternalError(t *testing.T)
   dropTestTables()
 
   var response mock.ErroredResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/worker/tasks", mock.GetTasksByUserIdRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/worker/tasks", mock.GetTasksByUserIdRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
