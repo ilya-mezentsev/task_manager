@@ -14,8 +14,8 @@ export class AllUsersComponent implements OnInit {
   public users: User[] = [];
 
   constructor(
-    private readonly adminApiRequester: AdminApiRequesterService,
-    private readonly notifierService: NotifierService
+    private readonly adminApi: AdminApiRequesterService,
+    private readonly notifier: NotifierService
   ) {}
 
   public usersExist(): boolean {
@@ -23,31 +23,30 @@ export class AllUsersComponent implements OnInit {
   }
 
   public deleteUser(userId: number): void {
-    const r = this.adminApiRequester.deleteUserById(userId);
+    const r = this.adminApi.deleteUserById(userId);
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
         this.users = this.users.filter(user => user.id !== userId);
-        this.notifierService.send('Done');
+        this.notifier.send('User deleted successfully');
       } else {
-        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
         return Promise.reject((result as ApiErrorResponse).error_detail);
       }
     });
   }
 
   ngOnInit() {
-    this.adminApiRequester.getUsersList()
+    this.adminApi.getUsersList()
       .then(usersList => this.processUsersListResponse(usersList))
       .catch(err => {
         console.log(err);
-        this.notifierService.send(err);
+        this.notifier.send(err);
       });
   }
 
   private processUsersListResponse(usersList: UsersListResponse | ApiErrorResponse): void {
     if (usersList.status === 'error') {
-      console.log(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
-      this.notifierService.send(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
+      this.notifier.send(`Error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
     } else {
       const users: User[] = (usersList as UsersListResponse).data;
       this.users = users == null

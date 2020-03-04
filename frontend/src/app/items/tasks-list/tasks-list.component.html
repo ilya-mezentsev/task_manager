@@ -1,9 +1,10 @@
 <table>
   <colgroup>
     <col span="1" style="width: 15%;">
+    <col span="1" style="width: 20%;">
     <col span="1" style="width: 30%;">
-    <col span="1" style="width: 40%;">
-    <col span="1" style="width: 30%;">
+    <col span="1" style="width: 15%;">
+    <col span="1" style="width: 5%;">
   </colgroup>
 
   <thead>
@@ -12,6 +13,7 @@
     <th>Title</th>
     <th>Description</th>
     <th *ngIf="userRole == admin">Group ID</th>
+    <th>Is completed</th>
     <th></th>
   </tr>
   </thead>
@@ -21,6 +23,7 @@
       <td>{{task.title}}</td>
       <td>{{task.description}}</td>
       <td *ngIf="userRole == admin">{{task.group_id}}</td>
+      <td>{{task.is_complete}}</td>
       <td>
         <div [ngSwitch]="userRole">
           <div *ngSwitchCase="admin">
@@ -28,7 +31,16 @@
           </div>
 
           <div *ngSwitchCase="groupLead">
-            <a class="waves-effect waves-light btn" (click)="assignTask(task.id)">Assign task to worker</a>
+
+
+                <p>
+                  <input id="userId" type="number" class="validate" [(ngModel)]="userId">
+                  <label class="active" for="userId">User ID</label>
+                </p>
+
+                <a class="waves-effect waves-light btn" (click)="assignTask(task.id)">Assign task to worker</a>
+
+
           </div>
 
           <div *ngSwitchCase="groupWorker">

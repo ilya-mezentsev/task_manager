@@ -11,20 +11,20 @@ import {NotifierService} from '../../services/notifier.service';
 export class CreateUserComponent implements OnInit {
 
   constructor(
-    private readonly adminApiRequester: AdminApiRequesterService,
-    private readonly notifierService: NotifierService
+    private readonly adminApi: AdminApiRequesterService,
+    private readonly notifier: NotifierService
   ) {}
 
   isGroupLead = false;
 
   public addUser(userName: string, groupId: number, isGroupLead: boolean): void {
-    this.notifierService.send(`Trying to add user "${userName}"`);
-    const r = this.adminApiRequester.addNewUser(userName, groupId, isGroupLead);
+    this.notifier.send(`Trying to add user "${userName}"`);
+    const r = this.adminApi.addNewUser(userName, groupId, isGroupLead);
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
-        this.notifierService.send('User added');
+        this.notifier.send('User added');
       } else {
-        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
         return Promise.reject((result as ApiErrorResponse).error_detail);
       }
     });

@@ -2,9 +2,8 @@
   <table *ngIf="usersExist(); else noUsers">
     <colgroup>
       <col span="1" style="width: 10%;">
-      <col span="1" style="width: 30%;">
-      <col span="1" style="width: 20%;">
-      <col span="1" style="width: 30%;">
+      <col span="1" style="width: 40%;">
+      <col span="1" style="width: 40%;">
       <col span="1" style="width: 10%;">
     </colgroup>
 
@@ -13,7 +12,6 @@
       <th>ID</th>
       <th>Name</th>
       <th>Group ID</th>
-      <th>Password</th>
       <th>Is group lead</th>
     </tr>
     </thead>
@@ -22,7 +20,6 @@
       <td>{{user.id}}</td>
       <td>{{user.name}}</td>
       <td>{{user.group_id}}</td>
-      <td>{{user.password}}</td>
       <td>{{user.is_group_lead}}</td>
     </tr>
     </tbody>

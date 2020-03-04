@@ -11,13 +11,13 @@ import {StorageService} from '../../services/storage.service';
   styleUrls: ['./group-users-list.component.scss']
 })
 export class GroupUsersListComponent implements OnInit {
-  public user: UserSession = this.storageService.getSession();
+  public user: UserSession = this.storage.getSession();
   public users: User[] = [];
 
   constructor(
     private readonly apiRequester: ApiRequesterService,
-    private readonly notifierService: NotifierService,
-    private readonly storageService: StorageService
+    private readonly notifier: NotifierService,
+    private readonly storage: StorageService
   ) {}
 
   public usersExist(): boolean {
@@ -29,14 +29,14 @@ export class GroupUsersListComponent implements OnInit {
       .then(usersList => this.processUsersListResponse(usersList))
       .catch(err => {
         console.log(err);
-        this.notifierService.send(err);
+        this.notifier.send(err);
       });
   }
 
   private processUsersListResponse(usersList: UsersListResponse | ApiErrorResponse): void {
     if (usersList.status === 'error') {
       console.log(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
-      this.notifierService.send(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
+      this.notifier.send(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
     } else {
       const users: User[] = (usersList as UsersListResponse).data;
       this.users = users == null

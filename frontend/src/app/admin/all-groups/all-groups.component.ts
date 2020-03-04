@@ -13,8 +13,8 @@ export class AllGroupsComponent implements OnInit {
   public groups: Group[] = [];
 
   constructor(
-    private readonly adminApiRequester: AdminApiRequesterService,
-    private readonly notifierService: NotifierService
+    private readonly adminApi: AdminApiRequesterService,
+    private readonly notifier: NotifierService
   ) {}
 
   public groupsExist(): boolean {
@@ -22,31 +22,30 @@ export class AllGroupsComponent implements OnInit {
   }
 
   public deleteGroup(groupId: number): void {
-    const r = this.adminApiRequester.deleteGroupById(groupId);
+    const r = this.adminApi.deleteGroupById(groupId);
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
         this.groups = this.groups.filter(group => group.id !== groupId);
-        this.notifierService.send('Done');
+        this.notifier.send('Group deleted successfully');
       } else {
-        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
         return Promise.reject((result as ApiErrorResponse).error_detail);
       }
     });
   }
 
   ngOnInit() {
-    this.adminApiRequester.getGroupsList()
+    this.adminApi.getGroupsList()
       .then(groupsList => this.processGroupsListResponse(groupsList))
       .catch(err => {
         console.log(err);
-        this.notifierService.send(err);
+        this.notifier.send(err);
       });
   }
 
   private processGroupsListResponse(groupsList: GroupsListResponse | ApiErrorResponse): void {
     if (groupsList.status === 'error') {
-      console.log(`error while getting groups list: ${(groupsList as ApiErrorResponse).error_detail}`);
-      this.notifierService.send(`error while getting groups list: ${(groupsList as ApiErrorResponse).error_detail}`);
+      this.notifier.send(`Error while getting groups list: ${(groupsList as ApiErrorResponse).error_detail}`);
     } else {
       const groups: Group[] = (groupsList as GroupsListResponse).data;
       this.groups = groups == null

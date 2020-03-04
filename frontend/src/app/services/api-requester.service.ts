@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ApiUrlBuilder} from '../helpers/api-url-builder';
-import {ApiErrorResponse} from '../interfaces/api';
+import {ApiDefaultResponse, ApiErrorResponse} from '../interfaces/api';
 import {UsersListResponse, TasksListResponse} from '../interfaces/api-responses';
 
 @Injectable({
@@ -9,21 +9,16 @@ import {UsersListResponse, TasksListResponse} from '../interfaces/api-responses'
 })
 export class ApiRequesterService {
   private readonly groupsUsersEndpoint = '/group/lead/users';
-  private  readonly tasksListEndpoint = '/group/worker/tasks';
+  private  readonly tasksListWorkerEndpoint = '/group/worker/tasks';
+  private  readonly taskLeadEndpoint = '/group/lead/task';
+  private  readonly tasksListLeadEndpoint = 'group/lead/tasks';
+  private readonly httpOptions = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(
     private readonly http: HttpClient
   ) { }
 
   public async getUsersList(groupId: number): Promise<UsersListResponse | ApiErrorResponse> {
-    // const options = {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/json'
-    //   }),
-    //   body: {
-    //     group_id: groupId
-    //   }
-    // };
     const body = {group_id: groupId};
     return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.groupsUsersEndpoint),
@@ -31,19 +26,35 @@ export class ApiRequesterService {
     ).toPromise() as UsersListResponse | ApiErrorResponse;
   }
 
-  public async getTasksList(userId: number): Promise<TasksListResponse | ApiErrorResponse> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: {
-        user_id: userId
-      }
+  public async getTasksListByUser(userId: number): Promise<TasksListResponse | ApiErrorResponse> {
+    const body = {
+      user_id: userId
     };
     return await this.http.post(
-      ApiUrlBuilder.getApiUrlRequest(this.tasksListEndpoint),
-      options
+      ApiUrlBuilder.getApiUrlRequest(this.tasksListWorkerEndpoint),
+      body
     ).toPromise() as TasksListResponse | ApiErrorResponse;
+  }
+
+  public async getTasksListByGroup(groupId: number): Promise<TasksListResponse | ApiErrorResponse> {
+    const body =  {
+        group_id: groupId
+    };
+    return await this.http.post(
+      ApiUrlBuilder.getApiUrlRequest(this.tasksListLeadEndpoint),
+      body
+    ).toPromise() as TasksListResponse | ApiErrorResponse;
+  }
+
+  public async assignTaskById(userId: number, taskId: number): Promise<ApiDefaultResponse | ApiErrorResponse> {
+    const body = {
+        user_id: userId,
+        task: {id: taskId}
+    };
+    return await this.http.post(
+      ApiUrlBuilder.getApiUrlRequest(this.taskLeadEndpoint),
+      body
+    ).toPromise() as ApiDefaultResponse | ApiErrorResponse;
   }
 
 }

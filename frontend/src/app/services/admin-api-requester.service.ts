@@ -15,6 +15,7 @@ export class AdminApiRequesterService {
   private readonly taskApiEndpoint = '/admin/task';
   private readonly usersListEndpoint = '/admin/users';
   private readonly userApiEndpoint = '/admin/user';
+  private readonly httpOptions = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(
     private readonly http: HttpClient
@@ -28,9 +29,7 @@ export class AdminApiRequesterService {
 
   public async deleteGroupById(id: number): Promise<DeleteGroupResponse | ApiErrorResponse> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
+      headers: this.httpOptions,
       body: {
         group_id: id
       }
@@ -53,9 +52,7 @@ export class AdminApiRequesterService {
 
   public async deleteTaskById(id: number): Promise<DeleteTaskResponse | ApiErrorResponse> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
+      headers: this.httpOptions,
       body: {
         task_id: id
       }
@@ -81,9 +78,7 @@ export class AdminApiRequesterService {
 
   public async deleteUserById(id: number): Promise<DeleteUserResponse | ApiErrorResponse> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
+      headers: this.httpOptions,
       body: {
         user_id: id
       }
@@ -108,17 +103,12 @@ export class AdminApiRequesterService {
   }
 
   public async addNewTask(groupId: number, taskTitle: string, taskDescription: string): Promise<addNewTaskResponse | ApiErrorResponse> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: {
+    const body = {
         group_id: groupId, tasks: [{title: taskTitle, description: taskDescription}]
-      }
     };
     return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.tasksListEndpoint),
-      options
+      body
     ).toPromise() as addNewTaskResponse | ApiErrorResponse;
   }
 }

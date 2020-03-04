@@ -9,7 +9,6 @@ export interface User {
   id: number;
   name: string;
   group_id: number;
-  password: string;
   is_group_lead: boolean;
 }
 

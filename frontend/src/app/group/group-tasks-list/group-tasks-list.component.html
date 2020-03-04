@@ -1,1 +1,8 @@
-<p>group-tasks-list works!</p>
+<div class="col s12">
+  <h5>All tasks:</h5>
+  <app-tasks-list
+    [userRole]="userRole"
+    [tasks]="tasks"
+    (assignTaskToEmitterTask)="assignTask($event)"
+  ></app-tasks-list>
+</div>

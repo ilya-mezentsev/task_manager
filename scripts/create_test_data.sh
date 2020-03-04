@@ -19,7 +19,7 @@ cookieGroupLead="Cookie: TM-Session-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e
 
 #echo 'create tasks...'
 #curl -X POST localhost/api/admin/tasks -H "${cookieHeader}" \
-#  -d '{"group_id": 1, "tasks": [{"title": "task228", "description": "perform task228"}]}'\
+#  -d '{"group_id": 1, "tasks": [{"title": "task2282e2", "description": "perform taske2e2228"}]}'\
 #  && echo
 
 #curl -X POST localhost/api/admin/user -H "${cookieHeader}" \
@@ -28,8 +28,10 @@ cookieGroupLead="Cookie: TM-Session-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e
 
 #curl localhost/api/admin/users -H "${cookieHeader}" && echo
 #echo "pidor"
-curl -X POST localhost/api/group/lead/users -H "${cookieGroupLead}" -d '{"group_id": 1}' && echo
-echo "dude"
-curl -X POST localhost/api/group/lead/tasks -H "${cookieGroupLead}" -d '{"group_id": 1}' && echo
+#curl -X POST localhost/api/group/lead/users -H "${cookieGroupLead}" -d '{"group_id": 1}' && echo
+#echo "dude"
+#curl -X POST localhost/api/group/lead/tasks -H "${cookieGroupLead}" -d '{"group_id": 1}' && echo
 
-#curl -X POST localhost/api/group/lead/task -H "${cookieGroupLead}" -d '{"user_id": 1, "task": {"id": 1}}'
+#curl -X POST localhost/api/group/lead/task -H "${cookieGroupLead}" -d '{"user_id": 2, "task": {"id": 1}}'
+
+curl localhost/api/group/worker/tasks -H "${cookieGroupLead}" -d '{"user_id": 1}' && echo

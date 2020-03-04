@@ -14,25 +14,25 @@ export class AllTasksComponent implements OnInit {
   public tasks: Task[] = [];
 
   constructor(
-    private readonly adminApiRequester: AdminApiRequesterService,
-    private readonly notifierService: NotifierService
+    private readonly adminApi: AdminApiRequesterService,
+    private readonly notifier: NotifierService
   ) { }
 
   public deleteTask(taskId: number): void {
-    const r = this.adminApiRequester.deleteTaskById(taskId);
+    const r = this.adminApi.deleteTaskById(taskId);
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
         this.tasks = this.tasks.filter(task => task.id !== taskId);
-        this.notifierService.send('Done');
+        this.notifier.send('Task deleted successfully');
       } else {
-        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
         return Promise.reject((result as ApiErrorResponse).error_detail);
       }
     });
   }
 
   ngOnInit() {
-    this.adminApiRequester.getTasksList()
+    this.adminApi.getTasksList()
       .then(res => {
         if (res.status === ResponseStatus.Ok) {
           this.tasks = (res as TasksListResponse).data;

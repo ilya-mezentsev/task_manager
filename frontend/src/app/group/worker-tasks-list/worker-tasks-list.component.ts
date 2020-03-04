@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ApiErrorResponse, ResponseStatus, UserSession} from '../../interfaces/api';
+import {ApiErrorResponse, ResponseStatus, UserRole, UserSession} from '../../interfaces/api';
 import {ApiRequesterService} from '../../services/api-requester.service';
 import {Task, TasksListResponse} from '../../interfaces/api-responses';
 import {NotifierService} from '../../services/notifier.service';
@@ -11,22 +11,22 @@ import {StorageService} from '../../services/storage.service';
   styleUrls: ['./worker-tasks-list.component.scss']
 })
 export class WorkerTasksListComponent implements OnInit {
-  public user: UserSession = this.storageService.getSession();
+  public user: UserSession = this.storage.getSession();
   public tasks: Task[] = [];
+  public userRole: UserRole = UserRole.GroupWorker;
 
   constructor(
-    private readonly apiRequesterService: ApiRequesterService,
-    private readonly notifierService: NotifierService,
-    private readonly storageService: StorageService
+    private readonly apiRequester: ApiRequesterService,
+    private readonly notifier: NotifierService,
+    private readonly storage: StorageService
   ) { }
 
   ngOnInit() {
-    this.apiRequesterService.getTasksList(this.user.id)
+    this.apiRequester.getTasksListByUser(this.user.id)
       .then(res => {
         if (res.status === ResponseStatus.Ok) {
           this.tasks = (res as TasksListResponse).data;
         } else {
-          this.notifierService.send((res as ApiErrorResponse).error_detail);
           return Promise.reject((res as ApiErrorResponse).error_detail);
         }
       })

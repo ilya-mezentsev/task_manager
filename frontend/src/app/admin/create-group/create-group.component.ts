@@ -11,18 +11,18 @@ import {NotifierService} from '../../services/notifier.service';
 export class CreateGroupComponent implements OnInit {
 
   constructor(
-    private readonly adminApiRequester: AdminApiRequesterService,
-    private readonly notifierService: NotifierService
+    private readonly adminApi: AdminApiRequesterService,
+    private readonly notifier: NotifierService
   ) {}
 
   public addGroup(groupName: string): void {
-    this.notifierService.send(`Trying to add group "${groupName}"`)
-    const r = this.adminApiRequester.addNewGroup(groupName);
+    this.notifier.send(`Trying to add group "${groupName}"`)
+    const r = this.adminApi.addNewGroup(groupName);
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
-        this.notifierService.send('Group added');
+        this.notifier.send('Group added');
       } else {
-        this.notifierService.send(`${(result as ApiErrorResponse).error_detail}`);
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
         return Promise.reject((result as ApiErrorResponse).error_detail);
       }
     });
