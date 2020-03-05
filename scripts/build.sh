@@ -6,3 +6,4 @@ fi
 
 cd ${PROJECT_ROOT}
 cd frontend/ && npm run build && cd ../ && cd backend/ && go build -o main && cd ../ && echo 'building done'
+

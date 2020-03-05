@@ -22,7 +22,7 @@ func TestGroupLeadRequestHandler_GetGroupTasksSuccess(t *testing.T) {
   defer dropTestTables()
 
   var response mock.TasksResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/lead/tasks", mock.GroupTasksRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/tasks", mock.GroupTasksRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -38,7 +38,7 @@ func TestGroupLeadRequestHandler_GetGroupTasksSuccess(t *testing.T) {
 
 func TestGroupLeadRequestHandler_GetTasksByIncorrectGroupIdError(t *testing.T) {
   var response mock.ErroredResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/lead/tasks", mock.GroupTasksIncorrectIdRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/tasks", mock.GroupTasksIncorrectIdRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -57,7 +57,7 @@ func TestGroupLeadRequestHandler_GetTasksByGroupIdErrorTableNotExists(t *testing
   dropTestTables()
 
   var response mock.ErroredResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/lead/tasks", mock.GroupTasksRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/tasks", mock.GroupTasksRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -77,7 +77,7 @@ func TestGroupLeadRequestHandler_GetUsersByGroupIdSuccess(t *testing.T) {
   defer dropTestTables()
 
   var response mock.AllUsersResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/lead/users", mock.GroupUsersRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/users", mock.GroupUsersRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -94,7 +94,7 @@ func TestGroupLeadRequestHandler_GetUsersByGroupIdSuccess(t *testing.T) {
 
 func TestGroupLeadRequestHandler_GetUsersByGroupId(t *testing.T) {
   var response mock.ErroredResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/lead/users", mock.GroupUsersIncorrectIdRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/users", mock.GroupUsersIncorrectIdRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {
@@ -113,7 +113,7 @@ func TestGroupLeadRequestHandler_GetUsersByGroupIdErrorTableNotExists(t *testing
   dropTestTables()
 
   var response mock.ErroredResponse
-  responseBody := makeRequest(t, http.MethodGet, "group/lead/users", mock.GroupUsersRequestData)
+  responseBody := makeRequest(t, http.MethodPost, "group/lead/users", mock.GroupUsersRequestData)
   err := json.NewDecoder(responseBody).Decode(&response)
 
   Assert(err == nil, func() {

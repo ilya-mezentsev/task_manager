@@ -1,10 +1,16 @@
-import {ApiResponse} from './api';
+import {ApiDefaultResponse, ApiResponse} from './api';
 
 export interface Group {
+  id: number;
   name: string;
 }
 
-export type GroupsListResponse = ApiResponse<Group[]>;
+export interface User {
+  id: number;
+  name: string;
+  group_id: number;
+  is_group_lead: boolean;
+}
 
 export interface Task {
   id: number;
@@ -16,4 +22,20 @@ export interface Task {
   comment: string;
 }
 
+export type GroupsListResponse = ApiResponse<Group[]>;
+
+export type DeleteGroupResponse = ApiDefaultResponse;
+
+export type addNewGroupResponse = ApiDefaultResponse;
+
+export type UsersListResponse = ApiResponse<User[]>;
+
+export type DeleteUserResponse = ApiDefaultResponse;
+
+export type addNewUserResponse = ApiDefaultResponse;
+
 export type TasksListResponse = ApiResponse<Task[]>;
+
+export type DeleteTaskResponse = ApiDefaultResponse;
+
+export type addNewTaskResponse = ApiDefaultResponse;

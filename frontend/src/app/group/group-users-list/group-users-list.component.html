@@ -1,1 +1,31 @@
-<p>group-users-list works!</p>
+<div class="col s12">
+  <table *ngIf="usersExist(); else noUsers">
+    <colgroup>
+      <col span="1" style="width: 10%;">
+      <col span="1" style="width: 40%;">
+      <col span="1" style="width: 40%;">
+      <col span="1" style="width: 10%;">
+    </colgroup>
+
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Group ID</th>
+      <th>Is group lead</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.id}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.group_id}}</td>
+      <td>{{user.is_group_lead}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <ng-template #noUsers>
+    <p>No users created</p>
+  </ng-template>
+</div>
+

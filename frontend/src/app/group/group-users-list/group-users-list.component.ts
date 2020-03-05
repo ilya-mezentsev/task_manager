@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {ApiRequesterService} from '../../services/api-requester.service';
+import {User, UsersListResponse} from '../../interfaces/api-responses';
+import {ApiErrorResponse, UserSession, ResponseStatus} from '../../interfaces/api';
+import {NotifierService} from '../../services/notifier.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-group-users-list',
@@ -6,10 +11,38 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./group-users-list.component.scss']
 })
 export class GroupUsersListComponent implements OnInit {
+  public user: UserSession = this.storage.getSession();
+  public users: User[] = [];
 
-  constructor() { }
+  constructor(
+    private readonly apiRequester: ApiRequesterService,
+    private readonly notifier: NotifierService,
+    private readonly storage: StorageService
+  ) {}
+
+  public usersExist(): boolean {
+    return this.users.length > 0;
+  }
 
   ngOnInit() {
+    this.apiRequester.getUsersList(this.user.id)
+      .then(usersList => this.processUsersListResponse(usersList))
+      .catch(err => {
+        console.log(err);
+        this.notifier.send(err);
+      });
+  }
+
+  private processUsersListResponse(usersList: UsersListResponse | ApiErrorResponse): void {
+    if (usersList.status === 'error') {
+      console.log(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
+      this.notifier.send(`error while getting users list: ${(usersList as ApiErrorResponse).error_detail}`);
+    } else {
+      const users: User[] = (usersList as UsersListResponse).data;
+      this.users = users == null
+        ? []
+        : users;
+    }
   }
 
 }

@@ -28,7 +28,7 @@ func bindGroupWorkerRoutesToHandlers() {
   api := router.PathPrefix("/group/worker").Subrouter()
   api.Use(middleware.RequiredGroupWorkerRole)
 
-  api.HandleFunc("/tasks", groupWorkerRequestHandler.GetTasksByWorkerId).Methods(http.MethodGet)
+  api.HandleFunc("/tasks", groupWorkerRequestHandler.GetTasksByWorkerId).Methods(http.MethodPost)
   api.HandleFunc("/task/comment", groupWorkerRequestHandler.CommentTask).Methods(http.MethodPatch)
   api.HandleFunc("/task/complete", groupWorkerRequestHandler.CompleteTask).Methods(http.MethodPatch)
 }

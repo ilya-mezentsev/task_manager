@@ -13,23 +13,26 @@ export class TasksListComponent implements OnInit {
   // admin
   @Output() public deleteTaskEmitter = new EventEmitter<number>();
   // group lead
-  @Output() public assignTaskToWorkerEmitter = new EventEmitter<number>();
+  @Output() public assignTaskToEmitter = new EventEmitter<any>();
   // group worker
-  @Output() public commentTaskEmitter = new EventEmitter<number>();
+  @Output() public commentTaskEmitter = new EventEmitter<any>();
   @Output() public completeTaskEmitter = new EventEmitter<number>();
 
   constructor() { }
+
+  public userId: number = 0;
+  public taskComment: string = '';
 
   public deleteTask(taskId: number): void {
     this.deleteTaskEmitter.emit(taskId);
   }
 
   public assignTask(taskId: number): void {
-    this.assignTaskToWorkerEmitter.emit(taskId);
+    this.assignTaskToEmitter.emit([this.userId, taskId]);
   }
 
   public commentTask(taskId: number): void {
-    this.commentTaskEmitter.emit(taskId);
+    this.commentTaskEmitter.emit([this.taskComment, taskId]);
   }
 
   public completeTask(taskId: number): void {

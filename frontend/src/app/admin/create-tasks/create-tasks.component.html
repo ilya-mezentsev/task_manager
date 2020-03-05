@@ -1,1 +1,25 @@
-<p>create-tasks works!</p>
+<br>
+<div class="row">
+  <div class="col s3"></div>
+  <div class="input-field col s6">
+    <p>
+      <input id="groupId" type="number" class="validate"
+             #groupId
+             (keyup.enter)="addTask(groupId.valueAsNumber, taskName.value, taskDescription.value)">
+      <label class="active" for="groupId">Group ID</label>
+    </p>
+    <p>
+      <input id="taskName" type="text" class="validate"
+             #taskName
+             (keyup.enter)="addTask(groupId.valueAsNumber, taskName.value, taskDescription.value)">
+      <label class="active" for="taskName">Task Name</label>
+    </p>
+    <p>
+      <input id="taskDescription" type="text" class="validate"
+             #taskDescription
+             (keyup.enter)="addTask(groupId.valueAsNumber, taskName.value, taskDescription.value)">
+      <label class="active" for="taskDescription">Task Description</label>
+    </p>
+    <button (click)="addTask(groupId.valueAsNumber, taskName.value, taskDescription.value)" class="btn waves-effect waves-light">Add</button>
+  </div>
+</div>
