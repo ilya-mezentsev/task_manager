@@ -237,9 +237,9 @@ $ curl localhost/api/group/worker/tasks -H "Cookie: TM-Session-Token=$sessionTok
   ]
 }
 ```
-##### POST /api/group/worker/task/comment
+##### PATCH /api/group/worker/task/comment
 ```bash
-$ curl localhost/api/group/worker/task/comment -H "Cookie: TM-Session-Token=$sessionToken" -d '{"task_id": 1, "comment": "hello world"}'
+$ curl -X PATCH localhost/api/group/worker/task/comment -H "Cookie: TM-Session-Token=$sessionToken" -d '{"task_id": 1, "comment": "hello world"}'
 ```
 ##### Adds comment to task and returns default body:
 ```json5
@@ -248,9 +248,9 @@ $ curl localhost/api/group/worker/task/comment -H "Cookie: TM-Session-Token=$ses
   "data": null
 }
 ```
-##### POST /api/group/worker/task/complete
+##### PATCH /api/group/worker/task/complete
 ```bash
-$ curl localhost/api/group/worker/task/complete -H "Cookie: TM-Session-Token=$sessionToken" -d '{"task_id": 1}'
+$ curl -X PATCH localhost/api/group/worker/task/complete -H "Cookie: TM-Session-Token=$sessionToken" -d '{"task_id": 1}'
 ```
 ##### Mark task as complete and returns default body:
 ```json5

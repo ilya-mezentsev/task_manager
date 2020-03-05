@@ -12,6 +12,8 @@ export class ApiRequesterService {
   private  readonly tasksListWorkerEndpoint = '/group/worker/tasks';
   private  readonly taskLeadEndpoint = '/group/lead/task';
   private  readonly tasksListLeadEndpoint = 'group/lead/tasks';
+  private readonly commentEndpoint = 'group/worker/task/comment';
+  private readonly completeEndpoint = 'group/worker/task/complete';
   private readonly httpOptions = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(
@@ -53,6 +55,27 @@ export class ApiRequesterService {
     };
     return await this.http.post(
       ApiUrlBuilder.getApiUrlRequest(this.taskLeadEndpoint),
+      body
+    ).toPromise() as ApiDefaultResponse | ApiErrorResponse;
+  }
+
+  public async commentTask(taskComment: string, taskId: number): Promise<ApiDefaultResponse | ApiErrorResponse> {
+    const body = {
+      task_id: taskId,
+      comment: taskComment
+    };
+    return await this.http.patch(
+      ApiUrlBuilder.getApiUrlRequest(this.commentEndpoint),
+      body
+    ).toPromise() as ApiDefaultResponse | ApiErrorResponse;
+  }
+
+  public async completeTask(taskId: number): Promise<ApiDefaultResponse | ApiErrorResponse> {
+    const body = {
+      task_id: taskId
+    };
+    return await this.http.patch(
+      ApiUrlBuilder.getApiUrlRequest(this.completeEndpoint),
       body
     ).toPromise() as ApiDefaultResponse | ApiErrorResponse;
   }

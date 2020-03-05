@@ -3,5 +3,7 @@
   <app-tasks-list
     [userRole]="userRole"
     [tasks]="tasks"
+    (commentTaskEmitter) = commentTask($event)
+    (completeTaskEmitter)= completeTask($event)
   ></app-tasks-list>
 </div>

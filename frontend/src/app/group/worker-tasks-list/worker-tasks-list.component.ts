@@ -21,7 +21,35 @@ export class WorkerTasksListComponent implements OnInit {
     private readonly storage: StorageService
   ) { }
 
-  ngOnInit() {
+  public commentTask(commentInfo: any): void {
+    const r = this.apiRequester.commentTask(commentInfo[0], commentInfo[1]);
+    this.notifier.send('Trying to comment task')
+    r.then(result => {
+      if (result.status === ResponseStatus.Ok) {
+        this.notifier.send('Task commented successfully');
+        this.reloadTasks();
+      } else {
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
+        return Promise.reject((result as ApiErrorResponse).error_detail);
+      }
+    });
+  }
+
+  public completeTask(taskId: number): void {
+    const r = this.apiRequester.completeTask(taskId);
+    this.notifier.send('Trying to complete task')
+    r.then(result => {
+      if (result.status === ResponseStatus.Ok) {
+        this.notifier.send('Task completed successfully');
+        this.reloadTasks();
+      } else {
+        this.notifier.send(`${(result as ApiErrorResponse).error_detail}`);
+        return Promise.reject((result as ApiErrorResponse).error_detail);
+      }
+    });
+  }
+
+  private reloadTasks(): void {
     this.apiRequester.getTasksListByUser(this.user.id)
       .then(res => {
         if (res.status === ResponseStatus.Ok) {
@@ -32,4 +60,9 @@ export class WorkerTasksListComponent implements OnInit {
       })
       .catch(err => console.log(err));
   }
+
+  ngOnInit() {
+    this.reloadTasks();
+  }
+
 }

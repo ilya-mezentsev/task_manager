@@ -21,8 +21,8 @@ export class GroupTasksListComponent implements OnInit {
     private readonly storage: StorageService
   ) { }
 
-  public assignTask(taskId: number): void {
-    const r = this.apiRequester.assignTaskById(0, taskId);
+  public assignTask(taskInfo: any): void {
+    const r = this.apiRequester.assignTaskById(taskInfo[0], taskInfo[1]);
     this.notifier.send('Trying to assign task')
     r.then(result => {
       if (result.status === ResponseStatus.Ok) {
